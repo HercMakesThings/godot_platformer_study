@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://ck61gkeynns21"]
+
+[ext_resource type="Texture2D" uid="uid://2g1oqqy0hmw6" path="res://assets/sprites/flushyGameTileset2-Sheet.png" id="1_qp7he"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0slww"]
+size = Vector2(32, 6)
+
+[node name="platform_test" type="AnimatableBody2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_qp7he")
+region_enabled = true
+region_rect = Rect2(32, 85.9451, 32, 6.35114)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_0slww")
+one_way_collision = true
