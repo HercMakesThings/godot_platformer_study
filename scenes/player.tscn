@@ -1,9 +1,33 @@
-[gd_scene load_steps=16 format=3 uid="uid://cyyv6s252qdk7"]
+[gd_scene load_steps=28 format=3 uid="uid://cyyv6s252qdk7"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_dt3sa"]
 [ext_resource type="Texture2D" uid="uid://8i4sl3qlntny" path="res://assets/sprites/flushy/pixel_flushy_og_pose-Sheet.png" id="1_xu7rx"]
 [ext_resource type="Texture2D" uid="uid://j5kyoh104dcj" path="res://assets/sprites/flushy/pixel_flushy_og_pose_walking-Sheet.png" id="3_34dju"]
 [ext_resource type="Texture2D" uid="uid://2onqcbrn74pl" path="res://assets/sprites/flushy/pixel_flushy_attack_basic-Sheet.png" id="3_ruck4"]
+[ext_resource type="Script" path="res://scripts/finite_state_machine.gd" id="5_1ug4c"]
+[ext_resource type="Script" path="res://scenes/sprite_position_util.gd" id="5_sssnf"]
+[ext_resource type="Script" path="res://scripts/player_idle.gd" id="6_aa1a6"]
+[ext_resource type="Script" path="res://scripts/player_move.gd" id="7_so2gr"]
+[ext_resource type="Script" path="res://scripts/PlayerInAir.gd" id="8_rwgix"]
+[ext_resource type="Script" path="res://scripts/player_jump_squat.gd" id="9_hhvrr"]
+[ext_resource type="Script" path="res://scenes/PlayerBasicAttack.gd" id="10_q08rp"]
+[ext_resource type="PackedScene" uid="uid://cl6f5342w14nm" path="res://scenes/hitbox.tscn" id="12_3dntq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ig227"]
+atlas = ExtResource("3_ruck4")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_38out"]
+atlas = ExtResource("3_ruck4")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fn4bt"]
+atlas = ExtResource("3_ruck4")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3q3wk"]
+atlas = ExtResource("3_ruck4")
+region = Rect2(0, 64, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lcnnc"]
 atlas = ExtResource("1_xu7rx")
@@ -21,9 +45,9 @@ region = Rect2(0, 32, 32, 32)
 atlas = ExtResource("3_ruck4")
 region = Rect2(129, 154, 53, 36)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_uj3o6"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_d8lei"]
 atlas = ExtResource("3_ruck4")
-region = Rect2(122, 84, 61, 42)
+region = Rect2(134, 89, 32, 37)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xqeti"]
 atlas = ExtResource("3_34dju")
@@ -43,6 +67,23 @@ region = Rect2(32, 0, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_32tf0"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ig227")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_38out")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fn4bt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3q3wk")
+}],
+"loop": true,
+"name": &"basic_attack_1",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_lcnnc")
@@ -67,7 +108,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_uj3o6")
+"texture": SubResource("AtlasTexture_d8lei")
 }],
 "loop": true,
 "name": &"jump_squat",
@@ -106,6 +147,31 @@ script = ExtResource("1_dt3sa")
 position = Vector2(3, -5)
 sprite_frames = SubResource("SpriteFrames_32tf0")
 animation = &"walk_right"
+offset = Vector2(6.01, -15.445)
+script = ExtResource("5_sssnf")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_onhl1")
+
+[node name="FSM" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("5_1ug4c")
+initial_state = NodePath("PlayerMove")
+
+[node name="PlayerIdle" type="Node" parent="FSM"]
+script = ExtResource("6_aa1a6")
+
+[node name="PlayerMove" type="Node" parent="FSM"]
+script = ExtResource("7_so2gr")
+
+[node name="PlayerInAir" type="Node" parent="FSM"]
+script = ExtResource("8_rwgix")
+
+[node name="PlayerJumpSquat" type="Node" parent="FSM"]
+script = ExtResource("9_hhvrr")
+
+[node name="PlayerBasicAttack" type="Node" parent="FSM"]
+script = ExtResource("10_q08rp")
+
+[node name="Hitbox" parent="." instance=ExtResource("12_3dntq")]
+position = Vector2(18, -12)
+rotation = -0.565487
