@@ -1,5 +1,8 @@
 extends Area2D
+class_name HitboxBase
 
+@export_range(1,20,1) var dmg: float = 15
+@export var kb_angle: Vector2 = Vector2(1,2)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cyyv6s252qdk7"]
+[gd_scene load_steps=31 format=3 uid="uid://cyyv6s252qdk7"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_dt3sa"]
 [ext_resource type="Texture2D" uid="uid://8i4sl3qlntny" path="res://assets/sprites/flushy/pixel_flushy_og_pose-Sheet.png" id="1_xu7rx"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://scripts/player_jump_squat.gd" id="9_hhvrr"]
 [ext_resource type="Script" path="res://scenes/PlayerBasicAttack.gd" id="10_q08rp"]
 [ext_resource type="PackedScene" uid="uid://cl6f5342w14nm" path="res://scenes/hitbox.tscn" id="12_3dntq"]
+[ext_resource type="Script" path="res://scripts/PlayerDamaged.gd" id="12_7jsp1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ig227"]
 atlas = ExtResource("3_ruck4")
@@ -28,6 +29,10 @@ region = Rect2(192, 0, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_3q3wk"]
 atlas = ExtResource("3_ruck4")
 region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_01riv"]
+atlas = ExtResource("3_ruck4")
+region = Rect2(64, 128, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lcnnc"]
 atlas = ExtResource("1_xu7rx")
@@ -86,6 +91,14 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_01riv")
+}],
+"loop": true,
+"name": &"damaged",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_lcnnc")
 }, {
 "duration": 1.0,
@@ -137,20 +150,37 @@ animations = [{
 "speed": 6.0
 }]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ajj7l"]
+radius = 10.9994
+height = 26.0195
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_onhl1"]
-radius = 8.0
+radius = 9.05539
 
 [node name="Player" type="CharacterBody2D"]
+collision_layer = 9
+collision_mask = 13
 script = ExtResource("1_dt3sa")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(3, -5)
 sprite_frames = SubResource("SpriteFrames_32tf0")
-animation = &"walk_right"
+animation = &"damaged"
 offset = Vector2(6.01, -15.445)
 script = ExtResource("5_sssnf")
 
+[node name="Hurtbox" type="Area2D" parent="."]
+position = Vector2(18, -12)
+rotation = -0.565487
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(-19.4845, -2.89027)
+rotation = 0.575959
+shape = SubResource("CapsuleShape2D_ajj7l")
+debug_color = Color(0.579752, 0.550922, 0.0927658, 0.42)
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 9.53674e-07)
 shape = SubResource("CircleShape2D_onhl1")
 
 [node name="FSM" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
@@ -172,6 +202,12 @@ script = ExtResource("9_hhvrr")
 [node name="PlayerBasicAttack" type="Node" parent="FSM"]
 script = ExtResource("10_q08rp")
 
+[node name="PlayerDamaged" type="Node" parent="FSM"]
+script = ExtResource("12_7jsp1")
+
 [node name="Hitbox" parent="." instance=ExtResource("12_3dntq")]
+visible = false
 position = Vector2(18, -12)
 rotation = -0.565487
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]

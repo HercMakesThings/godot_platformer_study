@@ -58,11 +58,11 @@ func Update(_delta: float):
 			animated_sprite.flip_h = false
 		animated_sprite.play("in_air")
 		
-	if direction:
+	if direction != 0:
 		is_player_moving.emit(direction, _delta)
-	else:
-		#player.velocity.x = move_toward(player.velocity.x, 0, player.speed)
-		is_player_moving.emit(direction, _delta)
+	#else:
+		##player.velocity.x = move_toward(player.velocity.x, 0, player.speed)
+		#is_player_moving.emit(direction, _delta)
 
 func Exit():
 	pass
