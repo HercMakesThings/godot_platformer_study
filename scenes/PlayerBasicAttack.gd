@@ -9,6 +9,8 @@ signal is_player_attacking
 var attack_frames
 var attack_count
 
+@onready var hitbox = $"../../Hitbox"
+
 #@onready var hitbox_1 = get_node("./atk_1_hitbox")
 #@onready var atk_1_hitbox = $atk_1_hitbox
 
@@ -31,17 +33,20 @@ func Enter():
 	#add_child(atk_1_hitbox)
 	
 func Update(_delta):
+	#hitbox.disabled
 	#atk_1_hitbox.shape_owner_get_shape()
 	#self.remove_child(atk_1_hitbox)
 	#if attack_frames == 15:
 		#self.add_child(atk_1_hitbox)
 	#if attack_count == 1:
 		#animated_sprite_2d.play("basic_attack_1")
+	#if attack_frames >= 15 && attack_frames <= 18:
+		#hitbox.set_process_mode(PROCESS_MODE_INHERIT)
 	if attack_frames >= 30:
 		state_transition.emit(self, "PlayerIdle")
 		return
 	attack_frames = attack_frames + 1
-	pass
-
+	
+	
 func Exit():
 	pass

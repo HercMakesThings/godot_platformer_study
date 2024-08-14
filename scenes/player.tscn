@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://cyyv6s252qdk7"]
+[gd_scene load_steps=37 format=3 uid="uid://cyyv6s252qdk7"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_dt3sa"]
 [ext_resource type="Texture2D" uid="uid://8i4sl3qlntny" path="res://assets/sprites/flushy/pixel_flushy_og_pose-Sheet.png" id="1_xu7rx"]
@@ -13,6 +13,8 @@
 [ext_resource type="Script" path="res://scenes/PlayerBasicAttack.gd" id="10_q08rp"]
 [ext_resource type="PackedScene" uid="uid://cl6f5342w14nm" path="res://scenes/hitbox.tscn" id="12_3dntq"]
 [ext_resource type="Script" path="res://scripts/PlayerDamaged.gd" id="12_7jsp1"]
+[ext_resource type="Script" path="res://scripts/PlayerLandingLag.gd" id="13_blm3h"]
+[ext_resource type="Script" path="res://scripts/player_vel_vis.gd" id="14_5ghsh"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ig227"]
 atlas = ExtResource("3_ruck4")
@@ -53,6 +55,10 @@ region = Rect2(129, 154, 53, 36)
 [sub_resource type="AtlasTexture" id="AtlasTexture_d8lei"]
 atlas = ExtResource("3_ruck4")
 region = Rect2(134, 89, 32, 37)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_02wtl"]
+atlas = ExtResource("3_ruck4")
+region = Rect2(192, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xqeti"]
 atlas = ExtResource("3_34dju")
@@ -129,6 +135,14 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_02wtl")
+}],
+"loop": true,
+"name": &"landing_lag",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_xqeti")
 }, {
 "duration": 1.0,
@@ -157,6 +171,17 @@ height = 26.0195
 [sub_resource type="CircleShape2D" id="CircleShape2D_onhl1"]
 radius = 9.05539
 
+[sub_resource type="CanvasTexture" id="CanvasTexture_yfwbj"]
+specular_color = Color(0.408699, 0.692188, 0.907185, 1)
+
+[sub_resource type="Animation" id="Animation_nfhr8"]
+resource_name = "enable_hurtbox"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_22ne6"]
+_data = {
+"enable_hurtbox": SubResource("Animation_nfhr8")
+}
+
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 9
 collision_mask = 13
@@ -165,7 +190,7 @@ script = ExtResource("1_dt3sa")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(3, -5)
 sprite_frames = SubResource("SpriteFrames_32tf0")
-animation = &"damaged"
+animation = &"basic_attack_1"
 offset = Vector2(6.01, -15.445)
 script = ExtResource("5_sssnf")
 
@@ -205,9 +230,23 @@ script = ExtResource("10_q08rp")
 [node name="PlayerDamaged" type="Node" parent="FSM"]
 script = ExtResource("12_7jsp1")
 
+[node name="PlayerLandingLag" type="Node" parent="FSM"]
+script = ExtResource("13_blm3h")
+
 [node name="Hitbox" parent="." instance=ExtResource("12_3dntq")]
-visible = false
 position = Vector2(18, -12)
 rotation = -0.565487
+
+[node name="Line2D" type="Line2D" parent="."]
+position = Vector2(28.945, 0)
+points = PackedVector2Array(0.025, 0, 0, 0)
+default_color = Color(0.201004, 0.544663, 0.844904, 1)
+texture = SubResource("CanvasTexture_yfwbj")
+script = ExtResource("14_5ghsh")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_22ne6")
+}
 
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]

@@ -5,6 +5,8 @@ class_name PlayerMove
 @onready var animated_sprite = $"../../AnimatedSprite2D"
 @onready var player = $"../.."
 
+var on_ground: bool
+
 signal is_player_moving(dir, delta)
 signal is_player_jumping(bool)
 
@@ -35,6 +37,9 @@ func Update(_delta: float):
 		
 	# play animations
 	if player.is_on_floor():
+		#if not on_ground:
+			#state_transition.emit(self, "PlayerLandingLag")
+		#on_ground = true
 		if direction == 0 and !Input.is_action_pressed("run_left_test") and !Input.is_action_pressed("run_right_test"):
 			state_transition.emit(self, "PlayerIdle")
 		else:
@@ -43,6 +48,7 @@ func Update(_delta: float):
 			elif direction < 0:
 				animated_sprite.play("walk_left")
 	else:
+		on_ground = false
 		#if player.dir == 1:
 			#animated_sprite.flip_h = false
 		#elif player.dir == -1:

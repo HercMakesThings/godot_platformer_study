@@ -16,7 +16,17 @@ func _process(delta):
 		else:
 			offset.x = 6
 			offset.y = -15
-		return
-	if animation != "basic_attack_1":
+		#return
+	elif animation == "landing_lag":
+		offset.x = 0
+		offset.y = -16
+	elif animation == "walk_right":
+		offset.x = -8
+		offset.y = 0
+	else:
 		offset.x = 0
 		offset.y = 0
+	#if animation != "basic_attack_1":
+		#offset.x = 0
+		#offset.y = 0
+		
