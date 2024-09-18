@@ -11,11 +11,16 @@ func _ready():
 		if child is State:
 			states[child.name.to_lower()] = child
 			child.state_transition.connect(change_state)
-		
+		elif not (child is State) && child.get_child_count() != 0:
+			for grandchild in child.get_children():
+				if grandchild is State:
+					states[grandchild.name.to_lower()] = grandchild
+					grandchild.state_transition.connect(change_state)
 		if initial_state:
 			initial_state.Enter()
 			current_state = initial_state
-
+	print(states.keys())
+	
 func change_state(source_state: State, new_state_name: String):
 	if source_state != current_state:
 		print("Invalid state change trying from: " + source_state.name + " but currently in: " + current_state.name)
@@ -53,6 +58,6 @@ func force_change_state(new_state: String):
 	current_state = newState
 
 func _physics_process(delta):
-	#print(current_state.name.to_lower())
+	print(current_state.name.to_lower())
 	if current_state:
 		current_state.Update(delta)

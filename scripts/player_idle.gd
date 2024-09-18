@@ -8,14 +8,18 @@ class_name PlayerIdle
 
 func Enter():
 	animated_sprite.flip_h = false
-	if player.dir == 1:
+	#if player.x_dir_raw == 1:
+	if player.x_dir_raw > 0:
 		animated_sprite.flip_h = false
-	elif player.dir == -1:
+	#elif player.x_dir_raw == -1:
+	elif player.x_dir_raw < 0:
 		animated_sprite.flip_h = true
-	elif player.dir == 0:
-		if player.prev_dir == 1:
+	elif player.x_dir_raw == 0:
+		#if player.prev_dir_x_raw == 1:
+		if player.prev_dir_x_raw > 0:
 			animated_sprite.flip_h = false
-		elif player.prev_dir == -1:
+		#elif player.prev_dir_x_raw == -1:
+		elif player.prev_dir_x_raw < 0:
 			animated_sprite.flip_h = true
 	animated_sprite.play("idle")
 	pass
@@ -28,7 +32,7 @@ func Update(_delta: float):
 		state_transition.emit(self, "PlayerMove")
 	if Input.is_action_just_pressed("run_right_test") or Input.is_action_just_pressed("run_left_test"):
 		state_transition.emit(self, "PlayerMove")
-	if Input.is_action_pressed("jump_test") and player.is_on_floor():
+	if Input.is_action_just_pressed("jump_test") and player.is_on_floor():
 		state_transition.emit(self, "PlayerJumpSquat")
 	if Input.is_action_pressed("attack_1_test"):
 		state_transition.emit(self, "PlayerBasicAttack")
