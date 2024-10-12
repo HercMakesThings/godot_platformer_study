@@ -1,10 +1,11 @@
-[gd_scene load_steps=53 format=3 uid="uid://cyyv6s252qdk7"]
+[gd_scene load_steps=60 format=3 uid="uid://cyyv6s252qdk7"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_dt3sa"]
 [ext_resource type="Texture2D" uid="uid://8i4sl3qlntny" path="res://assets/sprites/flushy/pixel_flushy_og_pose-Sheet.png" id="1_xu7rx"]
 [ext_resource type="Shader" path="res://shaders/sprite_shaders/base.gdshader" id="2_htcuv"]
 [ext_resource type="Texture2D" uid="uid://j5kyoh104dcj" path="res://assets/sprites/flushy/pixel_flushy_og_pose_walking-Sheet.png" id="3_34dju"]
 [ext_resource type="Texture2D" uid="uid://2onqcbrn74pl" path="res://assets/sprites/flushy/pixel_flushy_attack_basic-Sheet.png" id="3_ruck4"]
+[ext_resource type="Texture2D" uid="uid://cvhcrhfww147f" path="res://assets/sprites/flushy/pixel_flushy_og_pose_crouching_tilesheet_1.png" id="4_v544x"]
 [ext_resource type="Script" path="res://scripts/finite_state_machine.gd" id="5_1ug4c"]
 [ext_resource type="Script" path="res://scenes/sprite_position_util.gd" id="5_sssnf"]
 [ext_resource type="Script" path="res://scripts/player_idle.gd" id="6_aa1a6"]
@@ -16,9 +17,11 @@
 [ext_resource type="Script" path="res://scripts/PlayerDamaged.gd" id="12_7jsp1"]
 [ext_resource type="Script" path="res://scripts/PlayerAirDodge.gd" id="13_7gau2"]
 [ext_resource type="Script" path="res://scripts/PlayerLandingLag.gd" id="13_blm3h"]
+[ext_resource type="Script" path="res://scripts/PlayerCrouch.gd" id="14_1ip4y"]
 [ext_resource type="Script" path="res://scripts/player_vel_vis.gd" id="14_5ghsh"]
 [ext_resource type="Script" path="res://scripts/PlayerJab2.gd" id="14_jhbmd"]
 [ext_resource type="Script" path="res://scripts/PlayerJab3.gd" id="17_haokp"]
+[ext_resource type="Script" path="res://scripts/PlayerShield.gd" id="19_lxnmv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_65qsg"]
 resource_local_to_scene = true
@@ -73,6 +76,18 @@ region = Rect2(64, 128, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_6pqfs"]
 atlas = ExtResource("3_ruck4")
 region = Rect2(128, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hr88k"]
+atlas = ExtResource("4_v544x")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5tfq3"]
+atlas = ExtResource("4_v544x")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8qhya"]
+atlas = ExtResource("4_v544x")
+region = Rect2(32, 32, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_01riv"]
 atlas = ExtResource("3_ruck4")
@@ -152,7 +167,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"basic_attack_2",
-"speed": 5.0
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -169,6 +184,26 @@ animations = [{
 }],
 "loop": true,
 "name": &"basic_attack_3",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hr88k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5tfq3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8qhya")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5tfq3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hr88k")
+}],
+"loop": true,
+"name": &"crouch",
 "speed": 5.0
 }, {
 "frames": [{
@@ -247,16 +282,7 @@ height = 26.0195
 [sub_resource type="CircleShape2D" id="CircleShape2D_onhl1"]
 radius = 9.05539
 
-[sub_resource type="CanvasTexture" id="CanvasTexture_yfwbj"]
-specular_color = Color(0.408699, 0.692188, 0.907185, 1)
-
-[sub_resource type="Animation" id="Animation_nfhr8"]
-resource_name = "enable_hurtbox"
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_22ne6"]
-_data = {
-"enable_hurtbox": SubResource("Animation_nfhr8")
-}
+[sub_resource type="CircleShape2D" id="CircleShape2D_0knob"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ugh3t"]
 radius = 6.0
@@ -270,6 +296,17 @@ height = 38.0
 radius = 5.0
 height = 42.0
 
+[sub_resource type="CanvasTexture" id="CanvasTexture_yfwbj"]
+specular_color = Color(0.408699, 0.692188, 0.907185, 1)
+
+[sub_resource type="Animation" id="Animation_nfhr8"]
+resource_name = "enable_hurtbox"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_22ne6"]
+_data = {
+"enable_hurtbox": SubResource("Animation_nfhr8")
+}
+
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 9
 collision_mask = 13
@@ -279,7 +316,7 @@ script = ExtResource("1_dt3sa")
 material = SubResource("ShaderMaterial_65qsg")
 position = Vector2(3, -5)
 sprite_frames = SubResource("SpriteFrames_32tf0")
-animation = &"basic_attack_2"
+animation = &"idle"
 offset = Vector2(6.01, -15.445)
 script = ExtResource("5_sssnf")
 
@@ -288,18 +325,24 @@ wait_time = 0.257
 one_shot = true
 
 [node name="Hurtbox" type="Area2D" parent="."]
-position = Vector2(18, -12)
-rotation = -0.565487
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
-position = Vector2(-19.4845, -2.89027)
-rotation = 0.575959
+position = Vector2(0, -11)
 shape = SubResource("CapsuleShape2D_ajj7l")
 debug_color = Color(0.579752, 0.550922, 0.0927658, 0.42)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 9.53674e-07)
+position = Vector2(0, -9)
 shape = SubResource("CircleShape2D_onhl1")
+
+[node name="Shield" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Shield"]
+position = Vector2(0, -14)
+scale = Vector2(1.765, 1.765)
+shape = SubResource("CircleShape2D_0knob")
+disabled = true
+debug_color = Color(0, 0.634382, 0.429685, 0.42)
 
 [node name="FSM" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("5_1ug4c")
@@ -323,6 +366,9 @@ script = ExtResource("12_7jsp1")
 [node name="PlayerLandingLag" type="Node" parent="FSM"]
 script = ExtResource("13_blm3h")
 
+[node name="PlayerCrouch" type="Node" parent="FSM"]
+script = ExtResource("14_1ip4y")
+
 [node name="PlayerAirDodge" type="Node" parent="FSM"]
 script = ExtResource("13_7gau2")
 
@@ -331,11 +377,48 @@ script = ExtResource("13_7gau2")
 [node name="PlayerBasicAttack" type="Node" parent="FSM/PlayerAttacks"]
 script = ExtResource("10_q08rp")
 
+[node name="Jab1Hitbox" parent="FSM/PlayerAttacks/PlayerBasicAttack" instance=ExtResource("12_3dntq")]
+position = Vector2(18, -12)
+rotation = -0.565487
+xoff = 22
+active_window_begin = 10
+active_window_end = 12
+move_length = 18
+
+[node name="hitbox_shape" type="CollisionShape2D" parent="FSM/PlayerAttacks/PlayerBasicAttack/Jab1Hitbox"]
+shape = SubResource("CapsuleShape2D_ugh3t")
+debug_color = Color(0.781592, 0.33985, 0.700691, 0.42)
+
 [node name="PlayerJab2" type="Node" parent="FSM/PlayerAttacks"]
 script = ExtResource("14_jhbmd")
 
+[node name="Jab2Hitbox" parent="FSM/PlayerAttacks/PlayerJab2" instance=ExtResource("12_3dntq")]
+xoff = 16
+yoff = -30
+active_window_end = 14
+move_length = 18
+rot = 0.894
+move_animation = "basic_attack_2"
+
+[node name="hitbox_shape" type="CollisionShape2D" parent="FSM/PlayerAttacks/PlayerJab2/Jab2Hitbox"]
+shape = SubResource("CapsuleShape2D_251iw")
+
 [node name="PlayerJab3" type="Node" parent="FSM/PlayerAttacks"]
 script = ExtResource("17_haokp")
+
+[node name="Jab3Hitbox" parent="FSM/PlayerAttacks/PlayerJab3" instance=ExtResource("12_3dntq")]
+xoff = 26
+active_window_begin = 14
+active_window_end = 16
+move_length = 18
+move_animation = "basic_attack_3"
+
+[node name="hitbox_shape" type="CollisionShape2D" parent="FSM/PlayerAttacks/PlayerJab3/Jab3Hitbox"]
+shape = SubResource("CapsuleShape2D_h7xec")
+debug_color = Color(0.931339, 0.256346, 0.138949, 0.42)
+
+[node name="PlayerShield" type="Node" parent="FSM"]
+script = ExtResource("19_lxnmv")
 
 [node name="Line2D" type="Line2D" parent="."]
 visible = false
@@ -351,36 +434,11 @@ libraries = {
 }
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2(0, -10)
 target_position = Vector2(0, 11)
 
 [node name="Hitboxes" type="Node" parent="."]
 
-[node name="Jab1Hitbox" parent="Hitboxes" instance=ExtResource("12_3dntq")]
-position = Vector2(18, -12)
-rotation = -0.565487
-xoff = 22
-
-[node name="hitbox_shape" type="CollisionShape2D" parent="Hitboxes/Jab1Hitbox"]
-shape = SubResource("CapsuleShape2D_ugh3t")
-debug_color = Color(0.781592, 0.33985, 0.700691, 0.42)
-
-[node name="Jab2Hitbox" parent="Hitboxes" instance=ExtResource("12_3dntq")]
-xoff = 16
-yoff = -30
-rot = 0.894
-move_animation = "basic_attack_2"
-
-[node name="hitbox_shape" type="CollisionShape2D" parent="Hitboxes/Jab2Hitbox"]
-shape = SubResource("CapsuleShape2D_251iw")
-
-[node name="Jab3Hitbox" parent="Hitboxes" instance=ExtResource("12_3dntq")]
-xoff = 26
-move_animation = "basic_attack_3"
-
-[node name="hitbox_shape" type="CollisionShape2D" parent="Hitboxes/Jab3Hitbox"]
-shape = SubResource("CapsuleShape2D_h7xec")
-debug_color = Color(0.931339, 0.256346, 0.138949, 0.42)
-
 [connection signal="timeout" from="AnimatedSprite2D/flash_timer" to="." method="_on_flash_timer_timeout"]
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
-[connection signal="body_exited" from="Hitboxes/Jab1Hitbox" to="Hitboxes/Jab1Hitbox" method="_on_body_exited"]
+[connection signal="body_exited" from="FSM/PlayerAttacks/PlayerBasicAttack/Jab1Hitbox" to="FSM/PlayerAttacks/PlayerBasicAttack/Jab1Hitbox" method="_on_body_exited"]

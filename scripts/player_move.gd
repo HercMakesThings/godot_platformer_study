@@ -7,6 +7,8 @@ class_name PlayerMove
 
 var on_ground: bool
 
+var p1_input
+
 signal is_player_moving(dir, delta)
 signal is_player_jumping(bool)
 signal is_player_air_jumping(bool)
@@ -17,20 +19,31 @@ func get_player_axis(neg_action, pos_action):
 	return Input.get_action_strength(pos_action, true) - Input.get_action_strength(neg_action, true)
 
 func Enter():
+	#if player.dodge_buffer > 0.0 && player.air_dodge > 0:
+			#state_transition.emit(self, "PlayerAirDodge")
 	pass
 
 func Update(_delta: float):
+	p1_input = Input.get_vector("left_stick_left", "left_stick_right", "left_stick_down", "left_stick_up")
 	# reset horizontal orientation
 	animated_sprite.flip_h = false
 	
+	#if player.dodge_buffer > 0.0:
+		#player.dodge_buffer -= _delta
+	#if (player.dodge_buffer > 0.0 && player.air_dodge > 0) || guard_pressed():
+		#state_transition.emit(self, "PlayerAirDodge")
+		#return
+	
 	# Handle jump.
-	if Input.is_action_pressed("jump_test") and player.is_on_floor():
+	#if Input.is_action_pressed("jump_test") and player.is_on_floor():
+	if Input.is_action_just_pressed("jump_test") and player.is_on_floor():
 		#player.velocity.y = player.JUMP_VELOCITY
 		#is_player_jumping.emit(true)
 		state_transition.emit(self, "PlayerJumpSquat")
 		return
 		
-	if Input.is_action_pressed("attack_1_test") && player.is_on_floor():
+	#if Input.is_action_pressed("attack_1_test") && player.is_on_floor():
+	if Input.is_action_pressed("attack_1_test"):
 		state_transition.emit(self, "PlayerBasicAttack")
 		return
 		
@@ -49,8 +62,14 @@ func Update(_delta: float):
 				animated_sprite.play("walk_right")
 			elif direction.x < 0:
 				animated_sprite.play("walk_left")
+		if Input.is_action_pressed("left_stick_down") && abs(p1_input.x) < 0.7:
+			state_transition.emit(self, "PlayerCrouch")
+		#if player.dodge_buffer > 0.0 && player.air_dodge > 0:
+			#state_transition.emit(self, "PlayerAirDodge")
 	else:
 		on_ground = false
+		#if player.dodge_buffer > 0.0 && player.air_dodge > 0:
+			#state_transition.emit(self, "PlayerAirDodge")
 		if Input.is_action_just_pressed("jump_test"):
 			is_player_air_jumping.emit(true)
 		elif Input.is_action_just_pressed("down_input_test") && player.velocity.y >= 0:
@@ -71,8 +90,8 @@ func Update(_delta: float):
 		is_player_moving.emit(direction, _delta)
 	
 func guard_pressed():
-	#return Input.is_action_just_pressed("guard_left") || Input.is_action_just_pressed("guard_right")
-	return Input.is_action_pressed("guard_left") || Input.is_action_pressed("guard_right")
+	return Input.is_action_just_pressed("guard_left") || Input.is_action_just_pressed("guard_right")
+	#return Input.is_action_pressed("guard_left") || Input.is_action_pressed("guard_right")
 	
 func Exit():
 	pass

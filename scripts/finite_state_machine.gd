@@ -58,6 +58,6 @@ func force_change_state(new_state: String):
 	current_state = newState
 
 func _physics_process(delta):
-	print(current_state.name.to_lower())
+	#print(current_state.name.to_lower())
 	if current_state:
 		current_state.Update(delta)

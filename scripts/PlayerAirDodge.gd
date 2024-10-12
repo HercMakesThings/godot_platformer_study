@@ -7,7 +7,11 @@ var ad_frames: int
 var ad_dir
 
 func Enter():
-	ad_dir = Input.get_vector("left_stick_left", "left_stick_right", "left_stick_up", "left_stick_down").normalized()
+	ad_dir = Input.get_vector(
+		"left_stick_left", 
+		"left_stick_right", 
+		"left_stick_up", 
+		"left_stick_down").normalized()
 	
 func Update(_delta):
 	

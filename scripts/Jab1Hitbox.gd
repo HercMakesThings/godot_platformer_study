@@ -1,7 +1,9 @@
+class_name BasicHitbox
 extends Area2D
 
 #@onready var player = $".."
-@onready var player = $"../.."
+#@onready var player = $"../.."
+@onready var player = $"../../../.."
 
 var dmg: float = 15
 var kb_angle: Vector2 = Vector2(1,2).normalized()
@@ -14,7 +16,8 @@ var is_colliding: bool
 #@onready var collision_shape_2d_2 = $CollisionShape2D2
 
 #@onready var animated_sprite = $"../AnimatedSprite2D"
-@onready var animated_sprite = $"../../AnimatedSprite2D"
+#@onready var animated_sprite = $"../../AnimatedSprite2D"
+@onready var animated_sprite = $"../../../../AnimatedSprite2D"
 
 #@export var xoff: int = 18
 @export var xoff: int = 20

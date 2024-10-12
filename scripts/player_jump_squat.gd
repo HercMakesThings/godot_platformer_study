@@ -30,11 +30,11 @@ func Update(_delta):
 	squat_frames = squat_frames + 1
 	#print(squat_frames)
 	if Input.is_action_just_released("jump_test"):
-		is_player_jumping.emit("short")
+		is_player_jumping.emit("short", _delta)
 		state_transition.emit(self, "PlayerMove")
 		return
 	if squat_frames >= 4:
-		is_player_jumping.emit("high")
+		is_player_jumping.emit("high", _delta)
 		state_transition.emit(self, "PlayerMove")
 		return
 	

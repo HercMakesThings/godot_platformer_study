@@ -12,12 +12,12 @@ func Enter():
 	landing_frames = 0
 	
 func Update(delta):
-	if landing_frames <= 5:
+	landing_frames += 1
+	if landing_frames <= 4:
 		is_in_landing_lag.emit()
 		animated_sprite.play("landing_lag")
 	else:
 		state_transition.emit(self, "PlayerIdle")
-	landing_frames = landing_frames + 1
 	
 func Exit():
 	pass

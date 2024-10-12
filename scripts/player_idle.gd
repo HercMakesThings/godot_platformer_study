@@ -5,6 +5,7 @@ class_name PlayerIdle
 @onready var animated_sprite = $"../../AnimatedSprite2D"
 @onready var player = $"../.."
 
+var p1_input
 
 func Enter():
 	animated_sprite.flip_h = false
@@ -25,15 +26,19 @@ func Enter():
 	pass
 
 func Update(_delta: float):
+	p1_input = Input.get_vector("left_stick_left", "left_stick_right", "left_stick_down", "left_stick_up")
 	if abs(player.velocity.x) > 0:
 		#player.velocity.x = 0
 		player.velocity.x = move_toward(player.velocity.x, 0, _delta * 600)
 	if not player.is_on_floor():
 		state_transition.emit(self, "PlayerMove")
+		#state_transition.emit(self, "PlayerInAir")
 	if Input.is_action_just_pressed("run_right_test") or Input.is_action_just_pressed("run_left_test"):
 		state_transition.emit(self, "PlayerMove")
 	if Input.is_action_just_pressed("jump_test") and player.is_on_floor():
 		state_transition.emit(self, "PlayerJumpSquat")
+	if Input.is_action_pressed("left_stick_down") && player.is_on_floor() && abs(p1_input.x) < 0.7:
+			state_transition.emit(self, "PlayerCrouch")
 	if Input.is_action_pressed("attack_1_test"):
 		state_transition.emit(self, "PlayerBasicAttack")
 

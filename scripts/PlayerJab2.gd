@@ -3,6 +3,7 @@ class_name PlayerJab2
 
 @onready var animated_sprite = $"../../../AnimatedSprite2D"
 @onready var player = $"../../.."
+@onready var jab_2_hitbox = $Jab2Hitbox
 
 signal is_player_attacking
 
@@ -21,14 +22,17 @@ func Update(delta: float):
 	#if attack_frames > 4 && attack_frames < 10:
 		#is_player_attacking.emit()
 		#player.velocity.y -= 500 * delta
-	if Input.is_action_just_pressed("attack_3_test"):
+	#if Input.is_action_just_pressed("attack_3_test") && attack_frames >= jab_2_hitbox.active_window_end:
+	if (Input.is_action_just_pressed("attack_3_test") || player.atk_buffer > 0.0) && attack_frames >= jab_2_hitbox.active_window_end:
 		state_transition.emit(self, "PlayerJab3")
-		return
-	if attack_frames >= 30:
+		#return
+	#if attack_frames >= 14:
+	if attack_frames >= jab_2_hitbox.move_length:
 		state_transition.emit(self, "PlayerIdle")
 		return
+	is_player_attacking.emit()
 	attack_frames = attack_frames + 1
 	
 func Exit():
-	pass
+	attack_frames = 0
 	

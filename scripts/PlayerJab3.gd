@@ -3,6 +3,7 @@ class_name PlayerJab3
 
 @onready var animated_sprite = $"../../../AnimatedSprite2D"
 @onready var player = $"../../.."
+@onready var jab_3_hitbox = $Jab3Hitbox
 
 signal is_player_attacking
 
@@ -18,7 +19,8 @@ func Enter():
 	animated_sprite.play("basic_attack_3")
 	
 func Update(_delta):
-	if attack_frames >= 30:
+	#if attack_frames >= 16:
+	if attack_frames >= jab_3_hitbox.move_length:
 		state_transition.emit(self, "PlayerIdle")
 		return
 	attack_frames = attack_frames + 1

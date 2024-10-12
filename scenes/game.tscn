@@ -350,7 +350,7 @@ layer_0/tile_data = PackedInt32Array(262140, 524288, 4, 262141, 524288, 4, 26214
 
 [node name="Player" parent="." instance=ExtResource("1_efwp1")]
 z_index = 3
-position = Vector2(-92, -22)
+position = Vector2(-92, -6)
 collision_layer = 15
 collision_mask = 15
 

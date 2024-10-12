@@ -14,7 +14,8 @@ var attack_frames
 var attack_count
 
 #@onready var hitbox = $"../../Hitbox"
-@onready var hitbox = $"../../../Hitbox"
+#@onready var hitbox = $"../../../Hitbox"
+@onready var jab_1_hitbox = $Jab1Hitbox
 
 #@onready var hitbox_1 = get_node("./atk_1_hitbox")
 #@onready var atk_1_hitbox = $atk_1_hitbox
@@ -36,14 +37,16 @@ func Enter():
 	animated_sprite_2d.play("basic_attack_1")
 	
 func Update(_delta):
-	if Input.is_action_just_pressed("down_input_test") && player.velocity.y >= 0:
-			is_player_fast_falling.emit()
-	if Input.is_action_just_pressed("attack_2_test"):
+	#if Input.is_action_just_pressed("down_input_test") && player.velocity.y >= 0:
+			#is_player_fast_falling.emit()
+	if (Input.is_action_just_pressed("attack_2_test") || player.atk_buffer > 0.0) && attack_frames >= jab_1_hitbox.active_window_end:
 		state_transition.emit(self, "PlayerJab2")
-	if attack_frames >= 30:
+	#if attack_frames >= 16:
+	if attack_frames >= jab_1_hitbox.move_length:
 		state_transition.emit(self, "PlayerIdle")
 		return
+	is_player_attacking.emit()
 	attack_frames = attack_frames + 1
 	
 func Exit():
-	pass
+	attack_frames = 0
