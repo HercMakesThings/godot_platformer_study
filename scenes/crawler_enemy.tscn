@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://djsso6yvcm66h" path="res://scripts/crawler_enemy.gd" id="1_avvfv"]
 [ext_resource type="PackedScene" uid="uid://b58d3k3tt4jsm" path="res://scenes/hurtbox.tscn" id="1_umd2w"]
-[ext_resource type="Script" uid="uid://b8k7fqf1utbjk" path="res://scenes/crawler_fsm_lite.gd" id="3_y4yga"]
+[ext_resource type="Script" uid="uid://b8k7fqf1utbjk" path="res://scripts/crawler_fsm_lite.gd" id="3_y4yga"]
 [ext_resource type="PackedScene" uid="uid://cljnxyafc2rqu" path="res://scenes/hitbox_basic.tscn" id="4_qc2gs"]
 [ext_resource type="Script" uid="uid://74ctiqofli1i" path="res://scripts/health_manager.gd" id="5_btfn5"]
 [ext_resource type="Script" uid="uid://bjx5rtki0usbf" path="res://scripts/stamina_manager.gd" id="6_k8l7y"]

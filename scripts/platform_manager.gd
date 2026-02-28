@@ -4,7 +4,7 @@ class_name PlatformManager
 var platforms: Dictionary[String, PlatformBasic] = {}
 #var platforms := Array()
 
-signal _pl_on_platform
+signal _pl_on_platform(platform: PlatformBasic, collider: Area2D)
 
 func _ready():
 	for child in get_children():
@@ -13,7 +13,7 @@ func _ready():
 			child._pl_colliding_with_platform.connect(_on_platform_colliding)
 			#print(child.name)
 	
-func _on_platform_colliding(is_colliding, area):
+func _on_platform_colliding(is_colliding: bool, area: Area2D):
 	#if is_colliding && area.name == "Hurtbox":
 	if is_colliding:
 		#print("area... " + area.name)
@@ -32,6 +32,7 @@ func _on_platform_colliding(is_colliding, area):
 				#print(a)
 				#if a.name == area.name:
 				if a.get_parent() is PlatformBasic:
+					#print(area.get_parent().name)
 					_pl_on_platform.emit(a.get_parent(), area.get_parent())
 				#print("platform name: " + platform + ", collider name: " + area.get_parent().name)
 					#print("platform name: " + a.get_parent().name + ", collider name: " + area.get_parent().name)

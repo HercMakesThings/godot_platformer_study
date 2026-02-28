@@ -1,0 +1,1 @@
+class_name EnvironmentCollisionBox extends CollisionShape2D

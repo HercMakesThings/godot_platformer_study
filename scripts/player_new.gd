@@ -5,9 +5,12 @@ class_name PlayerNew extends CharacterBody2D
 @onready var health_manager: HealthManager = %HealthManager
 @onready var stamina_manager: StaminaManager = %StaminaManager
 
+#@onready var platform_manager: PlatformManager = %PlatformManager
+@onready var platform_manager: PlatformManager = $"../PlatformManager"
+
 
 func _ready() -> void:
-	pass
+	platform_manager._pl_on_platform.connect(_on_platform)
 	
 func _physics_process(delta: float) -> void:
 	# capture player input
@@ -20,3 +23,7 @@ func _physics_process(delta: float) -> void:
 	movement_component.tick(delta)
 	
 	move_and_slide()
+	
+func _on_platform(_platform: PlatformBasic, _collider: CharacterBody2D) -> void:
+	print("on a platform!!")
+	movement_component.is_on_platform = true

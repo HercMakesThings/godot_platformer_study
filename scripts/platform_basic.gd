@@ -13,13 +13,13 @@ func _ready():
 	pass
 	
 func _physics_process(delta):
-	var overlapping_areas = area.get_overlapping_areas()
-	#print(overlapping_areas)
-	for a in overlapping_areas:
-		#print(a)
-		#if a.name == "Hurtbox":
-		if a && a.name == "Hurtbox":
-			_pl_colliding_with_platform.emit(true, a)
+	if area.has_overlapping_areas():
+		var overlapping_areas = area.get_overlapping_areas()
+		#print(overlapping_areas)
+		for a in overlapping_areas:
+			#print(a.name)
+			if a && a.name == "Hurtbox":
+				_pl_colliding_with_platform.emit(true, a)
 	#print("player direction from platform: %s" % str(player.player_orientation))
 	#print(str(player.find_child("FloorContactRay").is_colliding()))
 	#var player_colliding = player.find_child("FloorContactRay").is_colliding()

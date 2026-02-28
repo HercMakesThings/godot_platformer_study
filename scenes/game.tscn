@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://daqmmkqbywlws" path="res://scripts/platform_manager.gd" id="3_p57ef"]
 [ext_resource type="Script" uid="uid://b1tkw1yxmq21m" path="res://scripts/test_label.gd" id="4_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://dmxyajsvknhfv" path="res://scenes/platform_basic_1.tscn" id="4_c31sl"]
-[ext_resource type="Script" uid="uid://by62tcho3drwi" path="res://scenes/label_2.gd" id="5_vtaks"]
+[ext_resource type="Script" uid="uid://by62tcho3drwi" path="res://scripts/label_2.gd" id="5_vtaks"]
 [ext_resource type="PackedScene" uid="uid://nj581ku4ihqa" path="res://scenes/enemy_basic.tscn" id="5_whekb"]
 [ext_resource type="PackedScene" uid="uid://bbpdo7iuex73c" path="res://scenes/crawler_enemy.tscn" id="8_gee14"]
 [ext_resource type="PackedScene" uid="uid://dx1h5gjrv33tf" path="res://scenes/player_new.tscn" id="10_vtaks"]
@@ -293,6 +293,7 @@ zoom = Vector2(4, 4)
 position_smoothing_enabled = true
 
 [node name="PlatformManager" type="Node" parent="." unique_id=477527982]
+unique_name_in_owner = true
 script = ExtResource("3_p57ef")
 
 [node name="platform_basic1" parent="PlatformManager" unique_id=1654590033 instance=ExtResource("4_c31sl")]
