@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://nj581ku4ihqa"]
+[gd_scene load_steps=6 format=3 uid="uid://nj581ku4ihqa"]
 
-[ext_resource type="Script" path="res://scripts/enemy_basic.gd" id="1_71vql"]
-[ext_resource type="Script" path="res://scripts/hitbox_base.gd" id="2_kk5ju"]
+[ext_resource type="Script" uid="uid://b4art2iijorqg" path="res://scripts/enemy_basic.gd" id="1_71vql"]
+[ext_resource type="Script" uid="uid://xofa5pix3h8p" path="res://scripts/hitbox_base.gd" id="2_kk5ju"]
+[ext_resource type="PackedScene" uid="uid://cljnxyafc2rqu" path="res://scenes/hitbox_basic.tscn" id="3_x206n"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_enhg1"]
 
@@ -30,6 +31,7 @@ shape = SubResource("RectangleShape2D_enhg1")
 debug_color = Color(0.0303454, 0.586199, 0.769096, 0.42)
 
 [node name="enemy_hitbox" type="Area2D" parent="." groups=["atk_hitbox_group"]]
+visible = false
 collision_layer = 9
 collision_mask = 15
 script = ExtResource("2_kk5ju")
@@ -39,3 +41,19 @@ z_index = 3
 position = Vector2(-10, -10)
 shape = SubResource("CircleShape2D_ceh77")
 debug_color = Color(0.938126, 0.21301, 0.33713, 0.42)
+
+[node name="RightHitbox" parent="." instance=ExtResource("3_x206n")]
+position = Vector2(11, 0)
+dmg = 12.0
+angle = -38.0
+bkb = 44.0
+kbg = 147.0
+lag = 3
+stun = 10
+
+[node name="TopHitbox" parent="." instance=ExtResource("3_x206n")]
+position = Vector2(0, -22)
+dmg = 10.0
+angle = 132.0
+bkb = 39.0
+kbg = 169.0

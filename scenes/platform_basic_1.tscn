@@ -1,18 +1,27 @@
-[gd_scene load_steps=2 format=3 uid="uid://dmxyajsvknhfv"]
+[gd_scene load_steps=3 format=3 uid="uid://dmxyajsvknhfv"]
 
 [ext_resource type="Texture2D" uid="uid://2g1oqqy0hmw6" path="res://assets/sprites/flushyGameTileset2-Sheet.png" id="1_f1ukv"]
+[ext_resource type="Script" uid="uid://dspbampbejlv2" path="res://scripts/platform_basic.gd" id="1_tlcd5"]
 
 [node name="platform_basic1" type="StaticBody2D"]
+script = ExtResource("1_tlcd5")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+position = Vector2(-2350.95, -32.394)
+scale = Vector2(3.64543, 1.10403)
+polygon = PackedVector2Array(-474.031, -292.208, 1788.53, -303.078, 1834.07, -86.5976, -539.319, -86.5976)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(-2192, 0.49997)
+position = Vector2(-2192, 0.499481)
 scale = Vector2(137, 127.167)
 texture = ExtResource("1_f1ukv")
 region_enabled = true
 region_rect = Rect2(32, 86, 32, 6)
 
 [node name="Sprite2D2" type="Sprite2D" parent="."]
-position = Vector2(2196, 0)
+position = Vector2(2196, 0.000518799)
 scale = Vector2(137.266, 127.333)
 texture = ExtResource("1_f1ukv")
 flip_h = true
@@ -20,5 +29,5 @@ region_enabled = true
 region_rect = Rect2(32, 86, 32, 6)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(-4111, -380, 4111, -379, 4388, -137, 4393, 125, 4100, 382, -4111, 378, -4386, 126, -4386, -126, -4106, -383)
+polygon = PackedVector2Array(-4111, -380, 4111, -379, 4400, -109, -4366, -109, -4106, -383)
 one_way_collision = true

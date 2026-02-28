@@ -20,20 +20,24 @@ var attack_count
 #@onready var hitbox_1 = get_node("./atk_1_hitbox")
 #@onready var atk_1_hitbox = $atk_1_hitbox
 
-func Enter():
+func Enter(_packet):
 	attack_frames = 0
 	attack_count = 1
 	is_player_attacking.emit()
 	#var direction = Input.get_axis("run_left_test", "run_right_test")
-	if player.x_dir_raw > 0:
+	#if player.x_dir_raw > 0:
+		#animated_sprite_2d.flip_h = false
+	#elif player.x_dir_raw < 0:
+		#animated_sprite_2d.flip_h = true
+	#elif player.x_dir_raw == 0:
+		#if player.player_orientation == 1:
+			#animated_sprite_2d.flip_h = false
+		#elif player.player_orientation == 0:
+			#animated_sprite_2d.flip_h = true
+	if player.player_orientation == 1:
 		animated_sprite_2d.flip_h = false
-	elif player.x_dir_raw < 0:
+	elif player.player_orientation == 0:
 		animated_sprite_2d.flip_h = true
-	elif player.x_dir_raw == 0:
-		if player.prev_dir > 0:
-			animated_sprite_2d.flip_h = false
-		elif player.prev_dir < 0:
-			animated_sprite_2d.flip_h = true
 	animated_sprite_2d.play("basic_attack_1")
 	
 func Update(_delta):

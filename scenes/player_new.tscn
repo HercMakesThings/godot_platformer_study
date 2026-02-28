@@ -1,0 +1,79 @@
+[gd_scene format=3 uid="uid://dx1h5gjrv33tf"]
+
+[ext_resource type="Script" uid="uid://bogxgk5lblv72" path="res://scenes/player_new.gd" id="1_vjt3m"]
+[ext_resource type="Script" uid="uid://bjk4djbuag7os" path="res://scripts/input_game_component.gd" id="2_wm45n"]
+[ext_resource type="Script" uid="uid://lgo3he6gsmg5" path="res://scripts/movement_component.gd" id="3_b288l"]
+[ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scenes/hurtbox.gd" id="4_d2bp7"]
+[ext_resource type="Script" uid="uid://74ctiqofli1i" path="res://scripts/health_manager.gd" id="5_8tn2v"]
+[ext_resource type="Script" uid="uid://bjx5rtki0usbf" path="res://scripts/stamina_manager.gd" id="6_6ljwu"]
+[ext_resource type="Script" uid="uid://bp5b6dbhlfcej" path="res://scripts/player_vel_vis.gd" id="7_6ljwu"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dsvhw"]
+radius = 8.0
+height = 24.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8tn2v"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_gvpj1"]
+specular_color = Color(0.408699, 0.692188, 0.907185, 1)
+
+[node name="PlayerNew" type="CharacterBody2D" unique_id=1831211902]
+script = ExtResource("1_vjt3m")
+
+[node name="EnvironmentCollisionBox" type="CollisionShape2D" parent="." unique_id=1721981752]
+unique_name_in_owner = true
+position = Vector2(0, -12)
+shape = SubResource("CapsuleShape2D_dsvhw")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=531971473]
+offset_left = -10.0
+offset_top = -30.0
+offset_right = 10.0
+color = Color(0.261, 0.78880006, 0.87, 1)
+
+[node name="InputGameComponent" type="Node" parent="." unique_id=1858147607]
+unique_name_in_owner = true
+script = ExtResource("2_wm45n")
+metadata/_custom_type_script = "uid://bjk4djbuag7os"
+
+[node name="MovementComponent" type="Node" parent="." unique_id=1645521682 node_paths=PackedStringArray("body", "model", "contact_point")]
+unique_name_in_owner = true
+script = ExtResource("3_b288l")
+body = NodePath("..")
+model = NodePath("../ColorRect")
+contact_point = NodePath("../FloorContactRay")
+metadata/_custom_type_script = "uid://lgo3he6gsmg5"
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=39300199]
+unique_name_in_owner = true
+script = ExtResource("4_d2bp7")
+metadata/_custom_type_script = "uid://lpgo7mxv0d5h"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=2005719371]
+position = Vector2(0, -15)
+shape = SubResource("CapsuleShape2D_8tn2v")
+debug_color = Color(0.59771556, 0.53621024, 0.27772722, 0.41960785)
+
+[node name="FloorContactRay" type="RayCast2D" parent="." unique_id=1623635467]
+unique_name_in_owner = true
+position = Vector2(0, -10)
+target_position = Vector2(0, 10)
+collide_with_areas = true
+
+[node name="HealthManager" type="Node" parent="." unique_id=1887605533]
+unique_name_in_owner = true
+script = ExtResource("5_8tn2v")
+metadata/_custom_type_script = "uid://74ctiqofli1i"
+
+[node name="StaminaManager" type="Node" parent="." unique_id=1658569831]
+unique_name_in_owner = true
+script = ExtResource("6_6ljwu")
+metadata/_custom_type_script = "uid://bjx5rtki0usbf"
+
+[node name="velocity_vis" type="Line2D" parent="." unique_id=1855895214]
+unique_name_in_owner = true
+position = Vector2(28.945, -10.4)
+points = PackedVector2Array(0.025, 0, 0, 0)
+default_color = Color(0.201004, 0.544663, 0.844904, 1)
+texture = SubResource("CanvasTexture_gvpj1")
+script = ExtResource("7_6ljwu")

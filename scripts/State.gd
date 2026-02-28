@@ -3,7 +3,7 @@ class_name State
 
 signal state_transition
 
-func Enter():
+func Enter(packet):
 	pass
 
 func Exit():
@@ -11,3 +11,4 @@ func Exit():
 	
 func Update(_delta: float):
 	pass
+	

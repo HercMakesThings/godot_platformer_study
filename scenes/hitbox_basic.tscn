@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://cljnxyafc2rqu"]
+
+[ext_resource type="Script" uid="uid://1sha4iidid8p" path="res://scripts/hitbox.gd" id="1_tov3m"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hxoa6"]
+
+[node name="Hitbox" type="Area2D"]
+script = ExtResource("1_tov3m")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+visible = false
+
+[node name="HitboxShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_hxoa6")
+disabled = true
+debug_color = Color(0.706832, 0.434187, 0.595769, 0.42)
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(10, 0)

@@ -17,11 +17,11 @@ func _ready():
 					states[grandchild.name.to_lower()] = grandchild
 					grandchild.state_transition.connect(change_state)
 		if initial_state:
-			initial_state.Enter()
+			initial_state.Enter(false)
 			current_state = initial_state
 	print(states.keys())
 	
-func change_state(source_state: State, new_state_name: String):
+func change_state(source_state: State, new_state_name: String, packet = false):
 	if source_state != current_state:
 		print("Invalid state change trying from: " + source_state.name + " but currently in: " + current_state.name)
 		return
@@ -34,17 +34,22 @@ func change_state(source_state: State, new_state_name: String):
 	if current_state:
 		current_state.Exit()
 	
-	new_state.Enter()
-	
+	if !packet:
+		new_state.Enter(false)
+	else:
+		new_state.Enter(packet)
+	print(new_state.name) # debug
 	current_state = new_state
 
-func force_change_state(new_state: String):
+func force_change_state(new_state: String, packet = false):
 	var newState = states.get(new_state.to_lower())
 	
+	#assert(newState, newState + " state does not exist in state machine")
 	if !newState:
 		print(newState + " state does not exist in state machine")
 		return
-	
+		
+	#assert(current_state != newState, "error, state is same, aborting")
 	if current_state == newState:
 		print("error, state is same, aborting")
 		return
@@ -53,7 +58,11 @@ func force_change_state(new_state: String):
 		var exit_callable = Callable(current_state, "Exit")
 		exit_callable.call_deferred()
 	
-	newState.Enter()
+	print(newState.name) # debug
+	if !packet:
+		newState.Enter(false)
+	else:
+		newState.Enter(packet)
 	
 	current_state = newState
 

@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://bbpdo7iuex73c"]
+
+[ext_resource type="Script" uid="uid://djsso6yvcm66h" path="res://scripts/crawler_enemy.gd" id="1_avvfv"]
+[ext_resource type="PackedScene" uid="uid://b58d3k3tt4jsm" path="res://scenes/hurtbox.tscn" id="1_umd2w"]
+[ext_resource type="Script" uid="uid://b8k7fqf1utbjk" path="res://scenes/crawler_fsm_lite.gd" id="3_y4yga"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_avvfv"]
+height = 26.0
+
+[node name="CrawlerEnemy" type="CharacterBody2D"]
+script = ExtResource("1_avvfv")
+
+[node name="EnvironmentCollisionBox" type="CollisionShape2D" parent="."]
+position = Vector2(0, -13)
+shape = SubResource("CapsuleShape2D_avvfv")
+
+[node name="Hurtbox" parent="." instance=ExtResource("1_umd2w")]
+position = Vector2(0, -2)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -10.0
+offset_top = -26.0
+offset_right = 10.0
+color = Color(0.514095, 0.770028, 0.61238, 1)
+
+[node name="CrawlerFSMLite" type="Node" parent="."]
+script = ExtResource("3_y4yga")
+
+[node name="AtkRange" type="RayCast2D" parent="."]
+position = Vector2(0, -23)
+target_position = Vector2(38, 0)
+collide_with_areas = true
+
+[node name="CollideRange" type="RayCast2D" parent="."]
+position = Vector2(0, -13)
+target_position = Vector2(14, 0)

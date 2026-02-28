@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://bbpdo7iuex73c"]
+
+[ext_resource type="Script" uid="uid://djsso6yvcm66h" path="res://scripts/crawler_enemy.gd" id="1_avvfv"]
+[ext_resource type="PackedScene" uid="uid://b58d3k3tt4jsm" path="res://scenes/hurtbox.tscn" id="1_umd2w"]
+[ext_resource type="Script" uid="uid://b8k7fqf1utbjk" path="res://scenes/crawler_fsm_lite.gd" id="3_y4yga"]
+[ext_resource type="PackedScene" uid="uid://cljnxyafc2rqu" path="res://scenes/hitbox_basic.tscn" id="4_qc2gs"]
+[ext_resource type="Script" uid="uid://74ctiqofli1i" path="res://scripts/health_manager.gd" id="5_btfn5"]
+[ext_resource type="Script" uid="uid://bjx5rtki0usbf" path="res://scripts/stamina_manager.gd" id="6_k8l7y"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_avvfv"]
+radius = 8.0
+height = 18.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_y4yga"]
+radius = 9.0
+height = 20.0
+
+[node name="CrawlerEnemy" type="CharacterBody2D" unique_id=1164148668]
+script = ExtResource("1_avvfv")
+
+[node name="CrawlerFSMLite" type="Node" parent="." unique_id=129486895]
+script = ExtResource("3_y4yga")
+
+[node name="EnvironmentCollisionBox" type="CollisionShape2D" parent="." unique_id=1550517189]
+position = Vector2(0, -9)
+shape = SubResource("CapsuleShape2D_avvfv")
+
+[node name="Hurtbox" parent="." unique_id=1602792120 instance=ExtResource("1_umd2w")]
+position = Vector2(0, -2)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1188729316]
+position = Vector2(0, -8)
+shape = SubResource("CapsuleShape2D_y4yga")
+debug_color = Color(0.550662, 0.552796, 0.315583, 0.42)
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=846069770]
+offset_left = -9.0
+offset_top = -20.0
+offset_right = 9.0
+color = Color(0.514095, 0.770028, 0.61238, 1)
+
+[node name="AtkRange" type="RayCast2D" parent="." unique_id=705676649]
+position = Vector2(0, -18)
+target_position = Vector2(30, 0)
+collide_with_areas = true
+
+[node name="CollideRange" type="RayCast2D" parent="." unique_id=917178428]
+position = Vector2(0, -10)
+target_position = Vector2(11, 0)
+
+[node name="hitboxes" type="Node2D" parent="." unique_id=43417544]
+
+[node name="Hitbox1" parent="hitboxes" unique_id=1871120516 instance=ExtResource("4_qc2gs")]
+position = Vector2(28, -15)
+dmg = 12.0
+angle = 275.0
+bkb = 126.0
+kbg = 5.0
+lag = 2
+stun = 16
+
+[node name="Hitbox2" parent="hitboxes" unique_id=2124774905 instance=ExtResource("4_qc2gs")]
+position = Vector2(30, -19)
+dmg = 10.0
+angle = 323.0
+bkb = 123.0
+kbg = 50.0
+
+[node name="HealthManager" type="Node" parent="." unique_id=271826005]
+script = ExtResource("5_btfn5")
+metadata/_custom_type_script = "uid://74ctiqofli1i"
+
+[node name="StaminaManager" type="Node" parent="." unique_id=564695475]
+script = ExtResource("6_k8l7y")
+metadata/_custom_type_script = "uid://bjx5rtki0usbf"

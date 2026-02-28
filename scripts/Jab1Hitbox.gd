@@ -46,17 +46,17 @@ func _process(delta):
 	
 func _physics_process(delta):
 	is_active = false
-	match move_animation:
-		"basic_attack_1":
-			pass
-		"basic_attack_2":
-			pass
-		"basic_attack_3":
-			pass
-		_:
-			pass
+	#match move_animation:
+		#"basic_attack_1":
+			#pass
+		#"basic_attack_2":
+			#pass
+		#"basic_attack_3":
+			#pass
+		#_:
+			#pass
 	if animated_sprite.get_animation() == move_animation:
-		var frame = animated_sprite.get_frame()
+		#var frame = animated_sprite.get_frame()
 		#print(frame)
 		if atk_frames >= active_window_begin && atk_frames <= active_window_end:
 			is_active = true
@@ -69,16 +69,19 @@ func _physics_process(delta):
 		shape.set_disabled(false)
 	else:
 		shape.set_disabled(true)
-	if player.player_dir > 0:
+	#if player.player_dir > 0:
+		#set_rotation(-rot)
+	#elif player.player_dir < 0:
+		#set_rotation(rot)
+	if player.player_orientation == 1:
 		set_rotation(-rot)
-	elif player.player_dir < 0:
+	elif player.player_orientation == 0:
 		set_rotation(rot)
-	if player.player_dir != 0:
-		position = player.to_global(Vector2((xoff*player.player_dir), yoff))
-		#player.position.up_direction
-		#player.position.unit
-	else:
-		position = player.to_global(Vector2(xoff, yoff))
+	#if player.player_dir != 0:
+		#position = player.to_global(Vector2((xoff*player.player_dir), yoff))
+	#else:
+		#position = player.to_global(Vector2(xoff, yoff))
+	position = player.to_global(Vector2((xoff*player.player_dir), yoff))
 	#if is_active && is_colliding:
 		#print("hit!")
 	

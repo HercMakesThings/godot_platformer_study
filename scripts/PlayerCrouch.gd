@@ -9,7 +9,7 @@ var p1_input
 
 signal is_player_crouching
 
-func Enter():
+func Enter(_packet):
 	#if p1_input == null:
 		#p1_input = Input.get_vector("left_stick_left", "left_stick_right", "left_stick_down", "left_stick_up")
 	crouch_frames = 0
@@ -35,10 +35,13 @@ func Update(_delta: float):
 		is_player_crouching.emit()
 	else:
 		state_transition.emit(self, "PlayerIdle")
+		return
 	if Input.is_action_just_pressed("jump_test"):
 		state_transition.emit(self, "PlayerJumpSquat")
+		return
 	if abs(p1_input.x) > 0.7:
 		state_transition.emit(self, "PlayerMove")
+		return
 		#state_transition.emit(self, "PlayerIdle")
 	crouch_frames += 1
 	

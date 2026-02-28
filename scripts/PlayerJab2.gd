@@ -9,12 +9,16 @@ signal is_player_attacking
 
 var attack_frames
 
-func Enter():
+func Enter(_packet):
 	attack_frames = 0
 	is_player_attacking.emit()
-	if player.player_dir > 0:
+	#if player.player_dir > 0:
+		#animated_sprite.flip_h = false
+	#elif player.player_dir < 0:
+		#animated_sprite.flip_h = true
+	if player.player_orientation == 1:
 		animated_sprite.flip_h = false
-	elif player.player_dir < 0:
+	if player.player_orientation == 0:
 		animated_sprite.flip_h = true
 	animated_sprite.play("basic_attack_2")
 	

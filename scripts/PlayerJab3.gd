@@ -9,7 +9,7 @@ signal is_player_attacking
 
 var attack_frames: int
 
-func Enter():
+func Enter(_packet):
 	attack_frames = 0
 	is_player_attacking.emit()
 	if player.player_dir > 0:

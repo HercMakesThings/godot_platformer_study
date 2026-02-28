@@ -4,7 +4,7 @@ extends State
 @onready var player = $"../.."
 @onready var animated_sprite = $"../../AnimatedSprite2D"
 
-func Enter():
+func Enter(_packet):
 	pass
 	
 func Update(_delta: float):
