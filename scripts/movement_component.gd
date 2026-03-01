@@ -14,19 +14,20 @@ class_name MovementComponent extends Node
 @export var ecb: EnvironmentCollisionBox
 @export var contact_point: RayCast2D
 
-@export var dash_speed := 50.0
+@export var dash_speed := 150.0
 @export var dash_time := 16
 @export var walk_speed := 15.0
-@export var run_speed := 50.0
-@export var MAX_SPEED := 150.0
-@export var MAX_WALK_SPD := 30.0
-@export var JUMP_VELOCITY := -200.0
+@export var run_speed := 45.0
+@export var MAX_SPEED := 200.0
+@export var MAX_AIR_SPEED := 175.0
+@export var MAX_WALK_SPD := 60.0
+@export var JUMP_VELOCITY := -250.0
 @export var LANDING_LAG := 3
 @export var mass := 5.0
 @export var fr_force := Vector2.ZERO
 @export var fr_threshold := 20.0
-@export_range(0.0, 1, 0.05) var friction := 0.95
-@export_range(0.0, 1, 0.05) var air_friction := 0.45
+@export_range(0.0, 1, 0.05) var friction := 0.6
+@export_range(0.0, 1, 0.05) var air_friction := 0.075
 @export var TERMINAL_VELOCITY := 350.0
 @export var extra_jump := 1
 
@@ -86,10 +87,10 @@ func tick(delta: float) -> void:
 		elif direction.x < 0.0:
 			orientation = -1
 	#print("curr state val: " + str(current_state))
-	#print("direction.x: " + str(direction.x))
-	print("direction.y: " + str(direction.y))
+	print("direction.x: " + str(direction.x))
+	#print("direction.y: " + str(direction.y))
 	#print("orientation: " + str(orientation))
-	print("full crouch threshold: " + str(-deadzone + -crouch_thresh))
+	#print("full crouch threshold: " + str(-deadzone + -crouch_thresh))
 	
 	if body.is_on_floor():
 		if !on_ground:
@@ -113,14 +114,20 @@ func tick(delta: float) -> void:
 	if (current_state == MoveState.WALK || 
 		current_state == MoveState.DASH || 
 		current_state == MoveState.RUN ||
-		current_state == MoveState.CROUCH):
+		current_state == MoveState.CROUCH ||
+		current_state == MoveState.LANDLAG):
 		if abs(direction.x) < deadzone:
-			body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta)
+			print("test!")
+			body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta * 5)
+			accel = accel.slerp(Vector2(0,0), 1)
 			if body.velocity.x == 0.0 && current_state != MoveState.CROUCH:
 				change_state(MoveState.IDLE)
 				print("current movement state: " + str(MoveState.keys()[current_state]))
 				return
 	
+## Changes current state to @param new and resets frame count.
+## Recommended to early return immediately after calling this function
+## to prevent an unclean state change
 func change_state(new: MoveState):
 	current_state = new
 	frame = 0
@@ -134,7 +141,8 @@ func handle_state(state: MoveState, delta: float) -> void:
 				if abs(direction.x) > deadzone:
 					change_state(MoveState.WALK)
 					return
-				body.velocity.x = move_toward(body.velocity.x, 0, 5)
+				#body.velocity.x = move_toward(body.velocity.x, 0.0, 5)
+				body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta)
 				accel = accel.lerp(Vector2(0,0), 1)
 				if will_jump:
 					will_jump = false
@@ -193,6 +201,7 @@ func handle_state(state: MoveState, delta: float) -> void:
 					#body.velocity.x *= -1
 					#frame = 0
 					body.velocity.x = 0
+					accel.x = 0
 					change_state(MoveState.IDLE)
 					return
 				if frame >= dash_time:
@@ -231,7 +240,7 @@ func handle_state(state: MoveState, delta: float) -> void:
 					elif orientation == 1:
 						model.play("walk_right")
 				if abs(body.velocity.x) < MAX_SPEED:
-					apply_force(Vector2(dash_speed, 0))
+					apply_force(Vector2(run_speed, 0))
 					apply_accel(delta)
 				#else:
 					#body.velocity.x = MAX_SPEED * orientation
@@ -330,13 +339,15 @@ func handle_state(state: MoveState, delta: float) -> void:
 				if extra_jump == 0:
 					extra_jump = 1
 			else:
-				if abs(body.velocity.x) < MAX_SPEED:
+				if abs(body.velocity.x) < MAX_AIR_SPEED:
 					apply_force(Vector2(dash_speed, 0))
 					apply_accel(delta)
 				elif direction.dot(body.velocity) < 0:
 					#apply_force(Vector2(dash_speed*0.005, 0))
 					#apply_accel(delta)
-					body.velocity = body.velocity.move_toward(Vector2.ZERO, decel * delta * 5)
+					#body.velocity = body.velocity.move_toward(Vector2.ZERO, decel * delta * 5)
+					body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta)
+					accel = accel.lerp(Vector2(0,0), 1)
 				#else:
 					#body.velocity.x = MAX_SPEED * orientation
 				if abs(direction.x) < deadzone:
@@ -352,7 +363,9 @@ func handle_state(state: MoveState, delta: float) -> void:
 					change_state(MoveState.IDLE)
 					return
 				else:
-					body.velocity = body.velocity.lerp(Vector2(0,0), 0.1)
+					#body.velocity = body.velocity.lerp(Vector2(0,0), 0.1)
+					body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta)
+					accel = accel.lerp(Vector2(0,0), 1)
 			else:
 				on_ground = false
 				change_state(MoveState.AIRBORNE)
@@ -372,6 +385,10 @@ func handle_state(state: MoveState, delta: float) -> void:
 					ecb.disabled = true
 				if direction.y >= -deadzone + -crouch_thresh:
 					change_state(MoveState.IDLE)
+					return
+				if will_jump:
+					will_jump = false
+					change_state(MoveState.JUMPSQUAT)
 					return
 			else:
 				on_ground = false
