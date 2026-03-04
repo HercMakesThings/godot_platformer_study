@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://b5jo0ea00swg" path="res://scripts/animation_component.gd" id="10_4mov0"]
 [ext_resource type="Script" uid="uid://b6cj2ucaeqd2" path="res://scripts/ability_manager.gd" id="11_7nfqo"]
 [ext_resource type="Script" uid="uid://cjkfeb23cki15" path="res://scripts/air_jump_ability.gd" id="11_kkhi3"]
+[ext_resource type="Script" uid="uid://hxq7leum3ryx" path="res://scripts/airdodge_ability.gd" id="13_nkc8p"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dsvhw"]
 radius = 8.0
@@ -114,4 +115,9 @@ metadata/_custom_type_script = "uid://b6cj2ucaeqd2"
 [node name="AirJump" type="Node" parent="AbilityManager" unique_id=1574185051]
 unique_name_in_owner = true
 script = ExtResource("11_kkhi3")
+metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
+
+[node name="AirDodge" type="Node" parent="AbilityManager" unique_id=1319945754]
+unique_name_in_owner = true
+script = ExtResource("13_nkc8p")
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
