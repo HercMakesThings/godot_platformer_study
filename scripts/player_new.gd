@@ -4,6 +4,7 @@ class_name PlayerNew extends CharacterBody2D
 @onready var movement_component: MovementComponent = %MovementComponent
 @onready var health_manager: HealthManager = %HealthManager
 @onready var stamina_manager: StaminaManager = %StaminaManager
+@onready var ability_manager: AbilityManager = %AbilityManager
 
 #@onready var platform_manager: PlatformManager = %PlatformManager
 @onready var platform_manager: PlatformManager = $"../PlatformManager"
@@ -21,6 +22,8 @@ func _physics_process(delta: float) -> void:
 	movement_component.hard_press_thresh = input_game_component.hardpress_thresh_ls
 	
 	movement_component.tick(delta)
+	
+	ability_manager.update_abilities(input_game_component, movement_component)
 	
 	move_and_slide()
 	

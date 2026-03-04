@@ -9,6 +9,9 @@
 [ext_resource type="Script" uid="uid://bjx5rtki0usbf" path="res://scripts/stamina_manager.gd" id="6_6ljwu"]
 [ext_resource type="Script" uid="uid://bp5b6dbhlfcej" path="res://scripts/player_vel_vis.gd" id="7_6ljwu"]
 [ext_resource type="Script" uid="uid://bspltfusgi8q8" path="res://scripts/orientation_visualizer.gd" id="8_gvpj1"]
+[ext_resource type="Script" uid="uid://b5jo0ea00swg" path="res://scripts/animation_component.gd" id="10_4mov0"]
+[ext_resource type="Script" uid="uid://b6cj2ucaeqd2" path="res://scripts/ability_manager.gd" id="11_7nfqo"]
+[ext_resource type="Script" uid="uid://cjkfeb23cki15" path="res://scripts/air_jump_ability.gd" id="11_kkhi3"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dsvhw"]
 radius = 8.0
@@ -80,6 +83,7 @@ metadata/_custom_type_script = "uid://bjx5rtki0usbf"
 
 [node name="velocity_vis" type="Line2D" parent="." unique_id=1855895214]
 unique_name_in_owner = true
+visible = false
 position = Vector2(28.945, -10.4)
 points = PackedVector2Array(0.025, 0, 0, 0)
 default_color = Color(0.201004, 0.544663, 0.844904, 1)
@@ -87,8 +91,27 @@ texture = SubResource("CanvasTexture_gvpj1")
 script = ExtResource("7_6ljwu")
 
 [node name="OrientationVisualizer" type="RayCast2D" parent="." unique_id=745393792 node_paths=PackedStringArray("body")]
+unique_name_in_owner = true
 position = Vector2(0, -13)
 target_position = Vector2(24, 0)
 script = ExtResource("8_gvpj1")
 body = NodePath("..")
 metadata/_custom_type_script = "uid://bspltfusgi8q8"
+
+[node name="AnimationComponent" type="Node" parent="." unique_id=430436860 node_paths=PackedStringArray("model", "movement_component")]
+unique_name_in_owner = true
+script = ExtResource("10_4mov0")
+model = NodePath("../PlaceholderModel")
+movement_component = NodePath("../MovementComponent")
+metadata/_custom_type_script = "uid://b5jo0ea00swg"
+
+[node name="AbilityManager" type="Node" parent="." unique_id=2051535807 node_paths=PackedStringArray("body")]
+unique_name_in_owner = true
+script = ExtResource("11_7nfqo")
+body = NodePath("..")
+metadata/_custom_type_script = "uid://b6cj2ucaeqd2"
+
+[node name="AirJump" type="Node" parent="AbilityManager" unique_id=1574185051]
+unique_name_in_owner = true
+script = ExtResource("11_kkhi3")
+metadata/_custom_type_script = "uid://b0ri7sbekqbq6"

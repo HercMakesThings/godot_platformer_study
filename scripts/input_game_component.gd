@@ -23,8 +23,8 @@ func update() -> void:
 	#btn_2_input = Input.is_action_just_pressed("btn_2")
 	btn_2_input = Input.is_action_pressed("btn_2")
 	#btn_3_input = Input.is_action_just_pressed("jump_test")
-	#btn_3_input = Input.is_action_just_pressed("btn_3")
-	btn_3_input = Input.is_action_pressed("btn_3")
+	btn_3_input = Input.is_action_just_pressed("btn_3")
+	#btn_3_input = Input.is_action_pressed("btn_3")
 	guard_input = is_guard_pressed()
 	
 	#debug
