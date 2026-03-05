@@ -52,6 +52,8 @@ enum MoveState {IDLE, WALK, DASH, RUN, RUNTURN, JUMPSQUAT, AIRBORNE, LANDLAG, CR
 var current_state: MoveState
 var frame: int
 var is_on_platform: bool
+var can_move: bool
+var move_paused: bool
 
 func _ready() -> void:
 	current_state = MoveState.IDLE if body.is_on_floor() else MoveState.AIRBORNE
@@ -60,6 +62,8 @@ func _ready() -> void:
 	frame = 0
 	gravity = GRAVITY
 	on_ground = body.is_on_floor()
+	can_move = true
+	move_paused = false
 
 func tick(delta: float) -> void:
 	if body == null:
@@ -91,6 +95,11 @@ func tick(delta: float) -> void:
 	#print("direction.y: " + str(direction.y))
 	#print("orientation: " + str(orientation))
 	#print("full crouch threshold: " + str(-deadzone + -crouch_thresh))
+	
+	## early return for when ability or game mechanic needs
+	## to pause the character entirely
+	if move_paused:
+		return
 	
 	if body.is_on_floor():
 		if !on_ground:
@@ -144,6 +153,9 @@ func handle_state(state: MoveState, delta: float) -> void:
 				#body.velocity.x = move_toward(body.velocity.x, 0.0, 5)
 				body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta)
 				accel = accel.lerp(Vector2(0,0), 1)
+				
+				if !can_move:
+					return
 				if will_jump:
 					will_jump = false
 					change_state(MoveState.JUMPSQUAT)
@@ -162,12 +174,14 @@ func handle_state(state: MoveState, delta: float) -> void:
 						model.play("walk_left")
 					elif orientation == 1:
 						model.play("walk_right")
-				if abs(body.velocity.x) < MAX_WALK_SPD:
+				if abs(body.velocity.x) < MAX_WALK_SPD && can_move:
 					#velocity = (velocity + accel * x_dir_raw * friction * delta)
 					apply_force(Vector2(walk_speed, 0))
 					apply_accel(delta)
-				else:
-					body.velocity.x = MAX_WALK_SPD * orientation
+				#else:
+					#body.velocity.x = MAX_WALK_SPD * orientation
+				if !can_move:
+					return
 				if frame < 3 && abs(direction.x) >= hard_press_thresh:
 					change_state(MoveState.DASH)
 					return
@@ -192,11 +206,13 @@ func handle_state(state: MoveState, delta: float) -> void:
 						model.play("walk_left")
 					elif orientation == 1:
 						model.play("walk_right")
-				if abs(body.velocity.x) < MAX_SPEED:
+				if abs(body.velocity.x) < MAX_SPEED && can_move:
 					apply_force(Vector2(dash_speed, 0))
 					apply_accel(delta)
 				#else:
 					#body.velocity.x = MAX_SPEED * orientation
+				if !can_move:
+					return
 				if direction.dot(body.velocity) < 0:
 					#body.velocity.x *= -1
 					#frame = 0
@@ -239,11 +255,13 @@ func handle_state(state: MoveState, delta: float) -> void:
 						model.play("walk_left")
 					elif orientation == 1:
 						model.play("walk_right")
-				if abs(body.velocity.x) < MAX_SPEED:
+				if abs(body.velocity.x) < MAX_SPEED && can_move:
 					apply_force(Vector2(run_speed, 0))
 					apply_accel(delta)
 				#else:
 					#body.velocity.x = MAX_SPEED * orientation
+				if !can_move:
+					return
 				#if abs(direction.x) > deadzone && abs(direction.x) < hard_press_thresh:
 					#if direction.dot(body.velocity) < 0:
 						#change_state(MoveState.RUNTURN)
@@ -279,6 +297,8 @@ func handle_state(state: MoveState, delta: float) -> void:
 				#if abs(direction.x) > deadzone && abs(direction.x) < hard_press_thresh:
 					#change_state(MoveState.WALK)
 					#return
+				if !can_move:
+					return
 				if abs(direction.x) < deadzone:
 					change_state(MoveState.IDLE)
 					return
@@ -339,6 +359,9 @@ func handle_state(state: MoveState, delta: float) -> void:
 				if extra_jump == 0:
 					extra_jump = 1
 			else:
+				apply_gravity()
+				if !can_move:
+					return
 				if abs(body.velocity.x) < MAX_AIR_SPEED:
 					apply_force(Vector2(dash_speed, 0))
 					apply_accel(delta)
@@ -354,7 +377,7 @@ func handle_state(state: MoveState, delta: float) -> void:
 					body.velocity.x = move_toward(body.velocity.x, 0, abs(body.velocity.x*0.05))
 					#body.velocity.x = move_toward(body.velocity.x, 0, 2)
 				is_on_platform = false
-				apply_gravity()
+				#apply_gravity()
 		MoveState.LANDLAG:
 			if body.is_on_floor():
 				if model is AnimatedSprite2D:
@@ -383,6 +406,8 @@ func handle_state(state: MoveState, delta: float) -> void:
 						ecb.disabled = false
 						return
 					ecb.disabled = true
+				if !can_move:
+					return
 				if direction.y >= -deadzone + -crouch_thresh:
 					change_state(MoveState.IDLE)
 					return
@@ -416,7 +441,7 @@ func calc_nForce() -> float:
 	return mass * gravity
 	
 func calc_friction() -> float:
-	var nf := calc_nForce()
+	var nf: float = calc_nForce()
 	if body.is_on_floor():
 		return nf * friction
 	else:

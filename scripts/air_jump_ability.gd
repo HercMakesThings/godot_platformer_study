@@ -9,11 +9,12 @@ var air_jumps: int
 func _ready() -> void:
 	air_jumps = air_jump_count
 
-func tick_ability(input: InputGameComponent, movement: MovementComponent) -> void:
+func tick_ability(input: InputGameComponent, movement: MovementComponent, _delta: float) -> void:
 	if (air_jumps > 0 &&
 		input.btn_3_input &&
 		movement.current_state == movement.MoveState.AIRBORNE &&
-		!body.is_on_floor()):
+		!body.is_on_floor() &&
+		movement.can_move):
 		body.velocity.y = movement.JUMP_VELOCITY * air_jump_modifier
 		air_jumps -= 1
 		

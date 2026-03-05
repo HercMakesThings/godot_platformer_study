@@ -23,7 +23,7 @@ func _physics_process(delta: float) -> void:
 	
 	movement_component.tick(delta)
 	
-	ability_manager.update_abilities(input_game_component, movement_component)
+	ability_manager.update_abilities(input_game_component, movement_component, delta)
 	
 	move_and_slide()
 	

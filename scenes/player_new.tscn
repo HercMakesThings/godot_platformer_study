@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://b7nwpiqypj75k" path="res://scripts/environment_collision_box.gd" id="2_q1g3e"]
 [ext_resource type="Script" uid="uid://bjk4djbuag7os" path="res://scripts/input_game_component.gd" id="2_wm45n"]
 [ext_resource type="Script" uid="uid://lgo3he6gsmg5" path="res://scripts/movement_component.gd" id="3_b288l"]
+[ext_resource type="Shader" uid="uid://c0qav8yjfpvc5" path="res://shaders/sprite_shaders/base.gdshader" id="3_id8he"]
 [ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="4_d2bp7"]
 [ext_resource type="Script" uid="uid://74ctiqofli1i" path="res://scripts/health_manager.gd" id="5_8tn2v"]
 [ext_resource type="Script" uid="uid://bjx5rtki0usbf" path="res://scripts/stamina_manager.gd" id="6_6ljwu"]
@@ -17,6 +18,11 @@
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dsvhw"]
 radius = 8.0
 height = 24.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_id8he"]
+shader = ExtResource("3_id8he")
+shader_parameter/flash_color = Color(1, 1, 1, 1)
+shader_parameter/flash_modifier = 0.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8tn2v"]
 height = 32.0
@@ -36,6 +42,8 @@ shape = SubResource("CapsuleShape2D_dsvhw")
 script = ExtResource("2_q1g3e")
 
 [node name="PlaceholderModel" type="ColorRect" parent="." unique_id=531971473]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_id8he")
 offset_left = 10.0
 offset_top = 15.0
 offset_right = 30.0
@@ -117,7 +125,13 @@ unique_name_in_owner = true
 script = ExtResource("11_kkhi3")
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
 
-[node name="AirDodge" type="Node" parent="AbilityManager" unique_id=1319945754]
+[node name="AirDodge" type="Node" parent="AbilityManager" unique_id=1319945754 node_paths=PackedStringArray("model")]
 unique_name_in_owner = true
 script = ExtResource("13_nkc8p")
+model = NodePath("../../PlaceholderModel")
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
+
+[node name="flash_timer" type="Timer" parent="AbilityManager/AirDodge" unique_id=722690103]
+wait_time = 0.205
+
+[connection signal="timeout" from="AbilityManager/AirDodge/flash_timer" to="AbilityManager/AirDodge" method="_on_flash_timer_timeout"]
