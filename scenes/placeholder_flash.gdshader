@@ -9,7 +9,8 @@ void vertex() {
 
 void fragment() {
 	// Called for every pixel the material is visible on.
-	vec4 color = texture(TEXTURE, UV);
+	//vec4 color = texture(TEXTURE, UV);
+	vec4 color = COLOR;
 	color.rgb = mix(color.rgb, flash_color.rgb, flash_modifier);
 	COLOR = color;
 }
