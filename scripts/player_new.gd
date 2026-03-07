@@ -28,5 +28,5 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	
 func _on_platform(_platform: PlatformBasic, _collider: CharacterBody2D) -> void:
-	print("on a platform!!")
+	#print("on a platform!!")
 	movement_component.is_on_platform = true

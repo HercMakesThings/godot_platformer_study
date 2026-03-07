@@ -91,7 +91,7 @@ func tick(delta: float) -> void:
 		elif direction.x < 0.0:
 			orientation = -1
 	#print("curr state val: " + str(current_state))
-	print("direction.x: " + str(direction.x))
+	#print("direction.x: " + str(direction.x))
 	#print("direction.y: " + str(direction.y))
 	#print("orientation: " + str(orientation))
 	#print("full crouch threshold: " + str(-deadzone + -crouch_thresh))
@@ -126,7 +126,6 @@ func tick(delta: float) -> void:
 		current_state == MoveState.CROUCH ||
 		current_state == MoveState.LANDLAG):
 		if abs(direction.x) < deadzone:
-			print("test!")
 			body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta * 5)
 			accel = accel.slerp(Vector2(0,0), 1)
 			if body.velocity.x == 0.0 && current_state != MoveState.CROUCH:
@@ -348,16 +347,19 @@ func handle_state(state: MoveState, delta: float) -> void:
 			if model is AnimatedSprite2D:
 				model.play("in_air")
 			if body.is_on_floor():
+				if extra_jump == 0:
+					extra_jump = 1
 				if !on_ground:
+					on_ground = true
 					if !contact_point.is_colliding():
 						change_state(MoveState.IDLE)
 						return
 					else:
 						change_state(MoveState.LANDLAG)
 						return
-				on_ground = true
-				if extra_jump == 0:
-					extra_jump = 1
+				else:
+					change_state(MoveState.LANDLAG)
+					return
 			else:
 				apply_gravity()
 				if !can_move:
@@ -406,6 +408,8 @@ func handle_state(state: MoveState, delta: float) -> void:
 						ecb.disabled = false
 						return
 					ecb.disabled = true
+				body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta)
+				accel = accel.lerp(Vector2(0,0), 1)
 				if !can_move:
 					return
 				if direction.y >= -deadzone + -crouch_thresh:

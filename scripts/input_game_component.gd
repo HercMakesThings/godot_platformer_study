@@ -28,8 +28,8 @@ func update() -> void:
 	guard_input = is_guard_pressed()
 	
 	#debug
-	if Input.is_action_just_pressed("btn_3"):
-		print("jump pressed!")
+	#if Input.is_action_just_pressed("btn_3"):
+		#print("jump pressed!")
 	
 func is_guard_pressed() -> bool:
 	return Input.is_action_pressed("guard_left") || Input.is_action_pressed("guard_right")
