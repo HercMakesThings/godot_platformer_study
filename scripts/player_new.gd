@@ -18,12 +18,14 @@ func _physics_process(delta: float) -> void:
 	input_game_component.update()
 	movement_component.direction = input_game_component.dir_input
 	movement_component.will_jump = input_game_component.btn_3_input
+	movement_component.jump_released = input_game_component.btn_3_input_released
 	movement_component.deadzone = input_game_component.deadzone_ls
 	movement_component.hard_press_thresh = input_game_component.hardpress_thresh_ls
 	
 	movement_component.tick(delta)
 	
-	ability_manager.update_abilities(input_game_component, movement_component, delta)
+	#ability_manager.update_abilities(input_game_component, movement_component, delta)
+	ability_manager.update_abilities(movement_component, delta)
 	
 	move_and_slide()
 	

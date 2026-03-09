@@ -22,8 +22,6 @@ var is_colliding: bool
 #@export var xoff: int = 18
 @export var xoff: int = 20
 @export var yoff: int = -10
-#@export var xoff: int
-#@export var yoff: int
 
 @export var active_window_begin: int = 12
 @export var active_window_end: int = 25

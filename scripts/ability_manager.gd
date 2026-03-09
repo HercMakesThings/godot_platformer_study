@@ -9,9 +9,11 @@ func _ready() -> void:
 		if ability is Ability:
 			print(str(body.name) + " has ability: " + str(ability.name))
 			
-func update_abilities(input: InputGameComponent, movement: MovementComponent, delta: float) -> void:
+#func update_abilities(input: InputGameComponent, movement: MovementComponent, delta: float) -> void:
+func update_abilities(movement: MovementComponent, delta: float) -> void:
 	if body == null:
 		return
 	for ability in get_children():
 		if ability is Ability:
-			ability.tick_ability(input, movement, delta)
+			#ability.tick_ability(input, movement, delta)
+			ability.tick_ability(movement, delta)

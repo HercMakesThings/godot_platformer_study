@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://b7nwpiqypj75k" path="res://scripts/environment_collision_box.gd" id="2_q1g3e"]
 [ext_resource type="Script" uid="uid://bjk4djbuag7os" path="res://scripts/input_game_component.gd" id="2_wm45n"]
 [ext_resource type="Script" uid="uid://lgo3he6gsmg5" path="res://scripts/movement_component.gd" id="3_b288l"]
-[ext_resource type="Shader" uid="uid://b0gags4mo66xw" path="res://scenes/placeholder_flash.gdshader" id="3_id8he"]
+[ext_resource type="Shader" path="res://scenes/placeholder_flash.gdshader" id="3_id8he"]
 [ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="4_d2bp7"]
 [ext_resource type="Script" uid="uid://74ctiqofli1i" path="res://scripts/health_manager.gd" id="5_8tn2v"]
 [ext_resource type="Script" uid="uid://bjx5rtki0usbf" path="res://scripts/stamina_manager.gd" id="6_6ljwu"]
@@ -14,6 +14,9 @@
 [ext_resource type="Script" uid="uid://b6cj2ucaeqd2" path="res://scripts/ability_manager.gd" id="11_7nfqo"]
 [ext_resource type="Script" uid="uid://cjkfeb23cki15" path="res://scripts/air_jump_ability.gd" id="11_kkhi3"]
 [ext_resource type="Script" uid="uid://hxq7leum3ryx" path="res://scripts/airdodge_ability.gd" id="13_nkc8p"]
+[ext_resource type="Script" uid="uid://bsh5afyom8ynf" path="res://scripts/jab_ability.gd" id="15_3c17b"]
+[ext_resource type="Script" uid="uid://dpp1v6omyvpw6" path="res://scripts/hitbox_new.gd" id="16_0gvfs"]
+[ext_resource type="Script" uid="uid://brf0y0hshgpn4" path="res://scripts/damaged_ability.gd" id="17_c8p0i"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dsvhw"]
 radius = 8.0
@@ -29,6 +32,10 @@ height = 32.0
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_gvpj1"]
 specular_color = Color(0.408699, 0.692188, 0.907185, 1)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c8p0i"]
+radius = 4.2413425
+height = 19.67609
 
 [node name="PlayerNew" type="CharacterBody2D" unique_id=1831211902]
 collision_layer = 9
@@ -120,18 +127,62 @@ script = ExtResource("11_7nfqo")
 body = NodePath("..")
 metadata/_custom_type_script = "uid://b6cj2ucaeqd2"
 
-[node name="AirJump" type="Node" parent="AbilityManager" unique_id=1574185051]
+[node name="AirJump" type="Node" parent="AbilityManager" unique_id=1574185051 node_paths=PackedStringArray("body", "input")]
 unique_name_in_owner = true
 script = ExtResource("11_kkhi3")
+body = NodePath("../..")
+input = NodePath("../../InputGameComponent")
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
 
-[node name="AirDodge" type="Node" parent="AbilityManager" unique_id=1319945754 node_paths=PackedStringArray("model")]
+[node name="AirDodge" type="Node" parent="AbilityManager" unique_id=1319945754 node_paths=PackedStringArray("body", "input", "model")]
 unique_name_in_owner = true
 script = ExtResource("13_nkc8p")
+body = NodePath("../..")
+input = NodePath("../../InputGameComponent")
 model = NodePath("../../PlaceholderModel")
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
 
 [node name="flash_timer" type="Timer" parent="AbilityManager/AirDodge" unique_id=722690103]
 wait_time = 0.205
+
+[node name="Jab" type="Node" parent="AbilityManager" unique_id=1124161573 node_paths=PackedStringArray("body", "input", "hitbox")]
+unique_name_in_owner = true
+script = ExtResource("15_3c17b")
+body = NodePath("../..")
+input = NodePath("../../InputGameComponent")
+hitbox = NodePath("HitboxNew")
+angle = 323.0
+bkb = 22.0
+kbg = 35.0
+xoff = 14.0
+yoff = -5.0
+metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
+
+[node name="HitboxNew" type="Area2D" parent="AbilityManager/Jab" unique_id=1751743212 node_paths=PackedStringArray("body", "default_hitbox_shape", "kb_dir_visual")]
+script = ExtResource("16_0gvfs")
+body = NodePath("../../..")
+default_hitbox_shape = NodePath("hitbox_shape")
+kb_dir_visual = NodePath("hitbox_shape/RayCast2D")
+lag = 2
+stun = 16
+metadata/_custom_type_script = "uid://dpp1v6omyvpw6"
+
+[node name="hitbox_shape" type="CollisionShape2D" parent="AbilityManager/Jab/HitboxNew" unique_id=626510771]
+skew = 0.14486232
+shape = SubResource("CapsuleShape2D_c8p0i")
+debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
+
+[node name="RayCast2D" type="RayCast2D" parent="AbilityManager/Jab/HitboxNew/hitbox_shape" unique_id=165138576]
+position = Vector2(0.24134254, -0.2678051)
+scale = Vector2(1, 1.0210605)
+skew = -0.14336586
+target_position = Vector2(3.999998, 0)
+
+[node name="Damaged" type="Node" parent="AbilityManager" unique_id=1969745582 node_paths=PackedStringArray("health_manager", "body")]
+unique_name_in_owner = true
+script = ExtResource("17_c8p0i")
+health_manager = NodePath("../../HealthManager")
+body = NodePath("../..")
+metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
 
 [connection signal="timeout" from="AbilityManager/AirDodge/flash_timer" to="AbilityManager/AirDodge" method="_on_flash_timer_timeout"]

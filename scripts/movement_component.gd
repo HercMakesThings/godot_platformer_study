@@ -14,46 +14,52 @@ class_name MovementComponent extends Node
 @export var ecb: EnvironmentCollisionBox
 @export var contact_point: RayCast2D
 
-@export var dash_speed := 150.0
-@export var dash_time := 16
-@export var walk_speed := 15.0
-@export var run_speed := 45.0
-@export var MAX_SPEED := 200.0
-@export var MAX_AIR_SPEED := 175.0
-@export var MAX_WALK_SPD := 60.0
-@export var JUMP_VELOCITY := -250.0
-@export var LANDING_LAG := 3
-@export var mass := 5.0
-@export var fr_force := Vector2.ZERO
-@export var fr_threshold := 20.0
-@export_range(0.0, 1, 0.05) var friction := 0.6
-@export_range(0.0, 1, 0.05) var air_friction := 0.075
-@export var TERMINAL_VELOCITY := 350.0
-@export var extra_jump := 1
+@export var dash_speed: float = 175.0
+@export var dash_time: int = 16
+@export var walk_speed: float = 15.0
+@export var run_speed: float = 40.0
+@export var MAX_SPEED: float= 160.0
+@export var MAX_AIR_SPEED: float = 125.0
+@export var MAX_WALK_SPD: float = 60.0
+@export var JUMP_VELOCITY: float = -250.0
+@export var SHORT_JUMP_MOD: float = 0.6
+@export var LANDING_LAG: int = 3
+@export var mass: float = 5.0
+@export var fr_force: Vector2 = Vector2.ZERO
+@export var fr_threshold: float = 20.0
+@export_range(0.0, 1, 0.05) var friction: float = 0.6
+#@export_range(0.0, 1, 0.05) var air_friction: float = 0.075
+@export_range(0.0, 1, 0.05) var air_friction: float = 0.06
+@export var TERMINAL_VELOCITY: float = 350.0
+@export var extra_jump: int = 1
 
-var hard_press_thresh := 0.8
-var deadzone := 0.15
-var crouch_thresh := 0.15
+var hard_press_thresh: float = 0.8
+var deadzone: float = 0.15
+var crouch_thresh: float = 0.15
 
 #var GRAVITY = ProjectSettings.get_setting("physics/2d/default_gravity")
-@export var GRAVITY := 8.0
+@export var GRAVITY: float = 8.0
 var gravity: float
+var weight: float
 
-var will_jump := false
+var will_jump: bool = false
+var jump_released: bool = false
+var is_short_jump: bool = false
 var on_ground: bool
 
-@export var decel := 400.0
-var accel := Vector2.ZERO
+@export var decel: float = 400.0
+var accel: Vector2 = Vector2.ZERO
 #var air_accel := Vector2.ZERO
-var dir_normalized := Vector2i.ZERO
-var direction := Vector2.ZERO
+var dir_normalized: Vector2i = Vector2i.ZERO
+var direction: Vector2 = Vector2.ZERO
 var orientation: int
-enum MoveState {IDLE, WALK, DASH, RUN, RUNTURN, JUMPSQUAT, AIRBORNE, LANDLAG, CROUCH}
 var current_state: MoveState
 var frame: int
 var is_on_platform: bool
 var can_move: bool
 var move_paused: bool
+
+enum MoveState {IDLE, WALK, DASH, RUN, RUNTURN, JUMPSQUAT, AIRBORNE, LANDLAG, CROUCH}
 
 func _ready() -> void:
 	current_state = MoveState.IDLE if body.is_on_floor() else MoveState.AIRBORNE
@@ -61,6 +67,7 @@ func _ready() -> void:
 	dir_normalized = Vector2(orientation, 0)
 	frame = 0
 	gravity = GRAVITY
+	weight = mass * gravity
 	on_ground = body.is_on_floor()
 	can_move = true
 	move_paused = false
@@ -95,6 +102,9 @@ func tick(delta: float) -> void:
 	#print("direction.y: " + str(direction.y))
 	#print("orientation: " + str(orientation))
 	#print("full crouch threshold: " + str(-deadzone + -crouch_thresh))
+	print("current velocity: " + str(body.velocity))
+	print("current x input: " + str(direction.x))
+	print("dot product: " + str(direction.dot(body.velocity.normalized())))
 	
 	## early return for when ability or game mechanic needs
 	## to pause the character entirely
@@ -118,7 +128,7 @@ func tick(delta: float) -> void:
 	handle_state(current_state, delta)
 	
 	frame = frame + 1
-	print("current movement state: " + str(MoveState.keys()[current_state]))
+	#print("current movement state: " + str(MoveState.keys()[current_state]))
 	
 	if (current_state == MoveState.WALK || 
 		current_state == MoveState.DASH || 
@@ -130,7 +140,7 @@ func tick(delta: float) -> void:
 			accel = accel.slerp(Vector2(0,0), 1)
 			if body.velocity.x == 0.0 && current_state != MoveState.CROUCH:
 				change_state(MoveState.IDLE)
-				print("current movement state: " + str(MoveState.keys()[current_state]))
+				#print("current movement state: " + str(MoveState.keys()[current_state]))
 				return
 	
 ## Changes current state to @param new and resets frame count.
@@ -146,8 +156,11 @@ func handle_state(state: MoveState, delta: float) -> void:
 			if body.is_on_floor():
 				if model is AnimatedSprite2D:
 					model.play("idle")
-				if abs(direction.x) > deadzone:
+				if abs(direction.x) >= deadzone && abs(direction.x) < hard_press_thresh:
 					change_state(MoveState.WALK)
+					return
+				elif abs(direction.x) >= hard_press_thresh:
+					change_state(MoveState.DASH)
 					return
 				#body.velocity.x = move_toward(body.velocity.x, 0.0, 5)
 				body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta)
@@ -177,7 +190,8 @@ func handle_state(state: MoveState, delta: float) -> void:
 					#velocity = (velocity + accel * x_dir_raw * friction * delta)
 					apply_force(Vector2(walk_speed, 0))
 					apply_accel(delta)
-				#else:
+				else:
+					body.velocity.x = move_toward(body.velocity.x, MAX_WALK_SPD * orientation, friction)
 					#body.velocity.x = MAX_WALK_SPD * orientation
 				if !can_move:
 					return
@@ -208,7 +222,8 @@ func handle_state(state: MoveState, delta: float) -> void:
 				if abs(body.velocity.x) < MAX_SPEED && can_move:
 					apply_force(Vector2(dash_speed, 0))
 					apply_accel(delta)
-				#else:
+				elif abs(body.velocity.x) >= MAX_SPEED && can_move:
+					body.velocity.x = move_toward(body.velocity.x, MAX_SPEED * orientation, smoothstep(0.0, 1.0, air_friction))
 					#body.velocity.x = MAX_SPEED * orientation
 				if !can_move:
 					return
@@ -257,8 +272,9 @@ func handle_state(state: MoveState, delta: float) -> void:
 				if abs(body.velocity.x) < MAX_SPEED && can_move:
 					apply_force(Vector2(run_speed, 0))
 					apply_accel(delta)
-				#else:
-					#body.velocity.x = MAX_SPEED * orientation
+				elif abs(body.velocity.x) >= MAX_SPEED && can_move:
+					#body.velocity.x = move_toward(body.velocity.x, MAX_SPEED * orientation, friction)
+					body.velocity.x = lerpf(body.velocity.x, MAX_SPEED * orientation, smoothstep(0.0, 1.0, air_friction))
 				if !can_move:
 					return
 				#if abs(direction.x) > deadzone && abs(direction.x) < hard_press_thresh:
@@ -324,20 +340,24 @@ func handle_state(state: MoveState, delta: float) -> void:
 			if body.is_on_floor():
 				if model is AnimatedSprite2D:
 					model.play("jump_squat")
+				if jump_released:
+					is_short_jump = true
 				if frame >= 4:
-					if will_jump:
+					if is_short_jump:
 						#apply_force(Vector2(0,JUMP_VELOCITY))
 						#accel = calc_accel(Vector2(0,JUMP_VELOCITY))
 						#apply_accel(delta)
-						body.velocity.y = JUMP_VELOCITY
+						body.velocity.y = JUMP_VELOCITY*SHORT_JUMP_MOD
 						change_state(MoveState.AIRBORNE)
+						is_short_jump = false
 						return
 					else:
 						#apply_force(Vector2(0,JUMP_VELOCITY*0.65))
 						#accel = calc_accel(Vector2(0,JUMP_VELOCITY*0.65))
 						#apply_accel(delta)
-						body.velocity.y = JUMP_VELOCITY*0.65
+						body.velocity.y = JUMP_VELOCITY
 						change_state(MoveState.AIRBORNE)
+						is_short_jump = false
 						return
 			else:
 				on_ground = false
@@ -367,14 +387,25 @@ func handle_state(state: MoveState, delta: float) -> void:
 				if abs(body.velocity.x) < MAX_AIR_SPEED:
 					apply_force(Vector2(dash_speed, 0))
 					apply_accel(delta)
-				elif direction.dot(body.velocity) < 0:
+				elif abs(body.velocity.x) >= MAX_AIR_SPEED:
+					#body.velocity.x = lerpf(body.velocity.x, MAX_AIR_SPEED * orientation, smoothstep(0.0, 1.0, air_friction))
+					#body.velocity.x = lerpf(body.velocity.x, MAX_AIR_SPEED * orientation, smoothstep(1.0, 0.0, friction))
+					body.velocity.x = lerpf(body.velocity.x, MAX_AIR_SPEED * orientation, air_friction)
+				if direction.dot(body.velocity.normalized()) < 0.0:
 					#apply_force(Vector2(dash_speed*0.005, 0))
 					#apply_accel(delta)
 					#body.velocity = body.velocity.move_toward(Vector2.ZERO, decel * delta * 5)
 					body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta)
+					#body.velocity.x = move_toward(body.velocity.x, 0, abs(body.velocity.x*0.05))
 					accel = accel.lerp(Vector2(0,0), 1)
-				#else:
-					#body.velocity.x = MAX_SPEED * orientation
+				## fast falling
+				if body.velocity.y >= 0:
+					if (direction.y < -hard_press_thresh && 
+						abs(direction.x) < deadzone &&
+						can_move
+					):
+						apply_force(Vector2(0.0, -decel))
+						apply_accel(delta)
 				if abs(direction.x) < deadzone:
 					body.velocity.x = move_toward(body.velocity.x, 0, abs(body.velocity.x*0.05))
 					#body.velocity.x = move_toward(body.velocity.x, 0, 2)
@@ -390,6 +421,7 @@ func handle_state(state: MoveState, delta: float) -> void:
 				else:
 					#body.velocity = body.velocity.lerp(Vector2(0,0), 0.1)
 					body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta)
+					#body.velocity.x = lerpf(body.velocity.x, 0.0, smoothstep(0.0, 1.0, friction))
 					accel = accel.lerp(Vector2(0,0), 1)
 			else:
 				on_ground = false
@@ -429,6 +461,11 @@ func apply_gravity(extra: float = 0) -> void:
 		body.velocity.y += (gravity + extra)
 	else:
 		body.velocity.y = TERMINAL_VELOCITY
+	if body.velocity.y < 0 && body.velocity.y <= -TERMINAL_VELOCITY:
+		##body.velocity.y = lerpf(body.velocity.y, -TERMINAL_VELOCITY, smoothstep(0.0, 1.0, air_friction))
+		body.velocity.y = lerpf(body.velocity.y, -TERMINAL_VELOCITY, smoothstep(0.0, 1.0, friction)*2)
+		#body.velocity.y = lerpf(body.velocity.y, -TERMINAL_VELOCITY, air_friction)
+		#body.velocity.y = lerpf(body.velocity.y, 0, air_friction)
 	
 func calc_accel(force: Vector2) -> Vector2:
 	return force / mass

@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://cl6f5342w14nm"]
+[gd_scene format=3 uid="uid://cl6f5342w14nm"]
 
 [ext_resource type="Script" uid="uid://n3muq278qkfk" path="res://scripts/Jab1Hitbox.gd" id="1_fga0u"]
 
@@ -6,12 +6,12 @@
 radius = 6.0
 height = 38.0
 
-[node name="Hitbox" type="Area2D"]
+[node name="Hitbox" type="Area2D" unique_id=2058098506]
 collision_layer = 4
 collision_mask = 5
 script = ExtResource("1_fga0u")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=232593701]
 visible = false
 shape = SubResource("CapsuleShape2D_yjo35")
 debug_color = Color(0.781592, 0.33985, 0.700691, 0.42)
