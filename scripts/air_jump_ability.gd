@@ -14,7 +14,8 @@ func _ready() -> void:
 #func tick_ability(input: InputGameComponent, movement: MovementComponent, _delta: float) -> void:
 func tick_ability(movement: MovementComponent, _delta: float) -> void:
 	if (air_jumps > 0 &&
-		input.btn_3_input &&
+		#input.btn_3_input &&
+		input.btn_3_just_pressed &&
 		movement.current_state == movement.MoveState.AIRBORNE &&
 		!body.is_on_floor() &&
 		movement.can_move):

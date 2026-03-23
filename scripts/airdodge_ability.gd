@@ -9,6 +9,7 @@ class_name Airdodge extends Ability
 @export var air_dodge_count: int = 1
 @export var air_dodge_length: int = 16
 @export var air_dodge_landlag: int = 8
+@export var air_dodge_speed: float = 500.0
 
 @onready var flash_timer: Timer = $flash_timer
 
@@ -92,9 +93,9 @@ func tick_ability(movement: MovementComponent, _delta: float) -> void:
 			if air_dodge < air_dodge_count:
 				air_dodge = air_dodge_count
 			if ad_frame <= air_dodge_length - air_dodge_landlag:
-				body.velocity = ad_direction * 500
+				body.velocity = ad_direction * air_dodge_speed
 			elif ad_frame < air_dodge_length:
-				body.velocity = lerp(body.velocity, Vector2(0,0), smoothstep(1.0, 0.0, movement.friction))
+				body.velocity = lerp(body.velocity, Vector2(0,0), smoothstep(1.0, 0.0, clampf(movement.friction, 0, 1)))
 			else:
 				movement.can_move = true
 				ad_frame = 0
@@ -118,7 +119,7 @@ func tick_ability(movement: MovementComponent, _delta: float) -> void:
 				flash_timer.timeout.emit()
 				return
 			if ad_frame < air_dodge_length - air_dodge_landlag:
-				body.velocity = ad_direction * 450
+				body.velocity = ad_direction * air_dodge_speed
 			elif ad_frame < air_dodge_length:
 					body.velocity = lerp(body.velocity, Vector2(0,0), smoothstep(0.0, 1.0, 0.5))
 			elif ad_frame >= air_dodge_length:

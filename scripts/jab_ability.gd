@@ -39,6 +39,7 @@ func tick_ability(movement: MovementComponent, delta: float) -> void:
 	if (input.btn_1_input &&
 		movement.can_move &&
 		movement.current_state != movement.MoveState.AIRBORNE &&
+		movement.current_state != movement.MoveState.RUNTURN &&
 		body.is_on_floor() &&
 		movement.direction.x < movement.deadzone):
 			atk_initiated = true
@@ -55,5 +56,7 @@ func tick_ability(movement: MovementComponent, delta: float) -> void:
 			atk_initiated = false
 			frames = 0
 			movement.can_move = true
+		if body.velocity.length() > 1.0:
+			body.velocity.x = move_toward(body.velocity.x, 0.0, movement.decel * delta)
 	hitbox.tick(delta)
 	

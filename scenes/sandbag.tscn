@@ -1,0 +1,89 @@
+[gd_scene format=3 uid="uid://cn2hl3dyvnbsd"]
+
+[ext_resource type="Script" uid="uid://c7wf075jkmfst" path="res://scripts/sandbag.gd" id="1_qb718"]
+[ext_resource type="Script" uid="uid://b7nwpiqypj75k" path="res://scripts/environment_collision_box.gd" id="2_d48q8"]
+[ext_resource type="Shader" uid="uid://dlnlw0tk7bj7c" path="res://shaders/sandbag.gdshader" id="2_qggip"]
+[ext_resource type="Script" uid="uid://7phcjebu2nrt" path="res://scripts/sandbag_color_rect.gd" id="3_5du47"]
+[ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="3_w1bhx"]
+[ext_resource type="Script" uid="uid://74ctiqofli1i" path="res://scripts/health_manager.gd" id="6_f8d84"]
+[ext_resource type="Script" uid="uid://lgo3he6gsmg5" path="res://scripts/movement_component.gd" id="7_o58ao"]
+[ext_resource type="Script" uid="uid://b6cj2ucaeqd2" path="res://scripts/ability_manager.gd" id="8_d14ff"]
+[ext_resource type="Script" uid="uid://brf0y0hshgpn4" path="res://scripts/damaged_ability.gd" id="9_tkrex"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wtxvj"]
+shader = ExtResource("2_qggip")
+shader_parameter/radius_scale = 0.20000000298024
+shader_parameter/rounded_corner_top_left = true
+shader_parameter/rounded_corner_top_right = true
+shader_parameter/rounded_corner_bottom_left = true
+shader_parameter/rounded_corner_bottom_right = true
+shader_parameter/width = 1.0
+shader_parameter/height = 1.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qggip"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5du47"]
+radius = 12.0
+height = 34.0
+
+[node name="Sandbag" type="CharacterBody2D" unique_id=2090127047]
+script = ExtResource("1_qb718")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=44927181]
+material = SubResource("ShaderMaterial_wtxvj")
+offset_left = -12.0
+offset_top = -17.0
+offset_right = 12.0
+offset_bottom = 17.0
+script = ExtResource("3_5du47")
+
+[node name="EnvironmentCollisionBox" type="CollisionShape2D" parent="." unique_id=1271259068]
+shape = SubResource("CapsuleShape2D_qggip")
+script = ExtResource("2_d48q8")
+metadata/_custom_type_script = "uid://b7nwpiqypj75k"
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1525920475]
+unique_name_in_owner = true
+script = ExtResource("3_w1bhx")
+metadata/_custom_type_script = "uid://lpgo7mxv0d5h"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=256331226]
+shape = SubResource("CapsuleShape2D_5du47")
+debug_color = Color(0.6572558, 0.5087544, 0.25347617, 0.41960785)
+
+[node name="HealthManager" type="Node" parent="." unique_id=1756630814]
+unique_name_in_owner = true
+script = ExtResource("6_f8d84")
+percent = 75.0
+metadata/_custom_type_script = "uid://74ctiqofli1i"
+
+[node name="MovementComponent" type="Node" parent="." unique_id=1774713098 node_paths=PackedStringArray("body", "model", "hurtbox", "ecb", "contact_point")]
+unique_name_in_owner = true
+script = ExtResource("7_o58ao")
+body = NodePath("..")
+model = NodePath("../ColorRect")
+hurtbox = NodePath("../Hurtbox")
+ecb = NodePath("../EnvironmentCollisionBox")
+contact_point = NodePath("../ContactPoint")
+metadata/_custom_type_script = "uid://lgo3he6gsmg5"
+
+[node name="AbilityManager" type="Node" parent="." unique_id=342872767 node_paths=PackedStringArray("body")]
+unique_name_in_owner = true
+script = ExtResource("8_d14ff")
+body = NodePath("..")
+metadata/_custom_type_script = "uid://b6cj2ucaeqd2"
+
+[node name="DamagedAbility" type="Node" parent="AbilityManager" unique_id=796749288 node_paths=PackedStringArray("health_manager", "body")]
+unique_name_in_owner = true
+script = ExtResource("9_tkrex")
+health_manager = NodePath("../../HealthManager")
+body = NodePath("../..")
+metadata/_custom_type_script = "uid://brf0y0hshgpn4"
+
+[node name="ContactPoint" type="RayCast2D" parent="." unique_id=1994832175]
+target_position = Vector2(0, 17)
+
+[connection signal="item_rect_changed" from="ColorRect" to="ColorRect" method="_on_item_rect_changed"]
+[connection signal="tree_entered" from="ColorRect" to="ColorRect" method="_on_tree_entered"]
+[connection signal="area_entered" from="Hurtbox" to="Hurtbox" method="_on_hurtbox_area_entered"]
+[connection signal="hurtbox_hit" from="Hurtbox" to="HealthManager" method="_on_hurtbox_hit"]

@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://by62tcho3drwi" path="res://scripts/label_2.gd" id="5_vtaks"]
 [ext_resource type="PackedScene" uid="uid://nj581ku4ihqa" path="res://scenes/enemy_basic.tscn" id="5_whekb"]
 [ext_resource type="PackedScene" uid="uid://bbpdo7iuex73c" path="res://scenes/crawler_enemy.tscn" id="8_gee14"]
+[ext_resource type="PackedScene" uid="uid://cn2hl3dyvnbsd" path="res://scenes/sandbag.tscn" id="10_kvpfn"]
 [ext_resource type="PackedScene" uid="uid://dx1h5gjrv33tf" path="res://scenes/player_new.tscn" id="10_vtaks"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vtaks"]
@@ -285,7 +286,7 @@ tile_set = SubResource("TileSet_0tnpc")
 
 [node name="PlayerNew" parent="." unique_id=1831211902 instance=ExtResource("10_vtaks")]
 unique_name_in_owner = true
-position = Vector2(-43, -69)
+position = Vector2(-62, 11)
 
 [node name="Camera2D" type="Camera2D" parent="PlayerNew" unique_id=2089388482]
 position = Vector2(0, -35.445)
@@ -351,3 +352,6 @@ offset_right = -163.0
 offset_bottom = -94.0
 text = "test"
 script = ExtResource("5_vtaks")
+
+[node name="Sandbag" parent="." unique_id=2090127047 instance=ExtResource("10_kvpfn")]
+position = Vector2(-141, -26)

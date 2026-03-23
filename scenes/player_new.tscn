@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://b7nwpiqypj75k" path="res://scripts/environment_collision_box.gd" id="2_q1g3e"]
 [ext_resource type="Script" uid="uid://bjk4djbuag7os" path="res://scripts/input_game_component.gd" id="2_wm45n"]
 [ext_resource type="Script" uid="uid://lgo3he6gsmg5" path="res://scripts/movement_component.gd" id="3_b288l"]
-[ext_resource type="Shader" path="res://scenes/placeholder_flash.gdshader" id="3_id8he"]
+[ext_resource type="Shader" uid="uid://b0gags4mo66xw" path="res://scenes/placeholder_flash.gdshader" id="3_id8he"]
 [ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="4_d2bp7"]
 [ext_resource type="Script" uid="uid://74ctiqofli1i" path="res://scripts/health_manager.gd" id="5_8tn2v"]
 [ext_resource type="Script" uid="uid://bjx5rtki0usbf" path="res://scripts/stamina_manager.gd" id="6_6ljwu"]
@@ -44,6 +44,7 @@ script = ExtResource("1_vjt3m")
 
 [node name="EnvironmentCollisionBox" type="CollisionShape2D" parent="." unique_id=1721981752]
 unique_name_in_owner = true
+visible = false
 position = Vector2(0, 2.86)
 shape = SubResource("CapsuleShape2D_dsvhw")
 script = ExtResource("2_q1g3e")
@@ -99,7 +100,6 @@ metadata/_custom_type_script = "uid://bjx5rtki0usbf"
 
 [node name="velocity_vis" type="Line2D" parent="." unique_id=1855895214]
 unique_name_in_owner = true
-visible = false
 position = Vector2(28.945, -10.4)
 points = PackedVector2Array(0.025, 0, 0, 0)
 default_color = Color(0.201004, 0.544663, 0.844904, 1)
@@ -151,7 +151,7 @@ script = ExtResource("15_3c17b")
 body = NodePath("../..")
 input = NodePath("../../InputGameComponent")
 hitbox = NodePath("HitboxNew")
-angle = 323.0
+angle = 341.0
 bkb = 22.0
 kbg = 35.0
 xoff = 14.0
@@ -185,4 +185,5 @@ health_manager = NodePath("../../HealthManager")
 body = NodePath("../..")
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
 
+[connection signal="area_entered" from="Hurtbox" to="Hurtbox" method="_on_hurtbox_area_entered"]
 [connection signal="timeout" from="AbilityManager/AirDodge/flash_timer" to="AbilityManager/AirDodge" method="_on_flash_timer_timeout"]

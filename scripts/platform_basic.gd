@@ -4,7 +4,7 @@ class_name PlatformBasic
 #@onready var player: Player = $"../../Player"
 
 
-@onready var collision_shape: CollisionPolygon2D = $CollisionPolygon2D
+#@onready var collision_shape: CollisionPolygon2D = $CollisionPolygon2D
 @onready var area: Area2D = $Area2D
 
 signal _pl_colliding_with_platform
@@ -12,9 +12,11 @@ signal _pl_colliding_with_platform
 func _ready():
 	pass
 	
-func _physics_process(delta):
+func _physics_process(_delta):
 	if area.has_overlapping_areas():
+	#if collision_shape.has_overlapping_areas():
 		var overlapping_areas = area.get_overlapping_areas()
+		#var overlapping_areas = collision_shape.get_overlapping_areas()
 		#print(overlapping_areas)
 		for a in overlapping_areas:
 			#print(a.name)

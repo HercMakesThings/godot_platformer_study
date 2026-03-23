@@ -48,7 +48,7 @@ func _ready() -> void:
 	var angle_radians: float = deg_to_rad(angle)
 	add_to_group("atk_hitbox_group")
 	#kb_dir_visual.target_position = kb_dir_visual.target_position.rotated(angle_radians)
-	angle_vec = angle_vec.rotated(angle_radians)
+	angle_vec = angle_vec.rotated(angle_radians*orientation)
 	var angle_dif = kb_dir_visual.target_position.angle_to(angle_vec)
 	kb_dir_visual.target_position = kb_dir_visual.target_position.rotated(angle_dif)
 	
@@ -70,6 +70,11 @@ func tick(_delta: float) -> void:
 		set_rotation(-rot)
 	elif orientation == -1:
 		set_rotation(rot)
+		
+	var angle_radians: float = deg_to_rad(angle)
+	angle_vec = angle_vec.rotated(angle_radians * orientation)
+	var angle_dif = kb_dir_visual.target_position.angle_to(angle_vec)
+	kb_dir_visual.target_position = kb_dir_visual.target_position.rotated(angle_dif)
 		
 	flip_hitbox(orientation)
 		

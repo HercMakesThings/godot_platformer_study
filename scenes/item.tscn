@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://cys7hb3m00cug"]
+
+[ext_resource type="Script" uid="uid://b7nwpiqypj75k" path="res://scripts/environment_collision_box.gd" id="1_4gq7n"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4gq7n"]
+
+[node name="Item" type="CharacterBody2D" unique_id=1557114568]
+
+[node name="EnvironmentCollisionBox" type="CollisionShape2D" parent="." unique_id=1788015614]
+shape = SubResource("CircleShape2D_4gq7n")
+script = ExtResource("1_4gq7n")
+metadata/_custom_type_script = "uid://b7nwpiqypj75k"
