@@ -300,6 +300,8 @@ script = ExtResource("3_p57ef")
 [node name="platform_basic1" parent="PlatformManager" unique_id=1654590033 instance=ExtResource("4_c31sl")]
 position = Vector2(-142, 4)
 scale = Vector2(0.01, 0.01)
+collision_layer = 9
+collision_mask = 9
 
 [node name="platform_basic2" parent="PlatformManager" unique_id=47708181 instance=ExtResource("4_c31sl")]
 position = Vector2(67, 3.81)

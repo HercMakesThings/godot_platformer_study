@@ -7,9 +7,11 @@ class_name Airdodge extends Ability
 @export var model: Node
 
 @export var air_dodge_count: int = 1
-@export var air_dodge_length: int = 16
-@export var air_dodge_landlag: int = 8
-@export var air_dodge_speed: float = 500.0
+#@export var air_dodge_length: int = 16
+#@export var air_dodge_landlag: int = 8
+@export var air_dodge_length: int = 20
+@export var air_dodge_landlag: int = 10
+@export var air_dodge_speed: float = 400.0
 
 @onready var flash_timer: Timer = $flash_timer
 
@@ -95,7 +97,10 @@ func tick_ability(movement: MovementComponent, _delta: float) -> void:
 			if ad_frame <= air_dodge_length - air_dodge_landlag:
 				body.velocity = ad_direction * air_dodge_speed
 			elif ad_frame < air_dodge_length:
-				body.velocity = lerp(body.velocity, Vector2(0,0), smoothstep(1.0, 0.0, clampf(movement.friction, 0, 1)))
+				#body.velocity = lerp(body.velocity, Vector2(0,0), smoothstep(1.0, 0.0, clampf(movement.friction, 0, 1)))
+				#body.velocity = lerp(body.velocity, Vector2(0,0), smoothstep(1.0, 0.0, clampf(movement.calc_friction(), 0, 1)))
+				body.velocity = body.velocity.move_toward(Vector2.ZERO, movement.calc_friction())
+				#body.velocity = body.velocity.move_toward(Vector2.ZERO, movement.accel_mag)
 			else:
 				movement.can_move = true
 				ad_frame = 0
@@ -119,15 +124,19 @@ func tick_ability(movement: MovementComponent, _delta: float) -> void:
 				flash_timer.timeout.emit()
 				return
 			if ad_frame < air_dodge_length - air_dodge_landlag:
+			#if ad_frame < air_dodge_length:
 				body.velocity = ad_direction * air_dodge_speed
 			elif ad_frame < air_dodge_length:
-					body.velocity = lerp(body.velocity, Vector2(0,0), smoothstep(0.0, 1.0, 0.5))
-			elif ad_frame >= air_dodge_length:
+					#body.velocity = lerp(body.velocity, Vector2(0,0), smoothstep(0.0, 1.0, 0.5))
+					body.velocity = body.velocity.slerp(Vector2.ZERO, smoothstep(0.0, 1.0, 0.5))
+			elif ad_frame >= air_dodge_length + 10:
 				movement.can_move = true
 				ad_frame = 0
 				touched_ground = false
 				ad_initiated = false
 				return
+			else:
+				movement.can_move = true
 		ad_frame += 1
 		return
 				

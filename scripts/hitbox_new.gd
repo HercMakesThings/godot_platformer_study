@@ -44,6 +44,7 @@ func _ready() -> void:
 	is_colliding = false
 	atk_frames = 0
 	count = 0
+	#top_level = true
 	
 	var angle_radians: float = deg_to_rad(angle)
 	add_to_group("atk_hitbox_group")
@@ -55,7 +56,11 @@ func _ready() -> void:
 func tick(_delta: float) -> void:
 	#print("player global position: " + str(body.global_position))
 	#hitbox_shape.position = body.to_global(Vector2((xoff*body.movement_component.orientation), yoff))
-	hitbox_shape.position = body.to_global(Vector2((xoff*orientation), yoff))
+	
+	#hitbox_shape.position = body.to_global(Vector2((xoff*orientation), yoff))
+	#global_position = body.global_position
+	global_position = Vector2(body.global_position.x+(xoff*orientation), body.global_position.y+yoff)
+	
 	#hitbox_shape.global_position = body.global_position
 	#print("hitbox global position: " + str(hitbox_shape.global_position))
 	if is_active:
@@ -66,10 +71,14 @@ func tick(_delta: float) -> void:
 		if atk_frames > 0:
 			atk_frames = 0
 		
-	if orientation == 1:
-		set_rotation(-rot)
-	elif orientation == -1:
-		set_rotation(rot)
+	#if orientation == 1:
+		#set_rotation(-rot)
+		##rotation_degrees = rot
+	#elif orientation == -1:
+		#set_rotation(rot)
+		##rotation_degrees = -rot
+	#set_rotation(rot*orientation)
+	rotation_degrees = rot*orientation
 		
 	var angle_radians: float = deg_to_rad(angle)
 	angle_vec = angle_vec.rotated(angle_radians * orientation)

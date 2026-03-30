@@ -5,7 +5,7 @@ class_name AirJump extends Ability
 @export var input: Node
 
 @export var air_jump_count: int = 1
-@export var air_jump_modifier: float = 0.75
+@export var air_jump_modifier: float = 0.9
 var air_jumps: int
 
 func _ready() -> void:

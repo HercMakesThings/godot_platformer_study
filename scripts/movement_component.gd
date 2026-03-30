@@ -14,22 +14,23 @@ class_name MovementComponent extends Node
 @export var ecb: EnvironmentCollisionBox
 @export var contact_point: RayCast2D
 
-@export var dash_speed: float = 180.0
+@export var dash_speed: float = 300.0
 @export var dash_time: int = 18
 @export var walk_speed: float = 15.0
 #@export var run_speed: float = 40.0
 @export var run_speed: float = 20.0
-@export var MAX_SPEED: float= 200.0
+@export var MAX_SPEED: float= 300.0
 @export var MAX_AIR_SPEED: float = 200.0
 @export var MAX_WALK_SPD: float = 60.0
 @export var JUMP_VELOCITY: float = -250.0
 @export var SHORT_JUMP_MOD: float = 0.6
 @export var LANDING_LAG: int = 3
 @export var mass: float = 5.0
-@export_range(0.0, 1, 0.05) var friction: float = 0.6
-#@export_range(0.0, 1, 0.05) var friction: float = 0.2
-#@export_range(0.0, 1, 0.05) var air_friction: float = 0.075
-@export_range(0.0, 1, 0.05) var air_friction: float = 0.15
+#@export_range(0.0, 1, 0.05) var friction: float = 0.95
+@export_range(0.0, 1, 0.05) var friction: float = 0.45
+#@export_range(0.0, 1, 0.05) var air_friction: float = 0.0075
+@export_range(0.0, 1, 0.05) var air_friction: float = 0.0045
+#@export_range(0.0, 1, 0.05) var air_friction: float = 0.2
 @export var TERMINAL_VELOCITY: float = 350.0
 @export var STARTING_VELOCITY: Vector2 = Vector2.ZERO
 
@@ -55,6 +56,7 @@ var on_ground: bool
 
 #@export var decel: float = 400.0
 @export var decel: float = 40.0
+@export var accel_mag: float = 80.0
 var accel: Vector2 = Vector2.ZERO
 var dir_normalized: Vector2i = Vector2i.ZERO
 var direction: Vector2 = Vector2.ZERO
@@ -93,8 +95,8 @@ func tick(delta: float) -> void:
 			model.size.y = 30
 		hurtbox.find_child("CollisionShape2D").scale.y = 1
 		hurtbox.find_child("CollisionShape2D").position.y = 0
-		if ecb.disabled && !body.is_on_floor():
-			ecb.disabled = false
+		#if ecb.disabled && !body.is_on_floor():
+			#ecb.disabled = false
 	
 	## early return for when ability or game mechanic needs
 	## to pause the character entirely
@@ -146,7 +148,6 @@ func handle_state(state: MoveState, delta: float) -> void:
 					return
 				if body.velocity.length() > 0.0:
 					decelerate(delta)
-					accel = accel.slerp(Vector2(0,0), 0.5)
 			else:
 				on_ground = false
 				change_state(MoveState.AIRBORNE)
@@ -170,7 +171,6 @@ func handle_state(state: MoveState, delta: float) -> void:
 						change_state(MoveState.IDLE)
 						return
 					decelerate(delta, 5.0)
-					#accel = accel.slerp(Vector2(0,0), 1)
 				if jump_just_pressed || jump_pressed:
 					change_state(MoveState.JUMPSQUAT)
 					return
@@ -209,7 +209,6 @@ func handle_state(state: MoveState, delta: float) -> void:
 						change_state(MoveState.IDLE)
 						return
 					decelerate(delta)
-					accel = accel.slerp(Vector2(0,0), 1)
 				if jump_just_pressed || jump_pressed:
 					change_state(MoveState.JUMPSQUAT)
 					return
@@ -242,7 +241,6 @@ func handle_state(state: MoveState, delta: float) -> void:
 						change_state(MoveState.IDLE)
 						return
 					decelerate(delta)
-					accel = accel.slerp(Vector2(0,0), 1)
 				if jump_just_pressed || jump_pressed:
 					change_state(MoveState.JUMPSQUAT)
 					return
@@ -344,6 +342,8 @@ func handle_state(state: MoveState, delta: float) -> void:
 						body.velocity.y = move_toward(body.velocity.y, TERMINAL_VELOCITY, run_speed)
 				apply_force(dash_force, delta)
 				body.velocity.x = clamp(body.velocity.x, -MAX_AIR_SPEED, MAX_AIR_SPEED)
+				if ecb.disabled && !contact_point.is_colliding():
+					ecb.disabled = false
 				is_on_platform = false
 		MoveState.LANDLAG:
 			if body.is_on_floor():
@@ -353,8 +353,8 @@ func handle_state(state: MoveState, delta: float) -> void:
 					change_state(MoveState.IDLE)
 					return
 				else:
-					decelerate(delta, 5.0)
-					accel = accel.lerp(Vector2(0,0), 1)
+					#decelerate(delta, 5.0)
+					decelerate(delta)
 			else:
 				on_ground = false
 				change_state(MoveState.AIRBORNE)
@@ -367,14 +367,13 @@ func handle_state(state: MoveState, delta: float) -> void:
 					model.size.y = 15
 				hurtbox.find_child("CollisionShape2D").scale.y = 0.5
 				hurtbox.find_child("CollisionShape2D").position.y = 8.15
-				if is_on_platform:
-					if ecb.disabled:
-						ecb.disabled = false
-						return
-					ecb.disabled = true
-				decelerate(delta)
-				accel = accel.lerp(Vector2(0,0), 1)
 				if !can_move:
+					return
+				if is_on_platform:
+					#if ecb.disabled:
+						#ecb.disabled = false
+						#return
+					ecb.disabled = true
 					return
 				if direction.y >= -deadzone + -crouch_thresh:
 					change_state(MoveState.IDLE)
@@ -382,6 +381,7 @@ func handle_state(state: MoveState, delta: float) -> void:
 				if jump_just_pressed || jump_pressed:
 					change_state(MoveState.JUMPSQUAT)
 					return
+				decelerate(delta)
 			else:
 				on_ground = false
 				change_state(MoveState.AIRBORNE)
@@ -399,15 +399,20 @@ func apply_force(force: Vector2, delta: float, use_dir = true) -> void:
 	accel = accel + calc_accel(force)
 	if use_dir:
 		var f: Vector2 = (body.velocity + accel * direction * calc_friction() * delta)
-		body.velocity = body.velocity.move_toward(f, calc_friction())
+		#body.velocity = body.velocity.move_toward(f, calc_friction())
+		#body.velocity = body.velocity.move_toward(f, accel_mag)
+		#body.velocity = body.velocity.move_toward(f, accel.length())
+		body.velocity = body.velocity.move_toward(f, f.length())
 	else:
 		var f: Vector2 = (body.velocity + accel * calc_friction() * delta)
 		#var f: Vector2 = (body.velocity + accel * delta)
-		body.velocity = body.velocity.move_toward(f, calc_friction())
+		#body.velocity = body.velocity.move_toward(f, calc_friction())
+		body.velocity = body.velocity.move_toward(f, f.length())
 		
 func decelerate(delta: float, mod: float = 1.0) -> void:
 	body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta * mod * calc_friction())
 	#body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta * mod * friction)
+	accel = accel.slerp(Vector2(0,0), 0.2)
 	
 func calc_nForce() -> float:
 	return mass * gravity

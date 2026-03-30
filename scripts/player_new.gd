@@ -32,18 +32,19 @@ func _physics_process(delta: float) -> void:
 	ability_manager.update_abilities(movement_component, delta)
 	
 	## debug
-	#debug_prints()
+	debug_prints()
 	
 	move_and_slide()
 	
 func _on_platform(_platform: PlatformBasic, collider: CharacterBody2D) -> void:
-	#print("on a platform!!")
 	#print("collider: " + str(collider.name))
 	if collider.name == "PlayerNew":
+		#print("on a platform!!")
 		movement_component.is_on_platform = true
 		
 func debug_prints():
 	print(str(name) + " -> current move state: " + str(movement_component.MoveState.keys()[movement_component.current_state]))
+	#print(str(name) + " -> current friction value: " + str(movement_component.calc_friction()))
 	#print(str(name) + " -> direction.x: " + str(movement_component.direction.x))
 	#print(str(name) + " -> direction.y: " + str(movement_component.direction.y))
 	#print(str(name) + " -> orientation: " + str(movement_component.orientation))

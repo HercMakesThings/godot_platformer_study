@@ -56,5 +56,11 @@ func update() -> void:
 		#print("jump pressed!")
 	
 func is_guard_pressed() -> bool:
+	#return Input.is_action_pressed("guard_left") || Input.is_action_pressed("guard_right")
+	return Input.is_action_just_pressed("guard_left") || Input.is_action_just_pressed("guard_right")
+	
+func is_guard_held() -> bool:
 	return Input.is_action_pressed("guard_left") || Input.is_action_pressed("guard_right")
-	#return Input.is_action_just_pressed("guard_left") || Input.is_action_just_pressed("guard_right")
+	
+func is_guard_released() -> bool:
+	return Input.is_action_just_released("guard_left") || Input.is_action_just_released("guard_right")

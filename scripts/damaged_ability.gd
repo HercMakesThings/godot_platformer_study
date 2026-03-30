@@ -49,6 +49,7 @@ func tick_ability(movement: MovementComponent, delta: float) -> void:
 			#movement.apply_force(force)
 			#movement.apply_accel(delta)
 			body.velocity = force
+			#movement.apply_force(force, delta)
 			print("body velocity: " + str(body.velocity))
 		else:
 			is_hit = false

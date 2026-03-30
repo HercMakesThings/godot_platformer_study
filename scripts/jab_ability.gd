@@ -48,6 +48,8 @@ func tick_ability(movement: MovementComponent, delta: float) -> void:
 			
 	if atk_initiated:
 		frames += 1
+		if body.velocity.length() > 1.0:
+			movement.decelerate(delta)
 		if frames >= active_window_start && frames < active_window_start + active_window:
 			hitbox.is_active = true
 		else:
@@ -56,7 +58,5 @@ func tick_ability(movement: MovementComponent, delta: float) -> void:
 			atk_initiated = false
 			frames = 0
 			movement.can_move = true
-		if body.velocity.length() > 1.0:
-			body.velocity.x = move_toward(body.velocity.x, 0.0, movement.decel * delta)
 	hitbox.tick(delta)
 	
