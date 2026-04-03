@@ -353,8 +353,8 @@ func handle_state(state: MoveState, delta: float) -> void:
 					change_state(MoveState.IDLE)
 					return
 				else:
-					#decelerate(delta, 5.0)
-					decelerate(delta)
+					decelerate(delta, 5.0)
+					#decelerate(delta)
 			else:
 				on_ground = false
 				change_state(MoveState.AIRBORNE)
@@ -398,16 +398,19 @@ func calc_accel(force: Vector2) -> Vector2:
 func apply_force(force: Vector2, delta: float, use_dir = true) -> void:
 	accel = accel + calc_accel(force)
 	if use_dir:
-		var f: Vector2 = (body.velocity + accel * direction * calc_friction() * delta)
+		#var f: Vector2 = (body.velocity + accel * direction * calc_friction() * delta)
+		var f: Vector2 = (body.velocity + accel * direction * calc_friction())
 		#body.velocity = body.velocity.move_toward(f, calc_friction())
 		#body.velocity = body.velocity.move_toward(f, accel_mag)
 		#body.velocity = body.velocity.move_toward(f, accel.length())
-		body.velocity = body.velocity.move_toward(f, f.length())
+		body.velocity = body.velocity.move_toward(f, f.length() * delta)
 	else:
-		var f: Vector2 = (body.velocity + accel * calc_friction() * delta)
+		#var f: Vector2 = (body.velocity + accel * calc_friction() * delta)
+		var f: Vector2 = (body.velocity + accel * calc_friction())
 		#var f: Vector2 = (body.velocity + accel * delta)
 		#body.velocity = body.velocity.move_toward(f, calc_friction())
-		body.velocity = body.velocity.move_toward(f, f.length())
+		#body.velocity = body.velocity.move_toward(f, f.length())
+		body.velocity = body.velocity.move_toward(f, f.length() * delta)
 		
 func decelerate(delta: float, mod: float = 1.0) -> void:
 	body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta * mod * calc_friction())

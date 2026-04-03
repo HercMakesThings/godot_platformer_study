@@ -14,10 +14,10 @@
 [ext_resource type="Script" uid="uid://b6cj2ucaeqd2" path="res://scripts/ability_manager.gd" id="11_7nfqo"]
 [ext_resource type="Script" uid="uid://cjkfeb23cki15" path="res://scripts/air_jump_ability.gd" id="11_kkhi3"]
 [ext_resource type="Script" uid="uid://hxq7leum3ryx" path="res://scripts/airdodge_ability.gd" id="13_nkc8p"]
-[ext_resource type="Script" uid="uid://bsh5afyom8ynf" path="res://scripts/jab_ability.gd" id="15_3c17b"]
-[ext_resource type="Script" uid="uid://dpp1v6omyvpw6" path="res://scripts/hitbox_new.gd" id="16_0gvfs"]
-[ext_resource type="Script" uid="uid://brf0y0hshgpn4" path="res://scripts/damaged_ability.gd" id="17_c8p0i"]
-[ext_resource type="Script" uid="uid://m7g2ic7fmnm4" path="res://scripts/ShieldAbility.gd" id="18_pqqny"]
+[ext_resource type="Script" path="res://scripts/jab_ability.gd" id="15_3c17b"]
+[ext_resource type="Script" path="res://scripts/hitbox_new.gd" id="16_0gvfs"]
+[ext_resource type="Script" path="res://scripts/damaged_ability.gd" id="17_c8p0i"]
+[ext_resource type="Script" path="res://scripts/ShieldAbility.gd" id="18_pqqny"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3c17b"]
 shader = ExtResource("3_id8he")
@@ -176,7 +176,6 @@ kb_dir_visual = NodePath("hitbox_shape/RayCast2D")
 lag = 2
 stun = 16
 rot = 12.01
-metadata/_custom_type_script = "uid://dpp1v6omyvpw6"
 
 [node name="hitbox_shape" type="CollisionShape2D" parent="AbilityManager/Jab/HitboxNew" unique_id=626510771]
 skew = 0.14486232

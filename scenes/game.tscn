@@ -8,8 +8,9 @@
 [ext_resource type="Script" uid="uid://by62tcho3drwi" path="res://scripts/label_2.gd" id="5_vtaks"]
 [ext_resource type="PackedScene" uid="uid://nj581ku4ihqa" path="res://scenes/enemy_basic.tscn" id="5_whekb"]
 [ext_resource type="PackedScene" uid="uid://bbpdo7iuex73c" path="res://scenes/crawler_enemy.tscn" id="8_gee14"]
-[ext_resource type="PackedScene" uid="uid://cn2hl3dyvnbsd" path="res://scenes/sandbag.tscn" id="10_kvpfn"]
+[ext_resource type="PackedScene" path="res://scenes/sandbag.tscn" id="10_kvpfn"]
 [ext_resource type="PackedScene" uid="uid://dx1h5gjrv33tf" path="res://scenes/player_new.tscn" id="10_vtaks"]
+[ext_resource type="Script" uid="uid://bsfowl8fm16ji" path="res://scenes/test_rigid.gd" id="11_kvpfn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vtaks"]
 texture = ExtResource("1_0tnpc")
@@ -267,6 +268,9 @@ _data = {
 &"move": SubResource("Animation_khb0g")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_dinhu"]
+radius = 5.3851647
+
 [node name="Game" type="Node2D" unique_id=86849412]
 
 [node name="SandboxArenaTileMapLayer" type="TileMapLayer" parent="." unique_id=1159999719]
@@ -300,8 +304,6 @@ script = ExtResource("3_p57ef")
 [node name="platform_basic1" parent="PlatformManager" unique_id=1654590033 instance=ExtResource("4_c31sl")]
 position = Vector2(-142, 4)
 scale = Vector2(0.01, 0.01)
-collision_layer = 9
-collision_mask = 9
 
 [node name="platform_basic2" parent="PlatformManager" unique_id=47708181 instance=ExtResource("4_c31sl")]
 position = Vector2(67, 3.81)
@@ -357,3 +359,10 @@ script = ExtResource("5_vtaks")
 
 [node name="Sandbag" parent="." unique_id=2090127047 instance=ExtResource("10_kvpfn")]
 position = Vector2(-141, -26)
+
+[node name="TestRigid" type="RigidBody2D" parent="." unique_id=1720368041]
+script = ExtResource("11_kvpfn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TestRigid" unique_id=802323628]
+position = Vector2(27, 24)
+shape = SubResource("CircleShape2D_dinhu")

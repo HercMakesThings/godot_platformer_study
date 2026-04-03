@@ -82,7 +82,10 @@ func tick_ability(movement: MovementComponent, _delta: float) -> void:
 			#if air_dodge < air_dodge_count:
 				#air_dodge = air_dodge_count
 			if !touched_ground:
-				touched_ground = true
+				## comment out the if statement below to enable superjump.
+				## is that a good idea?? not sure yet
+				if movement.current_state != movement.MoveState.JUMPSQUAT:
+					touched_ground = true
 			#if !movement.contact_point.is_colliding():
 			##if !movement.on_ground:
 				#movement.can_move = true
@@ -116,8 +119,6 @@ func tick_ability(movement: MovementComponent, _delta: float) -> void:
 				ad_initiated = false
 				touched_ground = false
 				
-				## comment out the line below to enable superjump.
-				## is that a good idea?? not sure yet
 				air_dodge = air_dodge_count
 				
 				flash_timer.stop()
