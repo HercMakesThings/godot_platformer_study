@@ -1,7 +1,7 @@
 ## This node handles basic movement for all entities in the game.
 ## It should be parented to the entity's CharacterBody2D or equivalent
 ## at the root node
-class_name MovementComponent extends Node
+class_name MovementManager extends Node
 
 ## The parent Body the component controls.
 ## TODO: May refactor to signals instead
@@ -12,7 +12,7 @@ class_name MovementComponent extends Node
 #@export var model: Node2D
 @export var model: Node
 @export var hurtbox: Hurtbox
-@export var ecb: EnvironmentCollisionBox
+#@export var ecb: EnvironmentCollisionBox
 @export var contact_point: RayCast2D
 
 @export var dash_speed: float = 300.0
@@ -27,8 +27,12 @@ class_name MovementComponent extends Node
 @export var SHORT_JUMP_MOD: float = 0.6
 @export var LANDING_LAG: int = 3
 @export var mass: float = 5.0
+#@export_range(0.0, 1, 0.05) var friction: float = 0.95
 @export_range(0.0, 1, 0.0001) var friction: float = 0.45
-@export_range(0.0, 1, 0.0001) var air_friction: float = 0.45
+#@export_range(0.0, 1, 0.05) var air_friction: float = 0.0075
+#@export_range(0.0, 1, 0.0001) var air_friction: float = 0.0045
+#@export_range(0.0, 1, 0.0001) var air_friction: float = 0.0025
+@export_range(0.0, 1, 0.05) var air_friction: float = 0.25
 @export var TERMINAL_VELOCITY: float = 350.0
 @export var STARTING_VELOCITY: Vector2 = Vector2.ZERO
 
@@ -65,7 +69,7 @@ var is_on_platform: bool
 var can_move: bool
 var move_paused: bool
 
-## Value returned when parent calls compute_val()
+##value returned when parent calls tick_val()
 var body_vel: Vector2 = Vector2.ZERO
 
 enum MoveState {IDLE, WALK, DASH, RUN, RUNTURN, JUMPSQUAT, AIRBORNE, LANDLAG, CROUCH}
@@ -76,8 +80,7 @@ func _ready() -> void:
 	frame = 0
 	gravity = GRAVITY
 	weight = mass * gravity
-	#on_ground = body.is_on_floor()
-	on_ground = is_on_ground()
+	on_ground = body.is_on_floor()
 	can_move = true
 	move_paused = false
 	walk_force = Vector2(walk_speed, 0)
@@ -85,9 +88,9 @@ func _ready() -> void:
 	run_force = Vector2(run_speed, 0)
 	
 ## WARNING: Do not use this + tick_val(), use 1 or the other
-func compute_vel(delta: float, dir: Vector2) -> Vector2:
+func tick(delta: float) -> void:
 	if body == null:
-		return Vector2.ZERO
+		return
 	if model is AnimatedSprite2D:
 		if orientation == -1:
 			model.flip_h = true
@@ -96,28 +99,26 @@ func compute_vel(delta: float, dir: Vector2) -> Vector2:
 	if current_state != MoveState.CROUCH:
 		if model is ColorRect && model.size.y < 30:
 			model.size.y = 30
-		if hurtbox != null:
-			hurtbox.find_child("CollisionShape2D").scale.y = 1
-			hurtbox.find_child("CollisionShape2D").position.y = 0
+		hurtbox.find_child("CollisionShape2D").scale.y = 1
+		hurtbox.find_child("CollisionShape2D").position.y = 0
+		#if ecb.disabled && !body.is_on_floor():
+			#ecb.disabled = false
 	
 	## early return for when ability or game mechanic needs
 	## to pause the character entirely
 	if move_paused:
-		return Vector2.ZERO
+		return
 	
 	if STARTING_VELOCITY != Vector2.ZERO:
 		#apply_force(STARTING_VELOCITY)
 		#apply_accel(delta)
-		body_vel = STARTING_VELOCITY
+		body.velocity = STARTING_VELOCITY
 		STARTING_VELOCITY = Vector2.ZERO
-	
-	direction = dir
 	
 	handle_state(current_state, delta)
 	frame = frame + 1
 	#print("current movement state: " + str(MoveState.keys()[current_state]) + ", entity: " + str(body.name))
 	#accel = Vector2.ZERO
-	return body_vel
 	
 ## Changes current state to @param new and resets frame count.
 ## Recommended to early return immediately after calling this function
@@ -129,8 +130,7 @@ func change_state(new: MoveState) -> void:
 func handle_state(state: MoveState, delta: float) -> void:
 	match state:
 		MoveState.IDLE:
-			#if body.is_on_floor():
-			if is_on_ground():
+			if body.is_on_floor():
 				if model is AnimatedSprite2D:
 					model.play("idle")
 				if !can_move:
@@ -152,15 +152,14 @@ func handle_state(state: MoveState, delta: float) -> void:
 				if direction.y <= -deadzone + -crouch_thresh:
 					change_state(MoveState.CROUCH)
 					return
-				if body_vel.length() > 0.0:
+				if body.velocity.length() > 0.0:
 					decelerate(delta)
 			else:
 				on_ground = false
 				change_state(MoveState.AIRBORNE)
 				return
 		MoveState.WALK:
-			#if body.is_on_floor():
-			if is_on_ground():
+			if body.is_on_floor():
 				if model is AnimatedSprite2D:
 					if orientation == -1:
 						model.play("walk_left")
@@ -172,7 +171,9 @@ func handle_state(state: MoveState, delta: float) -> void:
 					change_state(MoveState.DASH)
 					return
 				if abs(direction.x) < deadzone:
-					if body_vel.length() < 1.0 && frame >= 3:
+					#if body.velocity == Vector2.ZERO:
+					#if body.velocity.is_zero_approx() && frame >= 3:
+					if body.velocity.length() < 1.0 && frame >= 3:
 						change_state(MoveState.IDLE)
 						return
 					decelerate(delta, 5.0)
@@ -184,14 +185,13 @@ func handle_state(state: MoveState, delta: float) -> void:
 					return
 				apply_force(walk_force, delta)
 				# Clamp speed
-				body_vel.x = clamp(body_vel.x, -MAX_WALK_SPD, MAX_WALK_SPD)
+				body.velocity.x = clamp(body.velocity.x, -MAX_WALK_SPD, MAX_WALK_SPD)
 			else:
 				on_ground = false
 				change_state(MoveState.AIRBORNE)
 				return
 		MoveState.DASH:
-			#if body.is_on_floor():
-			if is_on_ground():
+			if body.is_on_floor():
 				if model is AnimatedSprite2D:
 					if orientation == -1:
 						model.play("walk_left")
@@ -199,8 +199,10 @@ func handle_state(state: MoveState, delta: float) -> void:
 						model.play("walk_right")
 				if !can_move:
 					return
-				if direction.dot(body_vel) < -deadzone && abs(direction.y) < deadzone:
-					body_vel.x = 0
+				#if direction.dot(body.velocity) < -deadzone:
+				if direction.dot(body.velocity) < -deadzone && abs(direction.y) < deadzone:
+					#body.velocity.x *= -1
+					body.velocity.x = 0
 					accel = Vector2.ZERO
 					change_state(MoveState.IDLE)
 					return
@@ -209,7 +211,7 @@ func handle_state(state: MoveState, delta: float) -> void:
 						change_state(MoveState.RUN)
 						return
 				if abs(direction.x) < deadzone:
-					if body_vel.length() < 1.0 && frame >= 3:
+					if body.velocity.length() < 1.0 && frame >= 3:
 						change_state(MoveState.IDLE)
 						return
 					decelerate(delta)
@@ -218,14 +220,13 @@ func handle_state(state: MoveState, delta: float) -> void:
 					return
 				apply_force(dash_force, delta)
 				# Clamp speed
-				body_vel.x = clamp(body_vel.x, -MAX_SPEED, MAX_SPEED)
+				body.velocity.x = clamp(body.velocity.x, -MAX_SPEED, MAX_SPEED)
 			else:
 				on_ground = false
 				change_state(MoveState.AIRBORNE)
 				return
 		MoveState.RUN:
-			#if body.is_on_floor():
-			if is_on_ground():
+			if body.is_on_floor():
 				if model is AnimatedSprite2D:
 					if orientation == -1:
 						model.play("walk_left")
@@ -238,11 +239,11 @@ func handle_state(state: MoveState, delta: float) -> void:
 						orientation = 1
 					elif direction.x < -deadzone:
 						orientation = -1
-				if direction.dot(body_vel) < -deadzone:
+				if direction.dot(body.velocity) < -deadzone:
 					change_state(MoveState.RUNTURN)
 					return
 				if abs(direction.x) < deadzone:
-					if body_vel.length() < 1.0 && frame >= 3:
+					if body.velocity.length() < 1.0 && frame >= 3:
 						change_state(MoveState.IDLE)
 						return
 					decelerate(delta)
@@ -253,15 +254,13 @@ func handle_state(state: MoveState, delta: float) -> void:
 					change_state(MoveState.CROUCH)
 					return
 				apply_force(run_force, delta)
-				# clamp speed
-				body_vel.x = clamp(body_vel.x, -MAX_SPEED, MAX_SPEED)
+				body.velocity.x = clamp(body.velocity.x, -MAX_SPEED, MAX_SPEED)
 			else:
 				on_ground = false
 				change_state(MoveState.AIRBORNE)
 				return
 		MoveState.RUNTURN:
-			#if body.is_on_floor():
-			if is_on_ground():
+			if body.is_on_floor():
 				if model is AnimatedSprite2D:
 					if orientation == -1:
 						model.play("walk_left")
@@ -274,7 +273,7 @@ func handle_state(state: MoveState, delta: float) -> void:
 				elif direction.x < -deadzone:
 					orientation = -1
 				if abs(direction.x) < deadzone:
-					if body_vel.length() < 1.0:
+					if body.velocity.length() < 1.0:
 						change_state(MoveState.IDLE)
 						return
 					decelerate(delta)
@@ -284,18 +283,18 @@ func handle_state(state: MoveState, delta: float) -> void:
 				if jump_just_pressed || jump_pressed:
 					change_state(MoveState.JUMPSQUAT)
 					return
-				if body_vel.x == 0.0:
+				#if direction == Vector2.ZERO or direction.dot(body.velocity) < 0:
+				if body.velocity.x == 0.0:
 					change_state(MoveState.RUN)
 					return
-				if direction.dot(body_vel) < 0:
+				if direction.dot(body.velocity) < 0:
 					decelerate(delta)
 			else:
 				on_ground = false
 				change_state(MoveState.AIRBORNE)
 				return
 		MoveState.JUMPSQUAT:
-			#if body.is_on_floor():
-			if is_on_ground():
+			if body.is_on_floor():
 				if model is AnimatedSprite2D:
 					model.play("jump_squat")
 				if jump_released:
@@ -305,7 +304,7 @@ func handle_state(state: MoveState, delta: float) -> void:
 						#apply_force(Vector2(0,JUMP_VELOCITY))
 						#accel = calc_accel(Vector2(0,JUMP_VELOCITY))
 						#apply_accel(delta)
-						body_vel.y = JUMP_VELOCITY*SHORT_JUMP_MOD
+						body.velocity.y = JUMP_VELOCITY*SHORT_JUMP_MOD
 						is_short_jump = false
 						change_state(MoveState.AIRBORNE)
 						return
@@ -313,7 +312,7 @@ func handle_state(state: MoveState, delta: float) -> void:
 						#apply_force(Vector2(0,JUMP_VELOCITY*0.65))
 						#accel = calc_accel(Vector2(0,JUMP_VELOCITY*0.65))
 						#apply_accel(delta)
-						body_vel.y = JUMP_VELOCITY
+						body.velocity.y = JUMP_VELOCITY
 						is_short_jump = false
 						change_state(MoveState.AIRBORNE)
 						return
@@ -324,8 +323,7 @@ func handle_state(state: MoveState, delta: float) -> void:
 		MoveState.AIRBORNE:
 			if model is AnimatedSprite2D:
 				model.play("in_air")
-			#if body.is_on_floor():
-			if is_on_ground():
+			if body.is_on_floor():
 				if !on_ground:
 					on_ground = true
 					if !contact_point.is_colliding():
@@ -342,20 +340,19 @@ func handle_state(state: MoveState, delta: float) -> void:
 				if !can_move:
 					return
 				## fast falling
-				if body_vel.y >= 0.0:
+				if body.velocity.y >= 0.0:
 					if (direction.y < -hard_press_thresh && 
 						abs(direction.x) < deadzone &&
 						can_move
 					):
-						body_vel.y = move_toward(body_vel.y, TERMINAL_VELOCITY, run_speed)
+						body.velocity.y = move_toward(body.velocity.y, TERMINAL_VELOCITY, run_speed)
 				apply_force(dash_force, delta)
-				body_vel.x = clamp(body_vel.x, -MAX_AIR_SPEED, MAX_AIR_SPEED)
-				if ecb.disabled && !contact_point.is_colliding():
-					ecb.disabled = false
-				is_on_platform = false
+				body.velocity.x = clamp(body.velocity.x, -MAX_AIR_SPEED, MAX_AIR_SPEED)
+				#if ecb.disabled && !contact_point.is_colliding():
+					#ecb.disabled = false
+				#is_on_platform = false
 		MoveState.LANDLAG:
-			#if body.is_on_floor():
-			if is_on_ground():
+			if body.is_on_floor():
 				if model is AnimatedSprite2D:
 					model.play("landing_lag")
 				if frame >= LANDING_LAG:
@@ -369,23 +366,18 @@ func handle_state(state: MoveState, delta: float) -> void:
 				change_state(MoveState.AIRBORNE)
 				return
 		MoveState.CROUCH:
-			#if body.is_on_floor():
-			if is_on_ground():
+			if body.is_on_floor():
 				if model is AnimatedSprite2D:
 					model.play("idle")
 				if model is ColorRect:
 					model.size.y = 15
-				if hurtbox != null:
-					hurtbox.find_child("CollisionShape2D").scale.y = 0.5
-					hurtbox.find_child("CollisionShape2D").position.y = 8.15
+				hurtbox.find_child("CollisionShape2D").scale.y = 0.5
+				hurtbox.find_child("CollisionShape2D").position.y = 8.15
 				if !can_move:
 					return
-				if is_on_platform:
-					#if ecb.disabled:
-						#ecb.disabled = false
-						#return
-					ecb.disabled = true
-					return
+				#if is_on_platform:
+					#ecb.disabled = true
+					#return
 				if direction.y >= -deadzone + -crouch_thresh:
 					change_state(MoveState.IDLE)
 					return
@@ -399,9 +391,9 @@ func handle_state(state: MoveState, delta: float) -> void:
 				return
 	
 func apply_gravity(extra: float = 0) -> void:
-	if body_vel.y <= TERMINAL_VELOCITY:
-		body_vel.y = move_toward(body_vel.y, TERMINAL_VELOCITY, gravity + extra)
-	body_vel.y = clamp(body_vel.y, -TERMINAL_VELOCITY, TERMINAL_VELOCITY)
+	if body.velocity.y <= TERMINAL_VELOCITY:
+		body.velocity.y = move_toward(body.velocity.y, TERMINAL_VELOCITY, gravity + extra)
+	body.velocity.y = clamp(body.velocity.y, -TERMINAL_VELOCITY, TERMINAL_VELOCITY)
 	
 func calc_accel(force: Vector2) -> Vector2:
 	return force / mass
@@ -409,14 +401,27 @@ func calc_accel(force: Vector2) -> Vector2:
 func apply_force(force: Vector2, delta: float, use_dir = true) -> void:
 	accel = accel + calc_accel(force)
 	if use_dir:
-		var f: Vector2 = (body_vel + accel * direction)
-		body_vel = body_vel.move_toward(f, f.length() * delta * calc_friction())
+		#var f: Vector2 = (body.velocity + accel * direction * calc_friction() * delta)
+		#var f: Vector2 = (body.velocity + accel * direction * calc_friction())
+		var f: Vector2 = (body.velocity + accel * direction * delta)
+		#var f: Vector2 = (body.velocity + accel * direction)
+		#body.velocity = body.velocity.move_toward(f, calc_friction())
+		#body.velocity = body.velocity.move_toward(f, accel_mag)
+		#body.velocity = body.velocity.move_toward(f, accel.length())
+		#body.velocity = body.velocity.move_toward(f, f.length() * delta)
+		body.velocity = body.velocity.move_toward(f, f.length() * calc_friction())
+		#body.velocity = body.velocity.move_toward(f, f.length() * delta * calc_friction())
 	else:
-		var f: Vector2 = (body_vel + accel * calc_friction())
-		body_vel = body_vel.move_toward(f, f.length() * delta * calc_friction())
+		#var f: Vector2 = (body.velocity + accel * calc_friction() * delta)
+		var f: Vector2 = (body.velocity + accel * calc_friction())
+		#var f: Vector2 = (body.velocity + accel * delta)
+		#body.velocity = body.velocity.move_toward(f, calc_friction())
+		#body.velocity = body.velocity.move_toward(f, f.length())
+		body.velocity = body.velocity.move_toward(f, f.length() * delta * calc_friction())
 		
 func decelerate(delta: float, mod: float = 1.0) -> void:
-	body_vel.x = move_toward(body_vel.x, 0.0, decel * delta * mod * calc_friction())
+	body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta * mod * calc_friction())
+	#body.velocity.x = move_toward(body.velocity.x, 0.0, decel * delta * mod * friction)
 	accel = accel.slerp(Vector2(0,0), 0.2)
 	
 func calc_nForce() -> float:
@@ -424,22 +429,12 @@ func calc_nForce() -> float:
 	
 func calc_friction() -> float:
 	var nf: float = calc_nForce()
-	#if body.is_on_floor():
-	if is_on_ground():
+	if body.is_on_floor():
 		return nf * friction
 	else:
+		#return nf * air_friction
 		return nf * (air_friction * 0.01)
 		
 func get_weight() -> float:
 	weight = mass * gravity
 	return weight
-	
-func is_on_ground() -> bool:
-	if body is RigidBody2D:
-		for bod in body.get_colliding_bodies():
-			if bod is TileMapLayer && bod.tile_set.get_physics_layer_collision_layer(0) == 2:
-				return true
-		return false
-	else:
-		return body.is_on_floor()
-			

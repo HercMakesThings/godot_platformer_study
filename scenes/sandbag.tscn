@@ -2,13 +2,28 @@
 
 [ext_resource type="Script" uid="uid://c7wf075jkmfst" path="res://scripts/sandbag.gd" id="1_qb718"]
 [ext_resource type="Script" uid="uid://b7nwpiqypj75k" path="res://scripts/environment_collision_box.gd" id="2_d48q8"]
+[ext_resource type="Script" uid="uid://b7hejklqonhm3" path="res://resources/move_res.gd" id="2_o58ao"]
 [ext_resource type="Shader" uid="uid://dlnlw0tk7bj7c" path="res://shaders/sandbag.gdshader" id="2_qggip"]
 [ext_resource type="Script" uid="uid://7phcjebu2nrt" path="res://scripts/sandbag_color_rect.gd" id="3_5du47"]
+[ext_resource type="Script" uid="uid://b1r2eahjfa8hu" path="res://resources/entity_res.gd" id="3_d14ff"]
+[ext_resource type="Script" uid="uid://by36nmf4yr75f" path="res://resources/entity_move_res.gd" id="3_tkrex"]
 [ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="3_w1bhx"]
 [ext_resource type="Script" uid="uid://74ctiqofli1i" path="res://scripts/health_manager.gd" id="6_f8d84"]
-[ext_resource type="Script" uid="uid://lgo3he6gsmg5" path="res://scripts/movement_component.gd" id="7_o58ao"]
+[ext_resource type="Script" uid="uid://lgo3he6gsmg5" path="res://scripts/movement_manager.gd" id="7_o58ao"]
 [ext_resource type="Script" uid="uid://b6cj2ucaeqd2" path="res://scripts/ability_manager.gd" id="8_d14ff"]
 [ext_resource type="Script" uid="uid://brf0y0hshgpn4" path="res://scripts/damaged_ability.gd" id="9_tkrex"]
+
+[sub_resource type="Resource" id="Resource_d14ff"]
+script = ExtResource("2_o58ao")
+metadata/_custom_type_script = "uid://b7hejklqonhm3"
+
+[sub_resource type="Resource" id="Resource_6vu6i"]
+script = ExtResource("3_tkrex")
+metadata/_custom_type_script = "uid://by36nmf4yr75f"
+
+[sub_resource type="Resource" id="Resource_tkrex"]
+script = ExtResource("3_d14ff")
+metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wtxvj"]
 shader = ExtResource("2_qggip")
@@ -27,7 +42,11 @@ radius = 12.0
 height = 34.0
 
 [node name="Sandbag" type="CharacterBody2D" unique_id=2090127047]
+collision_mask = 3
 script = ExtResource("1_qb718")
+movement = SubResource("Resource_d14ff")
+entity_movement = SubResource("Resource_6vu6i")
+entity = SubResource("Resource_tkrex")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=44927181]
 material = SubResource("ShaderMaterial_wtxvj")
@@ -57,13 +76,12 @@ script = ExtResource("6_f8d84")
 percent = 75.0
 metadata/_custom_type_script = "uid://74ctiqofli1i"
 
-[node name="MovementComponent" type="Node" parent="." unique_id=1774713098 node_paths=PackedStringArray("body", "model", "hurtbox", "ecb", "contact_point")]
+[node name="MovementManager" type="Node" parent="." unique_id=1774713098 node_paths=PackedStringArray("body", "model", "hurtbox", "contact_point")]
 unique_name_in_owner = true
 script = ExtResource("7_o58ao")
 body = NodePath("..")
 model = NodePath("../ColorRect")
 hurtbox = NodePath("../Hurtbox")
-ecb = NodePath("../EnvironmentCollisionBox")
 contact_point = NodePath("../ContactPoint")
 metadata/_custom_type_script = "uid://lgo3he6gsmg5"
 
@@ -78,6 +96,7 @@ unique_name_in_owner = true
 script = ExtResource("9_tkrex")
 health_manager = NodePath("../../HealthManager")
 body = NodePath("../..")
+hitstun_gravity = 16.0
 metadata/_custom_type_script = "uid://brf0y0hshgpn4"
 
 [node name="ContactPoint" type="RayCast2D" parent="." unique_id=1994832175]

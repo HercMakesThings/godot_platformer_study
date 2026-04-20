@@ -8,9 +8,13 @@
 [ext_resource type="Script" uid="uid://by62tcho3drwi" path="res://scripts/label_2.gd" id="5_vtaks"]
 [ext_resource type="PackedScene" uid="uid://nj581ku4ihqa" path="res://scenes/enemy_basic.tscn" id="5_whekb"]
 [ext_resource type="PackedScene" uid="uid://bbpdo7iuex73c" path="res://scenes/crawler_enemy.tscn" id="8_gee14"]
-[ext_resource type="PackedScene" path="res://scenes/sandbag.tscn" id="10_kvpfn"]
+[ext_resource type="PackedScene" uid="uid://cn2hl3dyvnbsd" path="res://scenes/sandbag.tscn" id="10_kvpfn"]
 [ext_resource type="PackedScene" uid="uid://dx1h5gjrv33tf" path="res://scenes/player_new.tscn" id="10_vtaks"]
 [ext_resource type="Script" uid="uid://bsfowl8fm16ji" path="res://scenes/test_rigid.gd" id="11_kvpfn"]
+[ext_resource type="Shader" uid="uid://dw5t7orxmcyin" path="res://shaders/rounded_corners.gdshader" id="12_dinhu"]
+[ext_resource type="Script" uid="uid://b7nwpiqypj75k" path="res://scripts/environment_collision_box.gd" id="12_trtic"]
+[ext_resource type="Script" uid="uid://b6ncwap61pjs1" path="res://scripts/movement_component.gd" id="13_kvuet"]
+[ext_resource type="Script" uid="uid://b8ht4tsoo7t80" path="res://scripts/test_item_char_2d.gd" id="15_ir15t"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vtaks"]
 texture = ExtResource("1_0tnpc")
@@ -125,8 +129,8 @@ texture = ExtResource("1_0tnpc")
 8:8/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_kvpfn"]
-physics_layer_0/collision_layer = 5
-physics_layer_0/collision_mask = 5
+physics_layer_0/collision_layer = 2
+physics_layer_0/collision_mask = 0
 sources/0 = SubResource("TileSetAtlasSource_vtaks")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dinhu"]
@@ -268,8 +272,24 @@ _data = {
 &"move": SubResource("Animation_khb0g")
 }
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_dinhu"]
-radius = 5.3851647
+[sub_resource type="CircleShape2D" id="CircleShape2D_ir15t"]
+radius = 4.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kvuet"]
+shader = ExtResource("12_dinhu")
+shader_parameter/radius_scale = 1.0
+shader_parameter/rounded_corner_top_left = true
+shader_parameter/rounded_corner_top_right = true
+shader_parameter/rounded_corner_bottom_left = true
+shader_parameter/rounded_corner_bottom_right = true
+shader_parameter/width = 1.0
+shader_parameter/height = 1.0
+shader_parameter/color = Color(0.39, 1, 0.70516664, 1)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_trtic"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_trtic"]
+radius = 4.0
 
 [node name="Game" type="Node2D" unique_id=86849412]
 
@@ -290,7 +310,7 @@ tile_set = SubResource("TileSet_0tnpc")
 
 [node name="PlayerNew" parent="." unique_id=1831211902 instance=ExtResource("10_vtaks")]
 unique_name_in_owner = true
-position = Vector2(-62, 11)
+position = Vector2(-64, 18)
 
 [node name="Camera2D" type="Camera2D" parent="PlayerNew" unique_id=2089388482]
 position = Vector2(0, -35.445)
@@ -332,6 +352,7 @@ collision_layer = 9
 
 [node name="CrawlerEnemy" parent="." unique_id=792170867 instance=ExtResource("8_gee14")]
 position = Vector2(-144, 38)
+collision_mask = 3
 
 [node name="Control" type="Control" parent="." unique_id=1030666623]
 layout_mode = 3
@@ -358,11 +379,70 @@ text = "test"
 script = ExtResource("5_vtaks")
 
 [node name="Sandbag" parent="." unique_id=2090127047 instance=ExtResource("10_kvpfn")]
-position = Vector2(-141, -26)
+position = Vector2(5, 26)
 
 [node name="TestRigid" type="RigidBody2D" parent="." unique_id=1720368041]
+position = Vector2(25, 23)
+collision_layer = 4
+collision_mask = 2
+lock_rotation = true
+contact_monitor = true
+max_contacts_reported = 8
 script = ExtResource("11_kvpfn")
+STARTING_VEL = Vector2(-75, 0)
+custom_dir = Vector2(-1, 0)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="TestRigid" unique_id=802323628]
-position = Vector2(27, 24)
-shape = SubResource("CircleShape2D_dinhu")
+[node name="EnvironmentCollisionBox" type="CollisionShape2D" parent="TestRigid" unique_id=531593473]
+shape = SubResource("CircleShape2D_ir15t")
+script = ExtResource("12_trtic")
+metadata/_custom_type_script = "uid://b7nwpiqypj75k"
+
+[node name="Sprite2D" type="Sprite2D" parent="TestRigid" unique_id=653661114]
+material = SubResource("ShaderMaterial_kvuet")
+scale = Vector2(7.995, 7.995)
+texture = SubResource("CanvasTexture_trtic")
+
+[node name="MovementComponent" type="Node" parent="TestRigid" unique_id=88015464 node_paths=PackedStringArray("body", "model", "ecb", "contact_point")]
+unique_name_in_owner = true
+script = ExtResource("13_kvuet")
+body = NodePath("..")
+model = NodePath("../Sprite2D")
+ecb = NodePath("../EnvironmentCollisionBox")
+contact_point = NodePath("../FloorContactPoint")
+LANDING_LAG = 0
+mass = 1.0
+friction = 0.074
+
+[node name="FloorContactPoint" type="RayCast2D" parent="TestRigid" unique_id=1167157789]
+unique_name_in_owner = true
+target_position = Vector2(0, 4)
+
+[node name="testItemChar2D" type="CharacterBody2D" parent="." unique_id=1045865251]
+position = Vector2(46, 18)
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("15_ir15t")
+
+[node name="EnvironmentCollisionBox" type="CollisionShape2D" parent="testItemChar2D" unique_id=470163904]
+shape = SubResource("CircleShape2D_trtic")
+script = ExtResource("12_trtic")
+metadata/_custom_type_script = "uid://b7nwpiqypj75k"
+
+[node name="Sprite2D" type="Sprite2D" parent="testItemChar2D" unique_id=913974900]
+material = SubResource("ShaderMaterial_kvuet")
+scale = Vector2(7.995, 7.995)
+texture = SubResource("CanvasTexture_trtic")
+
+[node name="FloorContactPoint" type="RayCast2D" parent="testItemChar2D" unique_id=1522799346]
+target_position = Vector2(0, 4)
+
+[node name="MovementComponent" type="Node" parent="testItemChar2D" unique_id=1536435764 node_paths=PackedStringArray("body", "model", "ecb", "contact_point")]
+script = ExtResource("13_kvuet")
+body = NodePath("..")
+model = NodePath("../Sprite2D")
+ecb = NodePath("../EnvironmentCollisionBox")
+contact_point = NodePath("../FloorContactPoint")
+MAX_AIR_SPEED = 250.0
+mass = 100.0
+friction = 1.0
+metadata/_custom_type_script = "uid://b6ncwap61pjs1"

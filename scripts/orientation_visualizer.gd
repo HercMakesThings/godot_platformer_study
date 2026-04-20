@@ -5,7 +5,15 @@ class_name OrientationVisualizer extends RayCast2D
 func _physics_process(_delta: float):
 	if body == null:
 		return
-	if body.movement_component.orientation == -1:
+	#if body.movement_manager.orientation == -1:
+		#target_position.x = -absf(target_position.x)
+	#elif body.movement_manager.orientation == 1:
+		#target_position.x = absf(target_position.x)
+	#if body.movement.orientation == -1:
+		#target_position.x = -absf(target_position.x)
+	#elif body.movement.orientation == 1:
+		#target_position.x = absf(target_position.x)
+	if body.entity.orientation == -1:
 		target_position.x = -absf(target_position.x)
-	elif body.movement_component.orientation == 1:
+	elif body.entity.orientation == 1:
 		target_position.x = absf(target_position.x)

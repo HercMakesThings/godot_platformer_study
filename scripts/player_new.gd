@@ -1,7 +1,7 @@
 class_name PlayerNew extends CharacterBody2D
 
 @onready var input_game_component: InputGameComponent = %InputGameComponent
-@onready var movement_component: MovementComponent = %MovementComponent
+@onready var movement_manager: MovementManager = %MovementManager
 @onready var health_manager: HealthManager = %HealthManager
 @onready var stamina_manager: StaminaManager = %StaminaManager
 @onready var ability_manager: AbilityManager = %AbilityManager
@@ -9,50 +9,117 @@ class_name PlayerNew extends CharacterBody2D
 #@onready var platform_manager: PlatformManager = %PlatformManager
 @onready var platform_manager: PlatformManager = $"../PlatformManager"
 
+#@onready var hitboxes: Node2D = %Hitboxes
+@onready var hitbox_manager: HitboxManager = %HitboxManager
+
+#@export var movement: MovementRes
+@export var contact_point: RayCast2D
+
+@export var entity: Entity
+@export var entity_movement: EntityMoveRes
+
+@export var placeholder_model: ColorRect
 
 func _ready() -> void:
 	platform_manager._pl_on_platform.connect(_on_platform)
-	movement_component.deadzone = input_game_component.deadzone_ls
-	movement_component.hard_press_thresh = input_game_component.hardpress_thresh_ls
+	hitbox_manager.hit_something.connect(_on_hit_something)
+	#movement_manager.deadzone = input_game_component.deadzone_ls
+	#movement_manager.hard_press_thresh = input_game_component.hardpress_thresh_ls
+	#movement.init()
+	entity.init()
 	
 func _physics_process(delta: float) -> void:
 	# capture player input
 	input_game_component.update()
-	movement_component.direction = input_game_component.dir_input
-	#movement_component.will_jump = input_game_component.btn_3_input
-	movement_component.jump_pressed = input_game_component.btn_3_input
-	movement_component.jump_just_pressed = input_game_component.btn_3_just_pressed
-	movement_component.jump_released = input_game_component.btn_3_input_released
-	#movement_component.deadzone = input_game_component.deadzone_ls
-	#movement_component.hard_press_thresh = input_game_component.hardpress_thresh_ls
 	
-	movement_component.tick(delta)
+	###########################################
+	#### movement manager method ##############
+	###########################################
+	#movement_manager.direction = input_game_component.dir_input
+	#movement_manager.jump_pressed = input_game_component.btn_3_input
+	#movement_manager.jump_just_pressed = input_game_component.btn_3_just_pressed
+	#movement_manager.jump_released = input_game_component.btn_3_input_released
 	
-	#ability_manager.update_abilities(input_game_component, movement_component, delta)
-	ability_manager.update_abilities(movement_component, delta)
+	#movement_manager.deadzone = input_game_component.deadzone_ls
+	#movement_manager.hard_press_thresh = input_game_component.hardpress_thresh_ls
+	
+	#movement_manager.tick(delta)
+	#ability_manager.update_abilities(input_game_component, movement_manager, delta)
+	#ability_manager.update_abilities(movement_manager, delta)
+	
+	###########################################
+	#### movement component resource (fat) ####
+	###########################################
+	
+	#movement.jump_pressed = input_game_component.btn_3_input
+	#movement.jump_just_pressed = input_game_component.btn_3_just_pressed
+	#movement.jump_released = input_game_component.btn_3_input_released
+	#movement.compute_movement(
+		#delta,
+		#input_game_component.dir_input,
+		#is_on_floor(),
+		#contact_point.is_colliding()
+	#)
+	#
+	#ability_manager.update_abilities(movement, delta)
+	#
+	#velocity = movement.body_vel
+	
+	###########################################
+	### movement component resource (thin) ####
+	###########################################
+	entity.jump_pressed = input_game_component.btn_3_input
+	entity.jump_just_pressed = input_game_component.btn_3_just_pressed
+	entity.jump_released = input_game_component.btn_3_input_released
+	entity.direction = input_game_component.dir_input
+	
+	entity.contact_point = contact_point.is_colliding()
+	entity.body_on_ground = is_on_floor()
+	
+	entity_movement.compute_movement(entity, delta)
+	
+	ability_manager.update_abilities(entity, delta)
+	
+	if !entity.move_paused:
+		velocity = entity.body_vel
+	else:
+		velocity = Vector2.ZERO
 	
 	## debug
-	debug_prints()
+	#debug_prints()
 	
-	move_and_slide()
+	if !entity.move_paused:
+		move_and_slide()
 	
-func _on_platform(_platform: PlatformBasic, collider: CharacterBody2D) -> void:
-	#print("collider: " + str(collider.name))
+func _on_platform(platform: PlatformBasic, collider: CharacterBody2D) -> void:
 	if collider.name == "PlayerNew":
-		#print("on a platform!!")
-		movement_component.is_on_platform = true
+		#%PlatformBehavior.is_on_platform = true
+		entity.is_on_platform = true
+		if %AirDodge.ad_initiated:
+			position.y = platform.position.y
 		
+func _on_hit_something(_hitbox: Node2D, _hurtbox: Node2D):
+	entity.hit_connected = true
+	
 func debug_prints():
-	print(str(name) + " -> current move state: " + str(movement_component.MoveState.keys()[movement_component.current_state]))
-	#print(str(name) + " -> current friction value: " + str(movement_component.calc_friction()))
-	#print(str(name) + " -> direction.x: " + str(movement_component.direction.x))
-	#print(str(name) + " -> direction.y: " + str(movement_component.direction.y))
-	#print(str(name) + " -> orientation: " + str(movement_component.orientation))
+	print(str(name) + " -> current move state: " + str(entity.MoveState.keys()[entity.current_state]))
+	print(str(name) + " -> is on platform: " + str(entity.is_on_platform))
+	#print("Move state frame count: " + str(entity.move_state_frame))
+	print(str(name) + " -> is on ground: " + str(entity.body_on_ground))
+	
+	#print(str(name) + " -> current move state: " + str(movement_manager.MoveState.keys()[movement_manager.current_state]))
+	#print(str(name) + " -> current move state: " + str(movement.MoveState.keys()[movement.current_state]))
+	#print(str(name) + " -> current velocity: " + str(movement.body_vel))
+	#print(str(name) + " -> current move frame: " + str(movement.frame))
+	#print(str(name) + " -> current friction value: " + str(movement_manager.calc_friction()))
+	#print(str(name) + " -> direction.x: " + str(movement_manager.direction.x))
+	#print(str(name) + " -> direction.y: " + str(movement_manager.direction.y))
+	#print(str(name) + " -> orientation: " + str(movement_manager.orientation))
 	#print(str(name) + " -> full crouch threshold: " + str(-deadzone + -crouch_thresh))
 	#print(str(name) + " -> accel: " + str(accel))
 	#print(str(name) + " -> current velocity: " + str(velocity))
-	#print(str(name) + " -> current x input: " + str(movement_component.direction.x))
-	#print(str(name) + " -> dot product: " + str(movement_component.direction.dot(body.velocity.normalized())))
-	#print(str(name) + " -> deadzone: " + str(movement_component.deadzone))
+	#print(str(name) + " -> current x input: " + str(movement_manager.direction.x))
+	#print(str(name) + " -> dot product: " + str(movement_manager.direction.dot(body.velocity.normalized())))
+	#print(str(name) + " -> deadzone: " + str(movement_manager.deadzone))
 	#print(str(name) + " -> velocity length: " + str(velocity.length()))
-	#print(str(name) + " -> frame #: " + str(movement_component.frame))
+	#print(str(name) + " -> frame #: " + str(movement_manager.frame))

@@ -31,7 +31,7 @@
 [ext_resource type="Script" uid="uid://bjx5rtki0usbf" path="res://scripts/stamina_manager.gd" id="29_dt7fs"]
 [ext_resource type="PackedScene" uid="uid://b58d3k3tt4jsm" path="res://scenes/hurtbox.tscn" id="30_wqfne"]
 [ext_resource type="Script" uid="uid://bjk4djbuag7os" path="res://scripts/input_game_component.gd" id="31_wnwbv"]
-[ext_resource type="Script" uid="uid://lgo3he6gsmg5" path="res://scripts/movement_component.gd" id="32_gl8cc"]
+[ext_resource type="Script" uid="uid://lgo3he6gsmg5" path="res://scripts/movement_manager.gd" id="32_gl8cc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_65qsg"]
 resource_local_to_scene = true
@@ -317,8 +317,7 @@ _data = {
 height = 20.0
 
 [node name="Player" type="CharacterBody2D" unique_id=770139277]
-collision_layer = 9
-collision_mask = 13
+collision_mask = 15
 script = ExtResource("1_dt3sa")
 MAX_SPEED = 200.0
 

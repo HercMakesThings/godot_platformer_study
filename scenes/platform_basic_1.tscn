@@ -9,9 +9,7 @@ collision_mask = 9
 script = ExtResource("1_tlcd5")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=92686573]
-position = Vector2(-2350.95, -47.309)
-scale = Vector2(3.64543, 1.10403)
-polygon = PackedVector2Array(-560.99005, 51.985905, 1854.637, 51.985905, 1767.4045, 393.4621, -477.87225, 393.4621)
+polygon = PackedVector2Array(4406, 0, 4406, 107, -4406, 107, -4406, 0)
 one_way_collision = true
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1666404502]
@@ -19,7 +17,7 @@ collision_layer = 9
 collision_mask = 9
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D" unique_id=2040147787]
-polygon = PackedVector2Array(4406, 19, 4300, 126, -4300, 126, -4406, 19)
+polygon = PackedVector2Array(4406, -15, 4406, 107, -4406, 107, -4406, -15)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=190138807]
 position = Vector2(-2203, 217)

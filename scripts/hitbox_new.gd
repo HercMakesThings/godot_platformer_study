@@ -1,6 +1,7 @@
 class_name HitboxNew extends Area2D
 
-@export var body: CharacterBody2D
+#@export var body: CharacterBody2D
+#@export var movement: Node
 @export var default_hitbox_shape: CollisionShape2D
 @export var kb_dir_visual: RayCast2D
 
@@ -19,14 +20,9 @@ var bkb: float = 0.0
 var kbg: float = 0.0
 @export var lag: int = 4
 @export var stun: int = 20
-
-#@export var xoff: int = 0
-#@export var yoff: int = 0
-var xoff: float = 0
-var yoff: float = 0
 @export var rot: float = 0
 
-var angle_vec := Vector2(1,0)
+var angle_vec: Vector2 = Vector2(1,0)
 
 var kb_angle: Vector2 = Vector2(1,2).normalized()
 var is_active: bool
@@ -37,6 +33,8 @@ var orientation: int
 
 var hitbox_shape: CollisionShape2D
 
+signal hit_something(hitbox: Area2D, hurtbox: Area2D)
+
 func _ready() -> void:
 	hitbox_shape = default_hitbox_shape
 	hitbox_shape.set_disabled(true)
@@ -44,7 +42,7 @@ func _ready() -> void:
 	is_colliding = false
 	atk_frames = 0
 	count = 0
-	#top_level = true
+	body_entered.connect(_on_hit)
 	
 	var angle_radians: float = deg_to_rad(angle)
 	add_to_group("atk_hitbox_group")
@@ -54,15 +52,11 @@ func _ready() -> void:
 	kb_dir_visual.target_position = kb_dir_visual.target_position.rotated(angle_dif)
 	
 func tick(_delta: float) -> void:
-	#print("player global position: " + str(body.global_position))
-	#hitbox_shape.position = body.to_global(Vector2((xoff*body.movement_component.orientation), yoff))
+	## TODO: decide whether hitbox should handle its own orientation
+	## or should the ability its tied to handle that
+	#orientation = movement.orientation
+	#position.x = abs(position.x)*orientation
 	
-	#hitbox_shape.position = body.to_global(Vector2((xoff*orientation), yoff))
-	#global_position = body.global_position
-	global_position = Vector2(body.global_position.x+(xoff*orientation), body.global_position.y+yoff)
-	
-	#hitbox_shape.global_position = body.global_position
-	#print("hitbox global position: " + str(hitbox_shape.global_position))
 	if is_active:
 		hitbox_shape.set_disabled(false)
 		atk_frames += 1
@@ -70,14 +64,7 @@ func tick(_delta: float) -> void:
 		hitbox_shape.set_disabled(true)
 		if atk_frames > 0:
 			atk_frames = 0
-		
-	#if orientation == 1:
-		#set_rotation(-rot)
-		##rotation_degrees = rot
-	#elif orientation == -1:
-		#set_rotation(rot)
-		##rotation_degrees = -rot
-	#set_rotation(rot*orientation)
+	
 	rotation_degrees = rot*orientation
 		
 	var angle_radians: float = deg_to_rad(angle)
@@ -89,20 +76,8 @@ func tick(_delta: float) -> void:
 		
 func flip_hitbox(dir: int) -> void:
 	angle_vec = Vector2(abs(angle_vec.x)*dir, angle_vec.y)
-	#if dir == -1:
-		#if position.x > 0:
-			#position.x *= -1
-			##scale.x *= -1
-			##angle -= 180
-			##angle_vec.x *= -1
-			#angle_vec = Vector2(-angle_vec.x, angle_vec.y)
-	#elif dir == 1:
-		#if position.x < 0:
-			#position.x *= -1
-			##scale.x *= -1
-			##angle += 180
-			##angle_vec.x *= -1
-			#angle_vec = Vector2(-angle_vec.x, angle_vec.y)
-	#var angle_vec = angle_vec.rotated(angle)
 	var angle_dif = kb_dir_visual.target_position.angle_to(angle_vec)
 	kb_dir_visual.target_position = kb_dir_visual.target_position.rotated(angle_dif)
+	
+func _on_hit(body: Node2D):
+	hit_something.emit(self, body)

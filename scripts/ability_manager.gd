@@ -10,10 +10,13 @@ func _ready() -> void:
 			print(str(body.name) + " has ability: " + str(ability.name))
 			
 #func update_abilities(input: InputGameComponent, movement: MovementComponent, delta: float) -> void:
-func update_abilities(movement: MovementComponent, delta: float) -> void:
+#func update_abilities(movement: MovementManager, delta: float) -> void:
+#func update_abilities(movement: MovementRes, delta: float) -> void:
+func update_abilities(entity: Entity, delta: float) -> void:
 	if body == null:
 		return
 	for ability in get_children():
 		if ability is Ability:
 			#ability.tick_ability(input, movement, delta)
-			ability.tick_ability(movement, delta)
+			#ability.tick_ability(movement, delta)
+			ability.tick_ability(entity, delta)

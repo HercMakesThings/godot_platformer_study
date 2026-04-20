@@ -3,10 +3,12 @@
 [ext_resource type="Script" uid="uid://bogxgk5lblv72" path="res://scripts/player_new.gd" id="1_vjt3m"]
 [ext_resource type="Script" uid="uid://b7nwpiqypj75k" path="res://scripts/environment_collision_box.gd" id="2_q1g3e"]
 [ext_resource type="Script" uid="uid://bjk4djbuag7os" path="res://scripts/input_game_component.gd" id="2_wm45n"]
-[ext_resource type="Script" uid="uid://lgo3he6gsmg5" path="res://scripts/movement_component.gd" id="3_b288l"]
 [ext_resource type="Shader" uid="uid://b0gags4mo66xw" path="res://scenes/placeholder_flash.gdshader" id="3_id8he"]
+[ext_resource type="Script" uid="uid://b1r2eahjfa8hu" path="res://resources/entity_res.gd" id="3_s8ti4"]
+[ext_resource type="Script" uid="uid://by36nmf4yr75f" path="res://resources/entity_move_res.gd" id="4_16kr7"]
 [ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="4_d2bp7"]
 [ext_resource type="Script" uid="uid://74ctiqofli1i" path="res://scripts/health_manager.gd" id="5_8tn2v"]
+[ext_resource type="Script" uid="uid://dq311lov6aphk" path="res://scripts/hitbox_manager.gd" id="5_16kr7"]
 [ext_resource type="Script" uid="uid://bjx5rtki0usbf" path="res://scripts/stamina_manager.gd" id="6_6ljwu"]
 [ext_resource type="Script" uid="uid://bp5b6dbhlfcej" path="res://scripts/player_vel_vis.gd" id="7_6ljwu"]
 [ext_resource type="Script" uid="uid://bspltfusgi8q8" path="res://scripts/orientation_visualizer.gd" id="8_gvpj1"]
@@ -14,18 +16,37 @@
 [ext_resource type="Script" uid="uid://b6cj2ucaeqd2" path="res://scripts/ability_manager.gd" id="11_7nfqo"]
 [ext_resource type="Script" uid="uid://cjkfeb23cki15" path="res://scripts/air_jump_ability.gd" id="11_kkhi3"]
 [ext_resource type="Script" uid="uid://hxq7leum3ryx" path="res://scripts/airdodge_ability.gd" id="13_nkc8p"]
-[ext_resource type="Script" path="res://scripts/jab_ability.gd" id="15_3c17b"]
-[ext_resource type="Script" path="res://scripts/hitbox_new.gd" id="16_0gvfs"]
-[ext_resource type="Script" path="res://scripts/damaged_ability.gd" id="17_c8p0i"]
-[ext_resource type="Script" path="res://scripts/ShieldAbility.gd" id="18_pqqny"]
+[ext_resource type="Script" uid="uid://bsh5afyom8ynf" path="res://scripts/jab_ability.gd" id="15_3c17b"]
+[ext_resource type="Script" uid="uid://dpp1v6omyvpw6" path="res://scripts/hitbox_new.gd" id="16_0gvfs"]
+[ext_resource type="Script" uid="uid://brf0y0hshgpn4" path="res://scripts/damaged_ability.gd" id="17_c8p0i"]
+[ext_resource type="Script" uid="uid://m7g2ic7fmnm4" path="res://scripts/ShieldAbility.gd" id="18_pqqny"]
+[ext_resource type="Script" uid="uid://cbh0ct731cyy3" path="res://scripts/medium_attacks.gd" id="19_ic7wx"]
+[ext_resource type="Script" uid="uid://b3lqiaibrgqrn" path="res://scripts/platform_behavior_ability.gd" id="20_gs3cc"]
+[ext_resource type="Script" uid="uid://uubyevs7hmlh" path="res://scripts/environment_collision_diamond.gd" id="23_s8ti4"]
+
+[sub_resource type="Resource" id="Resource_4qics"]
+script = ExtResource("3_s8ti4")
+dash_speed = 1200.0
+run_speed = 800.0
+friction = 0.4601
+air_friction = 0.2
+decel = 120.0
+metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
+
+[sub_resource type="Resource" id="Resource_nip3t"]
+script = ExtResource("4_16kr7")
+metadata/_custom_type_script = "uid://by36nmf4yr75f"
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c8p0i"]
+radius = 4.164545
+height = 19.67609
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3c17b"]
 shader = ExtResource("3_id8he")
 shader_parameter/flash_color = Color(1, 1, 1, 1)
 shader_parameter/flash_modifier = 0.0
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dsvhw"]
-radius = 8.0
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nirif"]
 height = 24.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8tn2v"]
@@ -37,29 +58,60 @@ radius = 16.0
 [sub_resource type="CanvasTexture" id="CanvasTexture_gvpj1"]
 specular_color = Color(0.408699, 0.692188, 0.907185, 1)
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c8p0i"]
-radius = 4.164545
-height = 19.67609
-
-[node name="PlayerNew" type="CharacterBody2D" unique_id=1831211902]
-collision_layer = 9
-collision_mask = 13
+[node name="PlayerNew" type="CharacterBody2D" unique_id=1831211902 node_paths=PackedStringArray("contact_point", "placeholder_model")]
+collision_mask = 10
 script = ExtResource("1_vjt3m")
+contact_point = NodePath("FloorContactRay")
+entity = SubResource("Resource_4qics")
+entity_movement = SubResource("Resource_nip3t")
+placeholder_model = NodePath("PlaceholderModel")
+
+[node name="HitboxManager" type="Node2D" parent="." unique_id=543654558]
+unique_name_in_owner = true
+script = ExtResource("5_16kr7")
+
+[node name="Jab1" type="Area2D" parent="HitboxManager" unique_id=1751743212 node_paths=PackedStringArray("default_hitbox_shape", "kb_dir_visual")]
+position = Vector2(21, -19.125)
+script = ExtResource("16_0gvfs")
+default_hitbox_shape = NodePath("hitbox_shape")
+kb_dir_visual = NodePath("hitbox_shape/RayCast2D")
+dmg = 3.0
+lag = 45
+stun = 16
+rot = 12.01
+
+[node name="hitbox_shape" type="CollisionShape2D" parent="HitboxManager/Jab1" unique_id=626510771]
+shape = SubResource("CapsuleShape2D_c8p0i")
+debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
+
+[node name="RayCast2D" type="RayCast2D" parent="HitboxManager/Jab1/hitbox_shape" unique_id=165138576]
+position = Vector2(0.24134254, -0.2678051)
+scale = Vector2(1, 1.0210605)
+skew = -0.14336586
+target_position = Vector2(3.999998, 0)
 
 [node name="PlaceholderModel" type="ColorRect" parent="." unique_id=531971473]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_3c17b")
 offset_left = 10.0
-offset_top = 15.0
 offset_right = 30.0
-offset_bottom = 45.0
+offset_bottom = 29.999983
 rotation = 3.1415927
 color = Color(0.261, 0.78880006, 0.87, 1)
 
+[node name="EnvironmentCollisionDiamond" type="CollisionPolygon2D" parent="." unique_id=1405959566]
+unique_name_in_owner = true
+position = Vector2(0, -15)
+polygon = PackedVector2Array(0, 15, 10, 0, 0, -15, -10, 0)
+disabled = true
+script = ExtResource("23_s8ti4")
+
 [node name="EnvironmentCollisionBox" type="CollisionShape2D" parent="." unique_id=1721981752]
 unique_name_in_owner = true
-position = Vector2(0, 2.86)
-shape = SubResource("CapsuleShape2D_dsvhw")
+visible = false
+position = Vector2(0, -12)
+shape = SubResource("CapsuleShape2D_nirif")
+disabled = true
 script = ExtResource("2_q1g3e")
 
 [node name="InputGameComponent" type="Node" parent="." unique_id=1858147607]
@@ -67,18 +119,9 @@ unique_name_in_owner = true
 script = ExtResource("2_wm45n")
 metadata/_custom_type_script = "uid://bjk4djbuag7os"
 
-[node name="MovementComponent" type="Node" parent="." unique_id=1645521682 node_paths=PackedStringArray("body", "model", "hurtbox", "ecb", "contact_point")]
-unique_name_in_owner = true
-script = ExtResource("3_b288l")
-body = NodePath("..")
-model = NodePath("../PlaceholderModel")
-hurtbox = NodePath("../Hurtbox")
-ecb = NodePath("../EnvironmentCollisionBox")
-contact_point = NodePath("../FloorContactRay")
-metadata/_custom_type_script = "uid://lgo3he6gsmg5"
-
 [node name="Hurtbox" type="Area2D" parent="." unique_id=39300199]
 unique_name_in_owner = true
+position = Vector2(0, -16)
 script = ExtResource("4_d2bp7")
 metadata/_custom_type_script = "uid://lpgo7mxv0d5h"
 
@@ -88,11 +131,13 @@ debug_color = Color(0.59771556, 0.53621024, 0.27772722, 0.41960785)
 
 [node name="FloorContactRay" type="RayCast2D" parent="." unique_id=1623635467]
 unique_name_in_owner = true
-target_position = Vector2(0, 15)
+position = Vector2(0, -16)
+target_position = Vector2(0, 16)
 collide_with_areas = true
 
 [node name="Shield" type="Area2D" parent="." unique_id=643222157]
 unique_name_in_owner = true
+position = Vector2(0, -16)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Shield" unique_id=622960555]
 shape = SubResource("CircleShape2D_pqqny")
@@ -118,17 +163,18 @@ script = ExtResource("7_6ljwu")
 
 [node name="OrientationVisualizer" type="RayCast2D" parent="." unique_id=745393792 node_paths=PackedStringArray("body")]
 unique_name_in_owner = true
-position = Vector2(0, -13)
+position = Vector2(0, -22.38)
 target_position = Vector2(24, 0)
 script = ExtResource("8_gvpj1")
 body = NodePath("..")
 metadata/_custom_type_script = "uid://bspltfusgi8q8"
 
-[node name="AnimationComponent" type="Node" parent="." unique_id=430436860 node_paths=PackedStringArray("model", "movement_component")]
+[node name="AnimationComponent" type="Node" parent="." unique_id=430436860 node_paths=PackedStringArray("body", "model", "hurtbox")]
 unique_name_in_owner = true
 script = ExtResource("10_4mov0")
+body = NodePath("..")
 model = NodePath("../PlaceholderModel")
-movement_component = NodePath("../MovementComponent")
+hurtbox = NodePath("../Hurtbox")
 metadata/_custom_type_script = "uid://b5jo0ea00swg"
 
 [node name="AbilityManager" type="Node" parent="." unique_id=2051535807 node_paths=PackedStringArray("body")]
@@ -144,10 +190,9 @@ body = NodePath("../..")
 input = NodePath("../../InputGameComponent")
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
 
-[node name="AirDodge" type="Node" parent="AbilityManager" unique_id=1319945754 node_paths=PackedStringArray("body", "input", "model")]
+[node name="AirDodge" type="Node" parent="AbilityManager" unique_id=1319945754 node_paths=PackedStringArray("input", "model")]
 unique_name_in_owner = true
 script = ExtResource("13_nkc8p")
-body = NodePath("../..")
 input = NodePath("../../InputGameComponent")
 model = NodePath("../../PlaceholderModel")
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
@@ -155,38 +200,17 @@ metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
 [node name="flash_timer" type="Timer" parent="AbilityManager/AirDodge" unique_id=722690103]
 wait_time = 0.205
 
-[node name="Jab" type="Node" parent="AbilityManager" unique_id=1124161573 node_paths=PackedStringArray("body", "input", "hitbox")]
+[node name="Jab" type="Node" parent="AbilityManager" unique_id=1124161573 node_paths=PackedStringArray("input", "hitbox")]
 unique_name_in_owner = true
 script = ExtResource("15_3c17b")
-body = NodePath("../..")
 input = NodePath("../../InputGameComponent")
-hitbox = NodePath("HitboxNew")
+hitbox = NodePath("../../HitboxManager/Jab1")
 angle = 341.0
 bkb = 22.0
 kbg = 35.0
 xoff = 14.0
 yoff = -5.0
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
-
-[node name="HitboxNew" type="Area2D" parent="AbilityManager/Jab" unique_id=1751743212 node_paths=PackedStringArray("body", "default_hitbox_shape", "kb_dir_visual")]
-script = ExtResource("16_0gvfs")
-body = NodePath("../../..")
-default_hitbox_shape = NodePath("hitbox_shape")
-kb_dir_visual = NodePath("hitbox_shape/RayCast2D")
-lag = 2
-stun = 16
-rot = 12.01
-
-[node name="hitbox_shape" type="CollisionShape2D" parent="AbilityManager/Jab/HitboxNew" unique_id=626510771]
-skew = 0.14486232
-shape = SubResource("CapsuleShape2D_c8p0i")
-debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
-
-[node name="RayCast2D" type="RayCast2D" parent="AbilityManager/Jab/HitboxNew/hitbox_shape" unique_id=165138576]
-position = Vector2(0.24134254, -0.2678051)
-scale = Vector2(1, 1.0210605)
-skew = -0.14336586
-target_position = Vector2(3.999998, 0)
 
 [node name="Damaged" type="Node" parent="AbilityManager" unique_id=1969745582 node_paths=PackedStringArray("health_manager", "body")]
 unique_name_in_owner = true
@@ -199,6 +223,17 @@ metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
 unique_name_in_owner = true
 script = ExtResource("18_pqqny")
 input = NodePath("../../InputGameComponent")
+metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
+
+[node name="MediumAttacks" type="Node" parent="AbilityManager" unique_id=1476256581]
+unique_name_in_owner = true
+script = ExtResource("19_ic7wx")
+metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
+
+[node name="PlatformBehavior" type="Node" parent="AbilityManager" unique_id=287219878 node_paths=PackedStringArray("ecd")]
+unique_name_in_owner = true
+script = ExtResource("20_gs3cc")
+ecd = NodePath("../../EnvironmentCollisionDiamond")
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
 
 [connection signal="area_entered" from="Hurtbox" to="Hurtbox" method="_on_hurtbox_area_entered"]

@@ -25,32 +25,36 @@ func _ready() -> void:
 	stun_frames = 0
 	hitbox = null
 	
-#func tick_ability(_input: InputGameComponent, movement: MovementComponent, delta: float) -> void:
-func tick_ability(movement: MovementComponent, delta: float) -> void:
+#func tick_ability(_input: InputGameComponent, entity: entityComponent, delta: float) -> void:
+#func tick_ability(entity: entityManager, delta: float) -> void:
+#func tick_ability(entity: entityRes, delta: float) -> void:
+func tick_ability(entity: Entity, _delta: float) -> void:
 	if is_hit:
 		
 		#print("is hit true: " + str(is_hit) + ", stun frames: " + str(stun_frames))
-		movement.can_move = false
-		movement.gravity = hitstun_gravity
+		entity.can_move = false
+		entity.gravity = hitstun_gravity
 		stun_frames += 1
 		#if stun_frames <= hitbox.lag:
 		if stun_frames <= atk_lag:
-			body.velocity = Vector2.ZERO
-			#movement.gravity = 0.0
+			#body.velocity = Vector2.ZERO
+			entity.body_vel = Vector2.ZERO
+			#entity.gravity = 0.0
 		#elif stun_frames <= hitbox.lag + hitbox.stun:
 		elif stun_frames <= atk_lag + atk_stun:
 			#var force: Vector2 = hitbox.angle_vec.normalized()
 			var force: Vector2 = atk_angle_vec.normalized()
-			#var kb: float = FlushyUtils.calc_kb(hitbox, health_manager.percent, movement.weight)
-			#var kb: float = FlushyUtils.calc_kb_no_area(atk_bkb, atk_kbg, atk_dmg, health_manager.percent, movement.weight)
-			var kb: float = FlushyUtils.calc_kb_no_area(atk_bkb, atk_kbg, atk_dmg, health_manager.percent, movement.get_weight())
+			#var kb: float = FlushyUtils.calc_kb(hitbox, health_manager.percent, entity.weight)
+			#var kb: float = FlushyUtils.calc_kb_no_area(atk_bkb, atk_kbg, atk_dmg, health_manager.percent, entity.weight)
+			var kb: float = FlushyUtils.calc_kb_no_area(atk_bkb, atk_kbg, atk_dmg, health_manager.percent, entity.get_weight())
 			force = force * kb
-			print("knockback: " + str(kb))
-			#movement.apply_force(force)
-			#movement.apply_accel(delta)
-			body.velocity = force
-			#movement.apply_force(force, delta)
-			print("body velocity: " + str(body.velocity))
+			#print("knockback: " + str(kb))
+			#entity.apply_force(force)
+			#entity.apply_accel(delta)
+			#body.velocity = force
+			entity.body_vel = force
+			#entity.apply_force(force, delta)
+			#print("body velocity: " + str(body.velocity))
 		else:
 			is_hit = false
 			stun_frames = 0
@@ -62,8 +66,8 @@ func tick_ability(movement: MovementComponent, delta: float) -> void:
 			atk_kbg = 0
 			atk_stun = 0
 			atk_lag = 0
-			movement.gravity = movement.GRAVITY
-			movement.can_move = true
+			entity.gravity = entity.GRAVITY
+			entity.can_move = true
 	
 func _on_hit(area: Area2D):
 	print("hit!")

@@ -1,7 +1,5 @@
 class_name Airdodge extends Ability
 
-#@onready var body: PlayerNew = $"../.."
-@export var body: CharacterBody2D
 @export var input: Node
 
 @export var model: Node
@@ -28,84 +26,45 @@ func _ready() -> void:
 	ad_initiated = false
 	touched_ground = false
 
-#func tick_ability(input: InputGameComponent, movement: MovementComponent, _delta: float) -> void:
-func tick_ability(movement: MovementComponent, _delta: float) -> void:
-	#print("can move: " + str(movement.can_move))
-	if (input.guard_input && air_dodge > 0 &&
-		(movement.current_state == movement.MoveState.AIRBORNE ||
-		 movement.current_state == movement.MoveState.JUMPSQUAT)):
-			ad_initiated = true
-			ad_direction = Vector2(
-				movement.direction.x,
-				-movement.direction.y
-			).normalized()
-			movement.can_move = false
-			air_dodge -= 1
+#func tick_ability(input: InputGameComponent, entity: MovementComponent, _delta: float) -> void:
+#func tick_ability(movement: MovementManager, _delta: float) -> void:
+#func tick_ability(movement: MovementRes, _delta: float) -> void:
+func tick_ability(entity: Entity, delta: float) -> void:
+	#if ((input.guard_input || input.is_guard_held()) && 
+	if (input.guard_input && 
+		air_dodge > 0 &&
+		(entity.current_state == entity.MoveState.AIRBORNE ||
+		 entity.current_state == entity.MoveState.JUMPSQUAT)
+	):
+		ad_initiated = true
+		ad_direction = Vector2(
+			entity.direction.x,
+			-entity.direction.y
+		).normalized()
+		entity.can_move = false
+		air_dodge -= 1
 			
 	if ad_initiated:
-		#print("ad frame: " + str(ad_frame))
-		#if ad_frame == 1:
-			#flash_timer.start()
-			#model.material.set_shader_parameter("flash_modifier", 0.6)
-		##if movement.current_state == movement.MoveState.LANDLAG:
-			##ad_initiated = false
-			##ad_frame = 0
-			##movement.can_move = true
-			##return
-		##if body.is_on_floor():
-			##if !movement.contact_point.is_colliding():
-				##ad_initiated = false
-				##ad_frame = 0
-				##movement.can_move = true
-				##return
-		#if ad_frame < 10:
-			#if body.is_on_floor():
-				##body.velocity = ad_direction * 5000 * delta
-				#body.velocity = ad_direction * 500
-			#else:
-				#body.velocity = ad_direction * 450
-		#if ad_frame >= 10:
-			#if body.is_on_floor():
-				#body.velocity = lerp(body.velocity, Vector2(0,0), 0.05)
-			##velocity = lerp(velocity, Vector2(0,0), body.friction)
-			#else:
-				#body.velocity = lerp(body.velocity, Vector2(0,0), 0.5)
-		#if ad_frame >= air_dodge_length:
-			#movement.can_move = true
-			#ad_frame = 0
-			#ad_initiated = false
-			
 		if ad_frame == 1:
 			flash_timer.start()
 			model.material.set_shader_parameter("flash_modifier", 0.6)
-		if body.is_on_floor():
-			#if air_dodge < air_dodge_count:
-				#air_dodge = air_dodge_count
+		if entity.body_on_ground:
 			if !touched_ground:
-				## comment out the if statement below to enable superjump.
-				## is that a good idea?? not sure yet
-				if movement.current_state != movement.MoveState.JUMPSQUAT:
+				if entity.current_state != entity.MoveState.JUMPSQUAT:
 					touched_ground = true
-			#if !movement.contact_point.is_colliding():
-			##if !movement.on_ground:
-				#movement.can_move = true
-				#ad_frame = 0
-				#ad_initiated = false
-				##_on_flash_timer_timeout()
-				#flash_timer.stop()
-				#flash_timer.timeout.emit()
-				#return
 			if air_dodge < air_dodge_count:
 				air_dodge = air_dodge_count
+			if entity.is_on_platform:
+				entity.body_vel.y = 0.0
 			if ad_frame <= air_dodge_length - air_dodge_landlag:
-				body.velocity = ad_direction * air_dodge_speed
-			elif ad_frame < air_dodge_length:
-				#body.velocity = lerp(body.velocity, Vector2(0,0), smoothstep(1.0, 0.0, clampf(movement.friction, 0, 1)))
-				#body.velocity = lerp(body.velocity, Vector2(0,0), smoothstep(1.0, 0.0, clampf(movement.calc_friction(), 0, 1)))
-				body.velocity = body.velocity.move_toward(Vector2.ZERO, movement.calc_friction())
-				#body.velocity = body.velocity.move_toward(Vector2.ZERO, movement.accel_mag)
+				entity.body_vel = ad_direction * air_dodge_speed
+			elif ad_frame < air_dodge_length && ad_frame >= air_dodge_landlag:
+				if entity.is_on_platform:
+					entity.decelerate(delta, 5.0)
+				else:
+					entity.decelerate(delta)
 			else:
-				movement.can_move = true
+				entity.can_move = true
 				ad_frame = 0
 				ad_initiated = false
 				if air_dodge < air_dodge_count && touched_ground:
@@ -113,35 +72,39 @@ func tick_ability(movement: MovementComponent, _delta: float) -> void:
 				touched_ground = false
 				return
 		else:
-			if touched_ground:
-				movement.can_move = true
+			if touched_ground && !entity.contact_point:
+				entity.can_move = true
 				ad_frame = 0
 				ad_initiated = false
 				touched_ground = false
-				
 				air_dodge = air_dodge_count
 				
 				flash_timer.stop()
 				flash_timer.timeout.emit()
 				return
+			#if entity.is_on_platform && !entity.contact_point:
+				#pass
 			if ad_frame < air_dodge_length - air_dodge_landlag:
-			#if ad_frame < air_dodge_length:
-				body.velocity = ad_direction * air_dodge_speed
+				entity.body_vel = ad_direction * air_dodge_speed
 			elif ad_frame < air_dodge_length:
-					#body.velocity = lerp(body.velocity, Vector2(0,0), smoothstep(0.0, 1.0, 0.5))
-					body.velocity = body.velocity.slerp(Vector2.ZERO, smoothstep(0.0, 1.0, 0.5))
+					entity.body_vel = entity.body_vel.slerp(Vector2.ZERO, smoothstep(0.0, 1.0, 0.5))
 			elif ad_frame >= air_dodge_length + 10:
-				movement.can_move = true
+				entity.can_move = true
 				ad_frame = 0
 				touched_ground = false
 				ad_initiated = false
 				return
 			else:
-				movement.can_move = true
+				entity.can_move = true
+				ad_frame = 0
+				touched_ground = false
+				ad_initiated = false
+				return
+			touched_ground = false
 		ad_frame += 1
 		return
 				
-	if (body.is_on_floor() && air_dodge < air_dodge_count):
+	if (entity.body_on_ground && air_dodge < air_dodge_count):
 		air_dodge = air_dodge_count
 				
 

@@ -1,6 +1,5 @@
 class_name JabAbility extends Ability
 
-@export var body: CharacterBody2D
 @export var input: Node
 @export var hitbox: HitboxNew
 
@@ -16,47 +15,57 @@ var ability_length: int = 18
 
 var atk_initiated: bool
 var frames: int
-var active_frames: int
+var active_frames_modifier: int
 
 func _ready() -> void:
 	atk_initiated = false
 	frames = 0
-	active_frames = 0
+	active_frames_modifier = 0
 	hitbox.angle = angle
 	hitbox.bkb = bkb
 	hitbox.kbg = kbg
-	hitbox.xoff = xoff
-	hitbox.yoff = yoff
 
-#func tick_ability(input: InputGameComponent, movement: MovementComponent, delta: float) -> void:
-func tick_ability(movement: MovementComponent, delta: float) -> void:
-	#print("orientation: " + str(movement.orientation))
-	hitbox.orientation = movement.orientation
-	#hitbox.position = body.to_global(Vector2((xoff*movement.orientation), yoff))
-	#hitbox.position = body.to_global(Vector2((xoff*movement.orientation), yoff))
-	#hitbox.position = Vector2(body.position.x+(xoff*movement.orientation), body.position.y+yoff)
-	#hitbox.position = body.to_global(body.to_local(Vector2.ZERO))
+#func tick_ability(input: InputGameComponent, entity: entityComponent, delta: float) -> void:
+#func tick_ability(entity: entityManager, delta: float) -> void:
+#func tick_ability(entity: entityRes, delta: float) -> void:
+func tick_ability(entity: Entity, delta: float) -> void:
+	## handle hitbox positioning and orientation
+	hitbox.orientation = entity.orientation
+	hitbox.position.x = abs(hitbox.position.x)*entity.orientation
+	
+	## Get player input and initiate attack
 	if (input.btn_1_input &&
-		movement.can_move &&
-		movement.current_state != movement.MoveState.AIRBORNE &&
-		movement.current_state != movement.MoveState.RUNTURN &&
-		body.is_on_floor() &&
-		movement.direction.x < movement.deadzone):
+		entity.can_move &&
+		entity.current_state != entity.MoveState.AIRBORNE &&
+		entity.current_state != entity.MoveState.RUNTURN &&
+		entity.body_on_ground &&
+		entity.direction.x < entity.deadzone):
 			atk_initiated = true
 			frames = 0
-			movement.can_move = false
-			
+			entity.can_move = false
+	
+	## Handle initiated attack
 	if atk_initiated:
 		frames += 1
-		if body.velocity.length() > 1.0:
-			movement.decelerate(delta)
-		if frames >= active_window_start && frames < active_window_start + active_window:
+		if entity.body_vel.length() > 1.0 && !entity.move_paused:
+			entity.decelerate(delta)
+		if entity.hit_connected:
+			active_frames_modifier = hitbox.lag
+			entity.move_paused = true
+		else:
+			active_frames_modifier = 0
+			entity.move_paused = false
+		if frames >= active_window_start && frames < active_window_start + active_window + active_frames_modifier:
 			hitbox.is_active = true
 		else:
 			hitbox.is_active = false
-		if frames >= ability_length:
+			entity.hit_connected = false
+		if frames >= ability_length + active_frames_modifier:
 			atk_initiated = false
 			frames = 0
-			movement.can_move = true
+			active_frames_modifier = 0
+			entity.can_move = true
+	
+	## Tick hitbox every frame
 	hitbox.tick(delta)
 	

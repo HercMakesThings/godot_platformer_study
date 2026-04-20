@@ -18,19 +18,21 @@ var shield_initiated: bool = false
 var shield_released: bool = false
 
 
-func tick_ability(movement: MovementComponent, delta: float) -> void:
+#func tick_ability(entity: entityManager, delta: float) -> void:
+#func tick_ability(entity: entityRes, delta: float) -> void:
+func tick_ability(entity: Entity, delta: float) -> void:
 	if (body.is_on_floor() &&
-		movement.can_move &&
-		movement.current_state != movement.MoveState.DASH &&
-		movement.current_state != movement.MoveState.JUMPSQUAT):
+		entity.can_move &&
+		entity.current_state != entity.MoveState.DASH &&
+		entity.current_state != entity.MoveState.JUMPSQUAT):
 			if input is InputGameComponent:
 				if input.is_guard_pressed():
 					shield_initiated = true
-					movement.can_move = false
+					entity.can_move = false
 					
 	if shield_initiated:
 		if abs(body.velocity) > Vector2.ZERO:
-			movement.decelerate(delta)
+			entity.decelerate(delta)
 		if input is InputGameComponent:
 			if input.is_guard_released() && !input.is_guard_pressed():
 				shield_released = true
@@ -38,21 +40,21 @@ func tick_ability(movement: MovementComponent, delta: float) -> void:
 				hurtbox.find_child("CollisionShape2D").disabled = false
 				shield.find_child("CollisionShape2D").disabled = true
 				return
-			if movement.jump_just_pressed || movement.jump_pressed:
+			if entity.jump_just_pressed || entity.jump_pressed:
 				shield_initiated = false
 				shield_released = false
 				hurtbox.find_child("CollisionShape2D").disabled = false
 				shield.find_child("CollisionShape2D").disabled = true
-				movement.current_state = movement.MoveState.JUMPSQUAT
-				movement.can_move = true
+				entity.current_state = entity.MoveState.JUMPSQUAT
+				entity.can_move = true
 				return
 			if !body.is_on_floor():
 				shield_initiated = false
 				shield_released = false
 				hurtbox.find_child("CollisionShape2D").disabled = false
 				shield.find_child("CollisionShape2D").disabled = true
-				movement.current_state = movement.MoveState.AIRBORNE
-				movement.can_move = true
+				entity.current_state = entity.MoveState.AIRBORNE
+				entity.can_move = true
 				return
 		hurtbox.find_child("CollisionShape2D").disabled = true
 
@@ -62,4 +64,4 @@ func tick_ability(movement: MovementComponent, delta: float) -> void:
 		release_frame += 1
 		if release_frame >= release_frames:
 			shield_released = false
-			movement.can_move = true
+			entity.can_move = true
