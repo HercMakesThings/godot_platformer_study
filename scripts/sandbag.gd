@@ -11,9 +11,14 @@ class_name Sandbag extends CharacterBody2D
 
 @export var entity: Entity
 
+@export var abilities: Dictionary[String, AbilityRes]
+
 func _ready() -> void:
 	platform_manager._pl_on_platform.connect(_on_platform)
 	entity.init()
+	for i in abilities:
+		abilities[i]._init_ability(self)
+		print(str(name) + " Ability Resource: " + str(abilities[i].name))
 
 func _physics_process(delta: float) -> void:
 	#movement_manager.tick(delta)
@@ -24,7 +29,11 @@ func _physics_process(delta: float) -> void:
 	#ability_manager.update_abilities(input_game_component, movement_manager, delta)
 	#ability_manager.update_abilities(movement_manager, delta)
 	#ability_manager.update_abilities(movement, delta)
-	ability_manager.update_abilities(entity, delta)
+	#ability_manager.update_abilities(entity, delta)
+	
+	for ability in abilities.values():
+		if ability is AbilityRes:
+			ability._act(self, delta)
 	
 	if !entity.move_paused:
 		velocity = entity.body_vel

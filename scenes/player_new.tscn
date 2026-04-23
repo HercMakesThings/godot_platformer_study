@@ -5,23 +5,28 @@
 [ext_resource type="Script" uid="uid://bjk4djbuag7os" path="res://scripts/input_game_component.gd" id="2_wm45n"]
 [ext_resource type="Shader" uid="uid://b0gags4mo66xw" path="res://scenes/placeholder_flash.gdshader" id="3_id8he"]
 [ext_resource type="Script" uid="uid://b1r2eahjfa8hu" path="res://resources/entity_res.gd" id="3_s8ti4"]
+[ext_resource type="Script" uid="uid://db3fuworsu3wx" path="res://resources/ability_res.gd" id="4_4qics"]
 [ext_resource type="Script" uid="uid://by36nmf4yr75f" path="res://resources/entity_move_res.gd" id="4_16kr7"]
 [ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="4_d2bp7"]
 [ext_resource type="Script" uid="uid://74ctiqofli1i" path="res://scripts/health_manager.gd" id="5_8tn2v"]
 [ext_resource type="Script" uid="uid://dq311lov6aphk" path="res://scripts/hitbox_manager.gd" id="5_16kr7"]
+[ext_resource type="Script" uid="uid://dccj2u2ecx18h" path="res://resources/abilities/air_jump_ability.gd" id="5_nip3t"]
 [ext_resource type="Script" uid="uid://bjx5rtki0usbf" path="res://scripts/stamina_manager.gd" id="6_6ljwu"]
+[ext_resource type="Script" uid="uid://dw1h7g3hodgca" path="res://resources/abilities/air_dodge_ability.gd" id="6_nip3t"]
 [ext_resource type="Script" uid="uid://bp5b6dbhlfcej" path="res://scripts/player_vel_vis.gd" id="7_6ljwu"]
+[ext_resource type="Script" uid="uid://b3jv5j777lhr2" path="res://resources/abilities/damaged_ability.gd" id="7_w1mpy"]
 [ext_resource type="Script" uid="uid://bspltfusgi8q8" path="res://scripts/orientation_visualizer.gd" id="8_gvpj1"]
+[ext_resource type="Script" uid="uid://1j4niiybm6q5" path="res://resources/abilities/platform_behavior_ability.gd" id="8_rrwfv"]
 [ext_resource type="Script" uid="uid://b5jo0ea00swg" path="res://scripts/animation_component.gd" id="10_4mov0"]
 [ext_resource type="Script" uid="uid://b6cj2ucaeqd2" path="res://scripts/ability_manager.gd" id="11_7nfqo"]
-[ext_resource type="Script" uid="uid://cjkfeb23cki15" path="res://scripts/air_jump_ability.gd" id="11_kkhi3"]
+[ext_resource type="Script" uid="uid://cjkfeb23cki15" path="res://scripts/air_jump_ability_node.gd" id="11_kkhi3"]
 [ext_resource type="Script" uid="uid://hxq7leum3ryx" path="res://scripts/airdodge_ability.gd" id="13_nkc8p"]
 [ext_resource type="Script" uid="uid://bsh5afyom8ynf" path="res://scripts/jab_ability.gd" id="15_3c17b"]
 [ext_resource type="Script" uid="uid://dpp1v6omyvpw6" path="res://scripts/hitbox_new.gd" id="16_0gvfs"]
-[ext_resource type="Script" uid="uid://brf0y0hshgpn4" path="res://scripts/damaged_ability.gd" id="17_c8p0i"]
+[ext_resource type="Script" uid="uid://brf0y0hshgpn4" path="res://scripts/damaged_ability_node.gd" id="17_c8p0i"]
 [ext_resource type="Script" uid="uid://m7g2ic7fmnm4" path="res://scripts/ShieldAbility.gd" id="18_pqqny"]
 [ext_resource type="Script" uid="uid://cbh0ct731cyy3" path="res://scripts/medium_attacks.gd" id="19_ic7wx"]
-[ext_resource type="Script" uid="uid://b3lqiaibrgqrn" path="res://scripts/platform_behavior_ability.gd" id="20_gs3cc"]
+[ext_resource type="Script" uid="uid://b3lqiaibrgqrn" path="res://scripts/platform_behavior_ability_node.gd" id="20_gs3cc"]
 [ext_resource type="Script" uid="uid://uubyevs7hmlh" path="res://scripts/environment_collision_diamond.gd" id="23_s8ti4"]
 
 [sub_resource type="Resource" id="Resource_4qics"]
@@ -36,6 +41,23 @@ metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
 [sub_resource type="Resource" id="Resource_nip3t"]
 script = ExtResource("4_16kr7")
 metadata/_custom_type_script = "uid://by36nmf4yr75f"
+
+[sub_resource type="Resource" id="Resource_rrwfv"]
+script = ExtResource("6_nip3t")
+metadata/_custom_type_script = "uid://dw1h7g3hodgca"
+
+[sub_resource type="Resource" id="Resource_w1mpy"]
+script = ExtResource("5_nip3t")
+metadata/_custom_type_script = "uid://dccj2u2ecx18h"
+
+[sub_resource type="Resource" id="Resource_3snu5"]
+script = ExtResource("7_w1mpy")
+hitstun_gravity = 16.0
+metadata/_custom_type_script = "uid://b3jv5j777lhr2"
+
+[sub_resource type="Resource" id="Resource_xgqu4"]
+script = ExtResource("8_rrwfv")
+metadata/_custom_type_script = "uid://1j4niiybm6q5"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c8p0i"]
 radius = 4.164545
@@ -58,13 +80,23 @@ radius = 16.0
 [sub_resource type="CanvasTexture" id="CanvasTexture_gvpj1"]
 specular_color = Color(0.408699, 0.692188, 0.907185, 1)
 
-[node name="PlayerNew" type="CharacterBody2D" unique_id=1831211902 node_paths=PackedStringArray("contact_point", "placeholder_model")]
+[node name="PlayerNew" type="CharacterBody2D" unique_id=1831211902 node_paths=PackedStringArray("input_game_component", "ecd", "hurtbox", "shield", "model", "TIMERS")]
 collision_mask = 10
 script = ExtResource("1_vjt3m")
-contact_point = NodePath("FloorContactRay")
+input_game_component = NodePath("InputGameComponent")
+ecd = NodePath("EnvironmentCollisionDiamond")
+hurtbox = NodePath("Hurtbox")
+shield = NodePath("Shield")
 entity = SubResource("Resource_4qics")
 entity_movement = SubResource("Resource_nip3t")
-placeholder_model = NodePath("PlaceholderModel")
+model = NodePath("PlaceholderModel")
+abilities = Dictionary[String, ExtResource("4_4qics")]({
+"AirDodge": SubResource("Resource_rrwfv"),
+"AirJump": SubResource("Resource_w1mpy"),
+"DamagedAbility": SubResource("Resource_3snu5"),
+"PlatformBehavior": SubResource("Resource_xgqu4")
+})
+TIMERS = NodePath("Timers")
 
 [node name="HitboxManager" type="Node2D" parent="." unique_id=543654558]
 unique_name_in_owner = true
@@ -76,7 +108,6 @@ script = ExtResource("16_0gvfs")
 default_hitbox_shape = NodePath("hitbox_shape")
 kb_dir_visual = NodePath("hitbox_shape/RayCast2D")
 dmg = 3.0
-lag = 45
 stun = 16
 rot = 12.01
 
@@ -102,8 +133,8 @@ color = Color(0.261, 0.78880006, 0.87, 1)
 [node name="EnvironmentCollisionDiamond" type="CollisionPolygon2D" parent="." unique_id=1405959566]
 unique_name_in_owner = true
 position = Vector2(0, -15)
-polygon = PackedVector2Array(0, 15, 10, 0, 0, -15, -10, 0)
-disabled = true
+polygon = PackedVector2Array(0, 15, 10, 0, 0, -6, -10, 0)
+one_way_collision = true
 script = ExtResource("23_s8ti4")
 
 [node name="EnvironmentCollisionBox" type="CollisionShape2D" parent="." unique_id=1721981752]
@@ -235,6 +266,12 @@ unique_name_in_owner = true
 script = ExtResource("20_gs3cc")
 ecd = NodePath("../../EnvironmentCollisionDiamond")
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
+
+[node name="Timers" type="Node" parent="." unique_id=1772106997]
+unique_name_in_owner = true
+
+[node name="ad_flash_timer" type="Timer" parent="Timers" unique_id=1176035128]
+wait_time = 0.205
 
 [connection signal="area_entered" from="Hurtbox" to="Hurtbox" method="_on_hurtbox_area_entered"]
 [connection signal="timeout" from="AbilityManager/AirDodge/flash_timer" to="AbilityManager/AirDodge" method="_on_flash_timer_timeout"]

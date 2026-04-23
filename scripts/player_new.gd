@@ -1,6 +1,6 @@
 class_name PlayerNew extends CharacterBody2D
 
-@onready var input_game_component: InputGameComponent = %InputGameComponent
+#@onready var input_game_component: InputGameComponent = %InputGameComponent
 @onready var movement_manager: MovementManager = %MovementManager
 @onready var health_manager: HealthManager = %HealthManager
 @onready var stamina_manager: StaminaManager = %StaminaManager
@@ -13,12 +13,28 @@ class_name PlayerNew extends CharacterBody2D
 @onready var hitbox_manager: HitboxManager = %HitboxManager
 
 #@export var movement: MovementRes
-@export var contact_point: RayCast2D
+#@export var contact_point: RayCast2D
+
+@export var input_game_component: InputGameComponent
+
+@export var ecd: EnvironmentCollisionDiamond
+@export var hurtbox: Hurtbox
+@export var shield: Area2D
+@onready var floor_contact_ray: RayCast2D = %FloorContactRay
 
 @export var entity: Entity
 @export var entity_movement: EntityMoveRes
 
-@export var placeholder_model: ColorRect
+#@export var placeholder_model: ColorRect
+@export var model: Node
+
+@export var abilities: Dictionary[String, AbilityRes]
+
+#@export var ad_flash_timer: Timer
+#@onready var timers: Node = %Timers
+@export var TIMERS: Node
+var timers: Dictionary[String, Timer]
+
 
 func _ready() -> void:
 	platform_manager._pl_on_platform.connect(_on_platform)
@@ -27,6 +43,14 @@ func _ready() -> void:
 	#movement_manager.hard_press_thresh = input_game_component.hardpress_thresh_ls
 	#movement.init()
 	entity.init()
+	for timer in TIMERS.get_children():
+		timers[timer.name] = timer
+	for i in abilities:
+		#abilities[abilities[i].resource_name] = abilities[i]
+		abilities[i]._init_ability(self)
+		print(str(name) + " Ability Resource: " + str(abilities[i].name))
+		#abilities.erase(abilities[i])
+		#abilities[abilities[i].resource_name]._init_ability()
 	
 func _physics_process(delta: float) -> void:
 	# capture player input
@@ -73,12 +97,16 @@ func _physics_process(delta: float) -> void:
 	entity.jump_released = input_game_component.btn_3_input_released
 	entity.direction = input_game_component.dir_input
 	
-	entity.contact_point = contact_point.is_colliding()
+	#entity.contact_point = contact_point.is_colliding()
 	entity.body_on_ground = is_on_floor()
 	
 	entity_movement.compute_movement(entity, delta)
 	
 	ability_manager.update_abilities(entity, delta)
+	
+	for ability in abilities.values():
+		if ability is AbilityRes:
+			ability._act(self, delta)
 	
 	if !entity.move_paused:
 		velocity = entity.body_vel
@@ -95,7 +123,8 @@ func _on_platform(platform: PlatformBasic, collider: CharacterBody2D) -> void:
 	if collider.name == "PlayerNew":
 		#%PlatformBehavior.is_on_platform = true
 		entity.is_on_platform = true
-		if %AirDodge.ad_initiated:
+		#if %AirDodge.ad_initiated && entity.body_vel.y > 0.0:
+		if abilities["AirDodge"].ad_initiated && entity.body_vel.y > 0.0:
 			position.y = platform.position.y
 		
 func _on_hit_something(_hitbox: Node2D, _hurtbox: Node2D):
@@ -103,9 +132,10 @@ func _on_hit_something(_hitbox: Node2D, _hurtbox: Node2D):
 	
 func debug_prints():
 	print(str(name) + " -> current move state: " + str(entity.MoveState.keys()[entity.current_state]))
-	print(str(name) + " -> is on platform: " + str(entity.is_on_platform))
+	print(str(name) + " -> entity.on_ground = " + str(entity.on_ground))
+	#print(str(name) + " -> is on platform: " + str(entity.is_on_platform))
 	#print("Move state frame count: " + str(entity.move_state_frame))
-	print(str(name) + " -> is on ground: " + str(entity.body_on_ground))
+	#print(str(name) + " -> is on ground: " + str(entity.body_on_ground))
 	
 	#print(str(name) + " -> current move state: " + str(movement_manager.MoveState.keys()[movement_manager.current_state]))
 	#print(str(name) + " -> current move state: " + str(movement.MoveState.keys()[movement.current_state]))

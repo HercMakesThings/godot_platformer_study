@@ -4,8 +4,8 @@ class_name JabAbility extends Ability
 @export var hitbox: HitboxNew
 
 @export_range(0, 360, 1) var angle: float = 0.0
-@export_range(0, 500, 1) var bkb: float = 0.0
-@export_range(0, 500, 1) var kbg: float = 0.0
+@export_range(0, 500, .1) var bkb: float = 0.0
+@export_range(0, 500, .1) var kbg: float = 0.0
 @export_range(-100, 100, 1) var xoff: float = 0
 @export_range(-100, 100, 1) var yoff: float = 0
 

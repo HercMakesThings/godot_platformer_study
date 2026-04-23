@@ -194,16 +194,20 @@ func handle_state(entity: Entity, delta: float) -> void:
 				#else:
 					#entity.change_state(MoveState.LANDLAG)
 					#return
-				if !entity.contact_point:
+				#if !entity.contact_point:
+				if entity.on_ground:
 					entity.change_state(entity.MoveState.IDLE)
 					return
 				else:
+					entity.on_ground = true
 					entity.change_state(entity.MoveState.LANDLAG)
 					return
 			else:
 				entity.apply_gravity()
 				if !entity.can_move:
 					return
+				if entity.on_ground:
+					entity.on_ground = false
 				## fast falling
 				if entity.body_vel.y >= 0.0:
 					if (entity.direction.y < -entity.hard_press_thresh && 

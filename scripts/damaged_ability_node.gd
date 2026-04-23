@@ -1,4 +1,4 @@
-class_name DamagedAbility extends Ability
+class_name DamagedAbilityNode extends Ability
 
 @export var health_manager: HealthManager
 @export var body: CharacterBody2D

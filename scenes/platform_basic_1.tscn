@@ -9,7 +9,7 @@ collision_mask = 9
 script = ExtResource("1_tlcd5")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=92686573]
-polygon = PackedVector2Array(4406, 0, 4406, 107, -4406, 107, -4406, 0)
+polygon = PackedVector2Array(4406, 0, 4406, 0, -4406, 0, -4406, 0)
 one_way_collision = true
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1666404502]

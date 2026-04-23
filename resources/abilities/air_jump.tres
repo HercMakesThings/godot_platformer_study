@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="AirJumpAbility" format=3 uid="uid://b2plrgccjti8g"]
+
+[ext_resource type="Script" uid="uid://dccj2u2ecx18h" path="res://resources/abilities/air_jump_ability.gd" id="1_au0dw"]
+
+[resource]
+script = ExtResource("1_au0dw")
+metadata/_custom_type_script = "uid://dccj2u2ecx18h"
