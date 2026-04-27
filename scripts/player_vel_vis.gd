@@ -8,7 +8,7 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	#set_point_position(1, player.velocity * 0.08)
 	set_point_position(1, player.entity.body_vel * 0.08)
 	#set_point_position(1, Vector2(player.velocity.x, 0) * 0.05)

@@ -27,7 +27,7 @@ func handle_state(entity: Entity, delta: float) -> void:
 				if abs(entity.direction.x) >= entity.deadzone && abs(entity.direction.x) < entity.hard_press_thresh:
 					entity.change_state(entity.MoveState.WALK)
 					return
-				elif abs(entity.direction.x) >= entity.hard_press_thresh:
+				elif abs(entity.direction.x) >= entity.hard_press_thresh && entity.move_state_frame > 0:
 					entity.change_state(entity.MoveState.DASH)
 					return
 				if entity.jump_just_pressed || entity.jump_pressed:
@@ -62,7 +62,8 @@ func handle_state(entity: Entity, delta: float) -> void:
 					return
 				entity.apply_force(entity.walk_force, delta)
 				# Clamp speed
-				entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_WALK_SPD, entity.MAX_WALK_SPD)
+				#entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_WALK_SPD, entity.MAX_WALK_SPD)
+				entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_WALK_SPD*absf(entity.direction.x), entity.MAX_WALK_SPD*absf(entity.direction.x))
 			else:
 				entity.on_ground = false
 				entity.change_state(entity.MoveState.AIRBORNE)
@@ -71,7 +72,7 @@ func handle_state(entity: Entity, delta: float) -> void:
 			if entity.body_on_ground:
 				if !entity.can_move:
 					return
-				if entity.direction.dot(entity.body_vel) < -entity.deadzone && abs(entity.direction.y) < entity.deadzone:
+				if entity.direction.dot(entity.body_vel) < -entity.deadzone && absf(entity.direction.y) <= entity.hard_press_thresh:
 					entity.body_vel.x = 0
 					entity.accel = Vector2.ZERO
 					entity.change_state(entity.MoveState.IDLE)
@@ -90,7 +91,11 @@ func handle_state(entity: Entity, delta: float) -> void:
 					return
 				entity.apply_force(entity.dash_force, delta)
 				# Clamp speed
-				entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_SPEED, entity.MAX_SPEED)
+				#entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_SPEED, entity.MAX_SPEED)
+				if absf(entity.direction.x) < entity.deadzone:
+					entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_SPEED*entity.deadzone, entity.MAX_SPEED*entity.deadzone)
+				else:
+					entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_SPEED*absf(entity.direction.x), entity.MAX_SPEED*absf(entity.direction.x))
 			else:
 				entity.on_ground = false
 				entity.change_state(entity.MoveState.AIRBORNE)
@@ -121,6 +126,10 @@ func handle_state(entity: Entity, delta: float) -> void:
 				entity.apply_force(entity.run_force, delta)
 				# clamp speed
 				entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_SPEED, entity.MAX_SPEED)
+				#if absf(entity.direction.x) < entity.deadzone:
+					#entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_SPEED*entity.deadzone, entity.MAX_SPEED*entity.deadzone)
+				#else:
+					#entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_SPEED*absf(entity.direction.x), entity.MAX_SPEED*absf(entity.direction.x))
 			else:
 				entity.on_ground = false
 				entity.change_state(entity.MoveState.AIRBORNE)
@@ -148,7 +157,7 @@ func handle_state(entity: Entity, delta: float) -> void:
 					entity.change_state(entity.MoveState.RUN)
 					return
 				if entity.direction.dot(entity.body_vel) < 0:
-					entity.decelerate(delta)
+					entity.decelerate(delta, 0.45)
 			else:
 				entity.on_ground = false
 				entity.change_state(entity.MoveState.AIRBORNE)
@@ -217,6 +226,10 @@ func handle_state(entity: Entity, delta: float) -> void:
 						entity.body_vel.y = move_toward(entity.body_vel.y, entity.TERMINAL_VELOCITY, entity.run_speed)
 				entity.apply_force(entity.dash_force, delta)
 				entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_AIR_SPEED, entity.MAX_AIR_SPEED)
+				#if absf(entity.direction.x) < entity.deadzone:
+					#entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_AIR_SPEED*entity.deadzone, entity.MAX_AIR_SPEED*entity.deadzone)
+				#else:
+					#entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_AIR_SPEED*absf(entity.direction.x), entity.MAX_AIR_SPEED*absf(entity.direction.x))
 		entity.MoveState.LANDLAG:
 			if entity.body_on_ground:
 				if entity.move_state_frame >= entity.LANDING_LAG:

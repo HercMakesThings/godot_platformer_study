@@ -427,7 +427,7 @@ func _physics_process(delta):
 	move_and_slide()
 	
 func _on_hurtbox_area_entered(area):
-	if area.is_in_group("atk_hitbox_group") and area is Hitbox:
+	if area.is_in_group("atk_hitbox_group") and area is HitboxOld:
 		#print(area.name)
 		fsm.force_change_state("PlayerDamaged", area)
 		return

@@ -8,7 +8,7 @@ class_name DamagedAbilityNode extends Ability
 var is_hit: bool
 var stun_frames: int
 
-var hitbox: HitboxNew
+var hitbox: Hitbox
 
 var atk_bkb: float = 0
 var atk_kbg: float = 0
@@ -74,17 +74,18 @@ func _on_hit(area: Area2D):
 	is_hit = true
 	stun_frames = 0
 	#hitbox = area
-	atk_angle = area.angle
-	atk_angle_vec = area.angle_vec
-	atk_dmg = area.dmg
-	atk_bkb = area.bkb
-	atk_kbg = area.kbg
-	atk_stun = area.stun
-	atk_lag = area.lag
-	#if hitbox != null:
-		#hitbox.bkb = area.bkb
-		#hitbox.kbg = area.kbg
-		#hitbox.angle = area.angle
-		#hitbox.dmg = area.dmg
-	#print("area kb lag: " + str(hitbox.lag))
-	#print("area kb stun: " + str(hitbox.stun))
+	if area is Hitbox:
+		atk_angle = area.stats.angle
+		atk_angle_vec = area.angle_vec
+		atk_dmg = area.stats.dmg
+		atk_bkb = area.stats.bkb
+		atk_kbg = area.stats.kbg
+		atk_stun = area.stats.stun
+		atk_lag = area.stats.lag
+		#if hitbox != null:
+			#hitbox.bkb = area.bkb
+			#hitbox.kbg = area.kbg
+			#hitbox.angle = area.angle
+			#hitbox.dmg = area.dmg
+		#print("area kb lag: " + str(hitbox.lag))
+		#print("area kb stun: " + str(hitbox.stun))

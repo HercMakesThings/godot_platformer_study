@@ -97,7 +97,7 @@ func apply_force(force: Vector2, delta: float, use_dir = true) -> void:
 		var f: Vector2 = (body_vel + accel * direction)
 		body_vel = body_vel.move_toward(f, f.length() * delta * calc_friction())
 	else:
-		var f: Vector2 = (body_vel + accel * calc_friction())
+		var f: Vector2 = (body_vel + accel)
 		body_vel = body_vel.move_toward(f, f.length() * delta * calc_friction())
 		
 func decelerate(delta: float, mod: float = 1.0) -> void:

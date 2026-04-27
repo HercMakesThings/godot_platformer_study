@@ -56,10 +56,19 @@ func _on_hit(area: Area2D):
 	print("hit!")
 	is_hit = true
 	stun_frames = 0
-	atk_angle = area.angle
+	
+	#atk_angle = area.angle
+	#atk_angle_vec = area.angle_vec
+	#atk_dmg = area.dmg
+	#atk_bkb = area.bkb
+	#atk_kbg = area.kbg
+	#atk_stun = area.stun
+	#atk_lag = area.lag
+	
+	atk_angle = area.stats.angle
 	atk_angle_vec = area.angle_vec
-	atk_dmg = area.dmg
-	atk_bkb = area.bkb
-	atk_kbg = area.kbg
-	atk_stun = area.stun
-	atk_lag = area.lag
+	atk_dmg = area.stats.dmg
+	atk_bkb = area.stats.bkb
+	atk_kbg = area.stats.kbg
+	atk_stun = area.stats.stun
+	atk_lag = area.stats.lag

@@ -7,7 +7,8 @@ func _ready() -> void:
 		return
 	for ability in get_children():
 		if ability is Ability:
-			print(str(body.name) + " has ability: " + str(ability.name))
+			#print(str(body.name) + " has ability: " + str(ability.name))
+			pass
 			
 #func update_abilities(input: InputGameComponent, movement: MovementComponent, delta: float) -> void:
 #func update_abilities(movement: MovementManager, delta: float) -> void:

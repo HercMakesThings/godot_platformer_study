@@ -18,8 +18,8 @@ func _physics_process(delta: float) -> void:
 	pass
 	
 func _on_hurtbox_hit(area: Area2D):
-	if area is HitboxNew:
+	if area is Hitbox:
 		hit.emit(area)
 		if !is_inanimate:
-			percent = percent + area.dmg
+			percent = percent + area.stats.dmg
 		print("percent: " + str(percent))

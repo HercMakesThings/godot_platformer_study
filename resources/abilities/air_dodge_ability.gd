@@ -40,13 +40,15 @@ func _act(actor: CharacterBody2D, delta: float) -> void:
 		if ad_frame == 1:
 			actor.timers.ad_flash_timer.start()
 			actor.model.material.set_shader_parameter("flash_modifier", 0.6)
+			actor.entity.body_vel = ad_direction * air_dodge_speed
 		if actor.entity.body_on_ground:
 			if !touched_ground:
 				if actor.entity.current_state != actor.entity.MoveState.JUMPSQUAT:
 					touched_ground = true
 			if air_dodge < air_dodge_count:
 				air_dodge = air_dodge_count
-			if actor.entity.is_on_platform:
+			#actor.entity.decelerate(delta)
+			if actor.entity.is_on_platform || actor.entity.body_on_ground:
 				actor.entity.body_vel.y = 0.0
 			if ad_frame <= air_dodge_length - air_dodge_landlag:
 				actor.entity.body_vel = ad_direction * air_dodge_speed
@@ -56,6 +58,7 @@ func _act(actor: CharacterBody2D, delta: float) -> void:
 				else:
 					actor.entity.decelerate(delta)
 			else:
+			#if ad_frame > air_dodge_length:
 				actor.entity.can_move = true
 				ad_frame = 0
 				ad_initiated = false

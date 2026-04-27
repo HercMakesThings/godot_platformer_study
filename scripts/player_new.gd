@@ -1,10 +1,10 @@
 class_name PlayerNew extends CharacterBody2D
 
 #@onready var input_game_component: InputGameComponent = %InputGameComponent
-@onready var movement_manager: MovementManager = %MovementManager
+#@onready var movement_manager: MovementManager = %MovementManager
 @onready var health_manager: HealthManager = %HealthManager
 @onready var stamina_manager: StaminaManager = %StaminaManager
-@onready var ability_manager: AbilityManager = %AbilityManager
+#@onready var ability_manager: AbilityManager = %AbilityManager
 
 #@onready var platform_manager: PlatformManager = %PlatformManager
 @onready var platform_manager: PlatformManager = $"../PlatformManager"
@@ -102,10 +102,29 @@ func _physics_process(delta: float) -> void:
 	
 	entity_movement.compute_movement(entity, delta)
 	
-	ability_manager.update_abilities(entity, delta)
+	#ability_manager.update_abilities(entity, delta)
 	
-	for ability in abilities.values():
+	for ability: AbilityRes in abilities.values():
 		if ability is AbilityRes:
+			if ability is AtkMove:
+				match ability.name:
+					"TestMove1":
+						ability.handle_atk_input(
+							input_game_component.btn_2_input &&
+							entity.can_move &&
+							entity.current_state != entity.MoveState.AIRBORNE &&
+							entity.current_state != entity.MoveState.RUNTURN &&
+							entity.body_on_ground
+						)
+					"DownMedium":
+						ability.handle_atk_input(
+							input_game_component.btn_1_input &&
+							input_game_component.dir_input.y < -input_game_component.hardpress_thresh_ls &&
+							entity.can_move &&
+							entity.current_state != entity.MoveState.AIRBORNE &&
+							entity.current_state != entity.MoveState.RUNTURN &&
+							entity.body_on_ground
+						)
 			ability._act(self, delta)
 	
 	if !entity.move_paused:
@@ -114,7 +133,7 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 	
 	## debug
-	#debug_prints()
+	debug_prints()
 	
 	if !entity.move_paused:
 		move_and_slide()
@@ -128,11 +147,13 @@ func _on_platform(platform: PlatformBasic, collider: CharacterBody2D) -> void:
 			position.y = platform.position.y
 		
 func _on_hit_something(_hitbox: Node2D, _hurtbox: Node2D):
-	entity.hit_connected = true
+	#entity.hit_connected = true
+	pass
 	
 func debug_prints():
 	print(str(name) + " -> current move state: " + str(entity.MoveState.keys()[entity.current_state]))
-	print(str(name) + " -> entity.on_ground = " + str(entity.on_ground))
+	#print(str(name) + " -> input direction: " + str(input_game_component.dir_input))
+	#print(str(name) + " -> entity.on_ground = " + str(entity.on_ground))
 	#print(str(name) + " -> is on platform: " + str(entity.is_on_platform))
 	#print("Move state frame count: " + str(entity.move_state_frame))
 	#print(str(name) + " -> is on ground: " + str(entity.body_on_ground))

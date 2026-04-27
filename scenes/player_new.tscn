@@ -17,12 +17,16 @@
 [ext_resource type="Script" uid="uid://b3jv5j777lhr2" path="res://resources/abilities/damaged_ability.gd" id="7_w1mpy"]
 [ext_resource type="Script" uid="uid://bspltfusgi8q8" path="res://scripts/orientation_visualizer.gd" id="8_gvpj1"]
 [ext_resource type="Script" uid="uid://1j4niiybm6q5" path="res://resources/abilities/platform_behavior_ability.gd" id="8_rrwfv"]
+[ext_resource type="Script" uid="uid://dv7453irfjqvy" path="res://resources/moves/jab_move.gd" id="9_3snu5"]
+[ext_resource type="Script" uid="uid://coptrl0topre1" path="res://resources/hitbox_stats_res.gd" id="9_xgqu4"]
 [ext_resource type="Script" uid="uid://b5jo0ea00swg" path="res://scripts/animation_component.gd" id="10_4mov0"]
 [ext_resource type="Script" uid="uid://b6cj2ucaeqd2" path="res://scripts/ability_manager.gd" id="11_7nfqo"]
 [ext_resource type="Script" uid="uid://cjkfeb23cki15" path="res://scripts/air_jump_ability_node.gd" id="11_kkhi3"]
+[ext_resource type="Script" uid="uid://bmekk4u010rgk" path="res://resources/abilities/shield_ability.gd" id="11_mq2y6"]
+[ext_resource type="Script" uid="uid://ddvm4l5suv2uc" path="res://resources/moves/atk_move_res.gd" id="12_0idwx"]
 [ext_resource type="Script" uid="uid://hxq7leum3ryx" path="res://scripts/airdodge_ability.gd" id="13_nkc8p"]
 [ext_resource type="Script" uid="uid://bsh5afyom8ynf" path="res://scripts/jab_ability.gd" id="15_3c17b"]
-[ext_resource type="Script" uid="uid://dpp1v6omyvpw6" path="res://scripts/hitbox_new.gd" id="16_0gvfs"]
+[ext_resource type="Script" uid="uid://dpp1v6omyvpw6" path="res://scripts/hitbox.gd" id="16_0gvfs"]
 [ext_resource type="Script" uid="uid://brf0y0hshgpn4" path="res://scripts/damaged_ability_node.gd" id="17_c8p0i"]
 [ext_resource type="Script" uid="uid://m7g2ic7fmnm4" path="res://scripts/ShieldAbility.gd" id="18_pqqny"]
 [ext_resource type="Script" uid="uid://cbh0ct731cyy3" path="res://scripts/medium_attacks.gd" id="19_ic7wx"]
@@ -33,9 +37,11 @@
 script = ExtResource("3_s8ti4")
 dash_speed = 1200.0
 run_speed = 800.0
+MAX_WALK_SPD = 100.0
 friction = 0.4601
-air_friction = 0.2
+air_friction = 0.1032
 decel = 120.0
+deadzone = 0.2
 metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
 
 [sub_resource type="Resource" id="Resource_nip3t"]
@@ -55,13 +61,86 @@ script = ExtResource("7_w1mpy")
 hitstun_gravity = 16.0
 metadata/_custom_type_script = "uid://b3jv5j777lhr2"
 
+[sub_resource type="Resource" id="Resource_0idwx"]
+script = ExtResource("9_xgqu4")
+rot = 269.0
+dmg = 12.0
+active_window_start = 10
+metadata/_custom_type_script = "uid://coptrl0topre1"
+
+[sub_resource type="Resource" id="Resource_x7sd6"]
+script = ExtResource("9_xgqu4")
+angle = 265.0
+bkb = 16.8
+kbg = 21.0
+rot = 274.0
+dmg = 8.0
+active_window_start = 12
+metadata/_custom_type_script = "uid://coptrl0topre1"
+
+[sub_resource type="Resource" id="Resource_xttus"]
+script = ExtResource("12_0idwx")
+name = "DownMedium"
+hitbox_stats_arr = Array[ExtResource("9_xgqu4")]([SubResource("Resource_0idwx"), SubResource("Resource_x7sd6")])
+hitbox_prefix = "dm"
+ability_length = 24
+metadata/_custom_type_script = "uid://ddvm4l5suv2uc"
+
+[sub_resource type="Resource" id="Resource_ngw8r"]
+script = ExtResource("9_xgqu4")
+angle = 341.0
+bkb = 22.0
+kbg = 35.0
+rot = 47.25
+dmg = 3.0
+metadata/_custom_type_script = "uid://coptrl0topre1"
+
+[sub_resource type="Resource" id="Resource_mq2y6"]
+script = ExtResource("9_3snu5")
+hitbox_stats_arr = Array[ExtResource("9_xgqu4")]([SubResource("Resource_ngw8r")])
+hitbox_prefix = "Jab"
+metadata/_custom_type_script = "uid://dv7453irfjqvy"
+
 [sub_resource type="Resource" id="Resource_xgqu4"]
 script = ExtResource("8_rrwfv")
 metadata/_custom_type_script = "uid://1j4niiybm6q5"
 
+[sub_resource type="Resource" id="Resource_qn6kq"]
+script = ExtResource("11_mq2y6")
+metadata/_custom_type_script = "uid://bmekk4u010rgk"
+
+[sub_resource type="Resource" id="Resource_swkrn"]
+script = ExtResource("9_xgqu4")
+metadata/_custom_type_script = "uid://coptrl0topre1"
+
+[sub_resource type="Resource" id="Resource_w7egs"]
+script = ExtResource("9_xgqu4")
+active_window_start = 24
+metadata/_custom_type_script = "uid://coptrl0topre1"
+
+[sub_resource type="Resource" id="Resource_vqcnq"]
+script = ExtResource("12_0idwx")
+name = "TestMove1"
+hitbox_stats_arr = Array[ExtResource("9_xgqu4")]([SubResource("Resource_swkrn"), SubResource("Resource_w7egs")])
+hitbox_prefix = "test"
+ability_length = 36
+metadata/_custom_type_script = "uid://ddvm4l5suv2uc"
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c8p0i"]
 radius = 4.164545
 height = 19.67609
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0idwx"]
+radius = 4.6349983
+height = 19.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qn6kq"]
+radius = 4.0
+height = 16.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_frj7f"]
+radius = 3.9249992
+height = 14.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3c17b"]
 shader = ExtResource("3_id8he")
@@ -94,7 +173,11 @@ abilities = Dictionary[String, ExtResource("4_4qics")]({
 "AirDodge": SubResource("Resource_rrwfv"),
 "AirJump": SubResource("Resource_w1mpy"),
 "DamagedAbility": SubResource("Resource_3snu5"),
-"PlatformBehavior": SubResource("Resource_xgqu4")
+"DownMedium": SubResource("Resource_xttus"),
+"Jab": SubResource("Resource_mq2y6"),
+"PlatformBehavior": SubResource("Resource_xgqu4"),
+"ShieldAbility": SubResource("Resource_qn6kq"),
+"TestMove1": SubResource("Resource_vqcnq")
 })
 TIMERS = NodePath("Timers")
 
@@ -103,23 +186,74 @@ unique_name_in_owner = true
 script = ExtResource("5_16kr7")
 
 [node name="Jab1" type="Area2D" parent="HitboxManager" unique_id=1751743212 node_paths=PackedStringArray("default_hitbox_shape", "kb_dir_visual")]
+unique_name_in_owner = true
 position = Vector2(21, -19.125)
 script = ExtResource("16_0gvfs")
 default_hitbox_shape = NodePath("hitbox_shape")
-kb_dir_visual = NodePath("hitbox_shape/RayCast2D")
-dmg = 3.0
-stun = 16
-rot = 12.01
+kb_dir_visual = NodePath("RayCast2D")
 
 [node name="hitbox_shape" type="CollisionShape2D" parent="HitboxManager/Jab1" unique_id=626510771]
 shape = SubResource("CapsuleShape2D_c8p0i")
 debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
 
-[node name="RayCast2D" type="RayCast2D" parent="HitboxManager/Jab1/hitbox_shape" unique_id=165138576]
-position = Vector2(0.24134254, -0.2678051)
-scale = Vector2(1, 1.0210605)
-skew = -0.14336586
+[node name="RayCast2D" type="RayCast2D" parent="HitboxManager/Jab1" unique_id=165138576]
 target_position = Vector2(3.999998, 0)
+
+[node name="test_1" type="Area2D" parent="HitboxManager" unique_id=334022531 node_paths=PackedStringArray("default_hitbox_shape", "kb_dir_visual")]
+position = Vector2(31.605, -23.81)
+script = ExtResource("16_0gvfs")
+default_hitbox_shape = NodePath("CollisionShape2D")
+kb_dir_visual = NodePath("RayCast2D")
+metadata/_custom_type_script = "uid://dpp1v6omyvpw6"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxManager/test_1" unique_id=2065909600]
+shape = SubResource("CapsuleShape2D_0idwx")
+debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
+
+[node name="RayCast2D" type="RayCast2D" parent="HitboxManager/test_1" unique_id=1292499346]
+target_position = Vector2(4.6, 0)
+
+[node name="test_2" type="Area2D" parent="HitboxManager" unique_id=704869461 node_paths=PackedStringArray("default_hitbox_shape", "kb_dir_visual")]
+position = Vector2(41.935, -27.83)
+script = ExtResource("16_0gvfs")
+default_hitbox_shape = NodePath("CollisionShape2D")
+kb_dir_visual = NodePath("RayCast2D")
+metadata/_custom_type_script = "uid://dpp1v6omyvpw6"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxManager/test_2" unique_id=2146634438]
+shape = SubResource("CapsuleShape2D_qn6kq")
+debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
+
+[node name="RayCast2D" type="RayCast2D" parent="HitboxManager/test_2" unique_id=1933773104]
+target_position = Vector2(3.93, 0)
+
+[node name="dm_1" type="Area2D" parent="HitboxManager" unique_id=1177752704 node_paths=PackedStringArray("default_hitbox_shape", "kb_dir_visual")]
+position = Vector2(18.635, -5.105)
+script = ExtResource("16_0gvfs")
+default_hitbox_shape = NodePath("CollisionShape2D")
+kb_dir_visual = NodePath("RayCast2D")
+metadata/_custom_type_script = "uid://dpp1v6omyvpw6"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxManager/dm_1" unique_id=1971510329]
+shape = SubResource("CapsuleShape2D_frj7f")
+debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
+
+[node name="RayCast2D" type="RayCast2D" parent="HitboxManager/dm_1" unique_id=29463099]
+target_position = Vector2(3.96, 0)
+
+[node name="dm_2" type="Area2D" parent="HitboxManager" unique_id=1578985981 node_paths=PackedStringArray("default_hitbox_shape", "kb_dir_visual")]
+position = Vector2(29.7, -5.105)
+script = ExtResource("16_0gvfs")
+default_hitbox_shape = NodePath("CollisionShape2D")
+kb_dir_visual = NodePath("RayCast2D")
+metadata/_custom_type_script = "uid://dpp1v6omyvpw6"
+
+[node name="RayCast2D" type="RayCast2D" parent="HitboxManager/dm_2" unique_id=1937659061]
+target_position = Vector2(3.96, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxManager/dm_2" unique_id=1671612530]
+shape = SubResource("CapsuleShape2D_frj7f")
+debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
 
 [node name="PlaceholderModel" type="ColorRect" parent="." unique_id=531971473]
 unique_name_in_owner = true

@@ -2,7 +2,7 @@
 ## WARNING: This ability requires an Area2D with a unique name of 'Shield' to be present as a direct descendant of Player.
 ## WARNING: As well as a shield, it also looks for a Hurtbox node as a direct child as well.
 ## It also looks for an exported Node that should be either InputGameComponent or some type of NPC AI component
-class_name ShieldAbility extends Ability
+class_name ShieldAbilityNode extends Ability
 
 @onready var body: PlayerNew = $"../.."
 @onready var shield: Area2D = %Shield

@@ -7,7 +7,7 @@ class_name PlatformBehavior extends Ability
 
 #func tick_ability(entity: entityManager, _delta: float) -> void:
 #func tick_ability(entity: entityRes, _delta: float) -> void:
-func tick_ability(entity: Entity, _delta: float) -> void:
+func tick_ability(_entity: Entity, _delta: float) -> void:
 	#if entity.body_on_ground:
 		#if entity.is_on_platform && entity.current_state == entity.MoveState.CROUCH:
 			##ecb.disabled = true
