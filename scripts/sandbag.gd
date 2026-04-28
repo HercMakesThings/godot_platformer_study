@@ -1,9 +1,9 @@
 class_name Sandbag extends CharacterBody2D
 
-@onready var movement_manager: MovementManager = %MovementManager
+#@onready var movement_manager: MovementManager = %MovementManager
 @onready var health_manager: HealthManager = %HealthManager
 @onready var ability_manager: AbilityManager = %AbilityManager
-@onready var platform_manager: PlatformManager = $"../PlatformManager"
+#@onready var platform_manager: PlatformManager = $"../PlatformManager"
 @onready var contact_point: RayCast2D = $ContactPoint
 
 @export var movement: MovementRes
@@ -14,7 +14,7 @@ class_name Sandbag extends CharacterBody2D
 @export var abilities: Dictionary[String, AbilityRes]
 
 func _ready() -> void:
-	platform_manager._pl_on_platform.connect(_on_platform)
+	#platform_manager._pl_on_platform.connect(_on_platform)
 	entity.init()
 	for i in abilities:
 		abilities[i]._init_ability(self)
@@ -45,9 +45,10 @@ func _physics_process(delta: float) -> void:
 	if !entity.move_paused:
 		move_and_slide()
 	
-func _on_platform(_platform: PlatformBasic, collider: CharacterBody2D) -> void:
-	if collider.name == "Sandbag":
-		movement_manager.is_on_platform = true
+#func _on_platform(_platform: PlatformBasic, collider: CharacterBody2D) -> void:
+	#if collider.name == "Sandbag":
+		#entity.is_on_platform = true
+		##movement_manager.is_on_platform = true
 		
 func debug_prints():
 	print(str(name) + " -> current movement state: " + str(entity.MoveState.keys()[entity.current_state]))

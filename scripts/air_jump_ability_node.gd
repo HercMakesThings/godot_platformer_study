@@ -1,4 +1,4 @@
-class_name AirJump extends Ability
+class_name AirJumpNode extends Ability
 
 #@onready var body: PlayerNew = $"../.."
 @export var body: CharacterBody2D

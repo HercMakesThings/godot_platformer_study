@@ -6,15 +6,13 @@
 [ext_resource type="Script" uid="uid://b1tkw1yxmq21m" path="res://scripts/test_label.gd" id="4_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://dmxyajsvknhfv" path="res://scenes/platform_basic_1.tscn" id="4_c31sl"]
 [ext_resource type="Script" uid="uid://by62tcho3drwi" path="res://scripts/label_2.gd" id="5_vtaks"]
-[ext_resource type="PackedScene" uid="uid://nj581ku4ihqa" path="res://scenes/enemy_basic.tscn" id="5_whekb"]
-[ext_resource type="PackedScene" uid="uid://bbpdo7iuex73c" path="res://scenes/crawler_enemy.tscn" id="8_gee14"]
 [ext_resource type="PackedScene" uid="uid://cn2hl3dyvnbsd" path="res://scenes/sandbag.tscn" id="10_kvpfn"]
 [ext_resource type="PackedScene" uid="uid://dx1h5gjrv33tf" path="res://scenes/player_new.tscn" id="10_vtaks"]
 [ext_resource type="Script" uid="uid://bsfowl8fm16ji" path="res://scenes/test_rigid.gd" id="11_kvpfn"]
-[ext_resource type="Shader" uid="uid://dw5t7orxmcyin" path="res://shaders/rounded_corners.gdshader" id="12_dinhu"]
+[ext_resource type="Shader" path="res://shaders/rounded_corners.gdshader" id="12_dinhu"]
 [ext_resource type="Script" uid="uid://b7nwpiqypj75k" path="res://scripts/environment_collision_box.gd" id="12_trtic"]
 [ext_resource type="Script" uid="uid://b6ncwap61pjs1" path="res://scripts/movement_component.gd" id="13_kvuet"]
-[ext_resource type="Script" uid="uid://b8ht4tsoo7t80" path="res://scripts/test_item_char_2d.gd" id="15_ir15t"]
+[ext_resource type="Script" path="res://scripts/test_item_char_2d.gd" id="15_ir15t"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vtaks"]
 texture = ExtResource("1_0tnpc")
@@ -344,15 +342,7 @@ position = Vector2(66, 8)
 libraries/ = SubResource("AnimationLibrary_c4wml")
 autoplay = &"move"
 
-[node name="EnemyBasic" parent="." unique_id=1946771054 instance=ExtResource("5_whekb")]
-position = Vector2(17, -63)
-collision_layer = 9
-
 [node name="GameManager" type="Node" parent="." unique_id=209595205]
-
-[node name="CrawlerEnemy" parent="." unique_id=792170867 instance=ExtResource("8_gee14")]
-position = Vector2(-144, 38)
-collision_mask = 3
 
 [node name="Control" type="Control" parent="." unique_id=1030666623]
 layout_mode = 3

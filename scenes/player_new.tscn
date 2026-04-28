@@ -4,12 +4,12 @@
 [ext_resource type="Script" uid="uid://b7nwpiqypj75k" path="res://scripts/environment_collision_box.gd" id="2_q1g3e"]
 [ext_resource type="Script" uid="uid://bjk4djbuag7os" path="res://scripts/input_game_component.gd" id="2_wm45n"]
 [ext_resource type="Shader" uid="uid://b0gags4mo66xw" path="res://scenes/placeholder_flash.gdshader" id="3_id8he"]
-[ext_resource type="Script" uid="uid://b1r2eahjfa8hu" path="res://resources/entity_res.gd" id="3_s8ti4"]
-[ext_resource type="Script" uid="uid://db3fuworsu3wx" path="res://resources/ability_res.gd" id="4_4qics"]
-[ext_resource type="Script" uid="uid://by36nmf4yr75f" path="res://resources/entity_move_res.gd" id="4_16kr7"]
+[ext_resource type="Script" path="res://resources/entity_res.gd" id="3_s8ti4"]
+[ext_resource type="Script" path="res://resources/ability_res.gd" id="4_4qics"]
+[ext_resource type="Script" path="res://resources/entity_move_res.gd" id="4_16kr7"]
 [ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="4_d2bp7"]
 [ext_resource type="Script" uid="uid://74ctiqofli1i" path="res://scripts/health_manager.gd" id="5_8tn2v"]
-[ext_resource type="Script" uid="uid://dq311lov6aphk" path="res://scripts/hitbox_manager.gd" id="5_16kr7"]
+[ext_resource type="Script" path="res://scripts/hitbox_manager.gd" id="5_16kr7"]
 [ext_resource type="Script" uid="uid://dccj2u2ecx18h" path="res://resources/abilities/air_jump_ability.gd" id="5_nip3t"]
 [ext_resource type="Script" uid="uid://bjx5rtki0usbf" path="res://scripts/stamina_manager.gd" id="6_6ljwu"]
 [ext_resource type="Script" uid="uid://dw1h7g3hodgca" path="res://resources/abilities/air_dodge_ability.gd" id="6_nip3t"]
@@ -18,20 +18,20 @@
 [ext_resource type="Script" uid="uid://bspltfusgi8q8" path="res://scripts/orientation_visualizer.gd" id="8_gvpj1"]
 [ext_resource type="Script" uid="uid://1j4niiybm6q5" path="res://resources/abilities/platform_behavior_ability.gd" id="8_rrwfv"]
 [ext_resource type="Script" uid="uid://dv7453irfjqvy" path="res://resources/moves/jab_move.gd" id="9_3snu5"]
-[ext_resource type="Script" uid="uid://coptrl0topre1" path="res://resources/hitbox_stats_res.gd" id="9_xgqu4"]
+[ext_resource type="Script" path="res://resources/hitbox_stats_res.gd" id="9_xgqu4"]
 [ext_resource type="Script" uid="uid://b5jo0ea00swg" path="res://scripts/animation_component.gd" id="10_4mov0"]
 [ext_resource type="Script" uid="uid://b6cj2ucaeqd2" path="res://scripts/ability_manager.gd" id="11_7nfqo"]
-[ext_resource type="Script" uid="uid://cjkfeb23cki15" path="res://scripts/air_jump_ability_node.gd" id="11_kkhi3"]
 [ext_resource type="Script" uid="uid://bmekk4u010rgk" path="res://resources/abilities/shield_ability.gd" id="11_mq2y6"]
 [ext_resource type="Script" uid="uid://ddvm4l5suv2uc" path="res://resources/moves/atk_move_res.gd" id="12_0idwx"]
 [ext_resource type="Script" uid="uid://hxq7leum3ryx" path="res://scripts/airdodge_ability.gd" id="13_nkc8p"]
 [ext_resource type="Script" uid="uid://bsh5afyom8ynf" path="res://scripts/jab_ability.gd" id="15_3c17b"]
 [ext_resource type="Script" uid="uid://dpp1v6omyvpw6" path="res://scripts/hitbox.gd" id="16_0gvfs"]
-[ext_resource type="Script" uid="uid://brf0y0hshgpn4" path="res://scripts/damaged_ability_node.gd" id="17_c8p0i"]
 [ext_resource type="Script" uid="uid://m7g2ic7fmnm4" path="res://scripts/ShieldAbility.gd" id="18_pqqny"]
-[ext_resource type="Script" uid="uid://cbh0ct731cyy3" path="res://scripts/medium_attacks.gd" id="19_ic7wx"]
-[ext_resource type="Script" uid="uid://b3lqiaibrgqrn" path="res://scripts/platform_behavior_ability_node.gd" id="20_gs3cc"]
-[ext_resource type="Script" uid="uid://uubyevs7hmlh" path="res://scripts/environment_collision_diamond.gd" id="23_s8ti4"]
+[ext_resource type="Script" path="res://scripts/medium_attacks.gd" id="19_ic7wx"]
+[ext_resource type="Script" path="res://scripts/platform_behavior_ability_node.gd" id="20_gs3cc"]
+[ext_resource type="Script" path="res://scripts/environment_collision_diamond.gd" id="23_s8ti4"]
+[ext_resource type="Script" path="res://scripts/air_jump_ability_node.gd" id="26_0idwx"]
+[ext_resource type="Script" path="res://scripts/damaged_ability_node.gd" id="29_0idwx"]
 
 [sub_resource type="Resource" id="Resource_4qics"]
 script = ExtResource("3_s8ti4")
@@ -42,11 +42,9 @@ friction = 0.4601
 air_friction = 0.1032
 decel = 120.0
 deadzone = 0.2
-metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
 
 [sub_resource type="Resource" id="Resource_nip3t"]
 script = ExtResource("4_16kr7")
-metadata/_custom_type_script = "uid://by36nmf4yr75f"
 
 [sub_resource type="Resource" id="Resource_rrwfv"]
 script = ExtResource("6_nip3t")
@@ -66,7 +64,6 @@ script = ExtResource("9_xgqu4")
 rot = 269.0
 dmg = 12.0
 active_window_start = 10
-metadata/_custom_type_script = "uid://coptrl0topre1"
 
 [sub_resource type="Resource" id="Resource_x7sd6"]
 script = ExtResource("9_xgqu4")
@@ -76,7 +73,6 @@ kbg = 21.0
 rot = 274.0
 dmg = 8.0
 active_window_start = 12
-metadata/_custom_type_script = "uid://coptrl0topre1"
 
 [sub_resource type="Resource" id="Resource_xttus"]
 script = ExtResource("12_0idwx")
@@ -348,11 +344,9 @@ script = ExtResource("11_7nfqo")
 body = NodePath("..")
 metadata/_custom_type_script = "uid://b6cj2ucaeqd2"
 
-[node name="AirJump" type="Node" parent="AbilityManager" unique_id=1574185051 node_paths=PackedStringArray("body", "input")]
+[node name="AirJump" type="Node" parent="AbilityManager" unique_id=1574185051]
 unique_name_in_owner = true
-script = ExtResource("11_kkhi3")
-body = NodePath("../..")
-input = NodePath("../../InputGameComponent")
+script = ExtResource("26_0idwx")
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
 
 [node name="AirDodge" type="Node" parent="AbilityManager" unique_id=1319945754 node_paths=PackedStringArray("input", "model")]
@@ -377,11 +371,9 @@ xoff = 14.0
 yoff = -5.0
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
 
-[node name="Damaged" type="Node" parent="AbilityManager" unique_id=1969745582 node_paths=PackedStringArray("health_manager", "body")]
+[node name="Damaged" type="Node" parent="AbilityManager" unique_id=1969745582]
 unique_name_in_owner = true
-script = ExtResource("17_c8p0i")
-health_manager = NodePath("../../HealthManager")
-body = NodePath("../..")
+script = ExtResource("29_0idwx")
 metadata/_custom_type_script = "uid://b0ri7sbekqbq6"
 
 [node name="ShieldAbility" type="Node" parent="AbilityManager" unique_id=1133150547 node_paths=PackedStringArray("input")]

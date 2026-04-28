@@ -77,6 +77,13 @@ func _act(actor: CharacterBody2D, delta: float) -> void:
 				actor.timers.ad_flash_timer.stop()
 				actor.timers.ad_flash_timer.timeout.emit()
 				return
+			## accessibility logic to snap actor to platform when
+			## travelling down in order to make wavelanding easier
+			if actor.entity.body_vel.y > 0.0:
+				if actor.hurtbox.has_overlapping_areas():
+					for a in actor.hurtbox.get_overlapping_areas():
+						if a.get_parent() is PlatformBasic:
+							actor.position.y = a.get_parent().position.y
 			if ad_frame < air_dodge_length - air_dodge_landlag:
 				actor.entity.body_vel = ad_direction * air_dodge_speed
 			elif ad_frame < air_dodge_length:

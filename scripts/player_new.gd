@@ -6,8 +6,7 @@ class_name PlayerNew extends CharacterBody2D
 @onready var stamina_manager: StaminaManager = %StaminaManager
 #@onready var ability_manager: AbilityManager = %AbilityManager
 
-#@onready var platform_manager: PlatformManager = %PlatformManager
-@onready var platform_manager: PlatformManager = $"../PlatformManager"
+#@onready var platform_manager: PlatformManager = $"../PlatformManager"
 
 #@onready var hitboxes: Node2D = %Hitboxes
 @onready var hitbox_manager: HitboxManager = %HitboxManager
@@ -37,7 +36,7 @@ var timers: Dictionary[String, Timer]
 
 
 func _ready() -> void:
-	platform_manager._pl_on_platform.connect(_on_platform)
+	#platform_manager._article_on_platform.connect(_on_platform)
 	hitbox_manager.hit_something.connect(_on_hit_something)
 	#movement_manager.deadzone = input_game_component.deadzone_ls
 	#movement_manager.hard_press_thresh = input_game_component.hardpress_thresh_ls
@@ -133,7 +132,7 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 	
 	## debug
-	debug_prints()
+	#debug_prints()
 	
 	if !entity.move_paused:
 		move_and_slide()
@@ -141,10 +140,11 @@ func _physics_process(delta: float) -> void:
 func _on_platform(platform: PlatformBasic, collider: CharacterBody2D) -> void:
 	if collider.name == "PlayerNew":
 		#%PlatformBehavior.is_on_platform = true
-		entity.is_on_platform = true
+		#entity.is_on_platform = true
+		pass
 		#if %AirDodge.ad_initiated && entity.body_vel.y > 0.0:
-		if abilities["AirDodge"].ad_initiated && entity.body_vel.y > 0.0:
-			position.y = platform.position.y
+		#if abilities["AirDodge"].ad_initiated && entity.body_vel.y > 0.0:
+			#position.y = platform.position.y
 		
 func _on_hit_something(_hitbox: Node2D, _hurtbox: Node2D):
 	#entity.hit_connected = true
