@@ -1,6 +1,6 @@
 class_name DamagedAbilityNode extends Ability
 
-@export var health_manager: HealthManager
+@export var health_manager: HealthManagerNode
 @export var body: CharacterBody2D
 
 @export var hitstun_gravity: float = 4.0

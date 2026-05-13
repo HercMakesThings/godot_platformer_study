@@ -6,10 +6,10 @@ var name: String = "AirJumpAbility"
 @export var air_jump_modifier: float = 0.9
 var air_jumps: int
 
-func _init_ability(_actor: CharacterBody2D) -> void:
+func _init_ability(_actor: Node2D) -> void:
 	air_jumps = air_jump_count
 	
-func _act(actor: CharacterBody2D, _delta: float) -> void:
+func _act(actor: Node2D, _delta: float) -> void:
 	if (air_jumps > 0 &&
 		actor.input_game_component.btn_3_just_pressed &&
 		actor.entity.current_state == actor.entity.MoveState.AIRBORNE &&

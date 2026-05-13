@@ -2,10 +2,10 @@ class_name PlatformBehaviorAbility extends AbilityRes
 
 var name: String = "PlatformBehaviorAbility"
 
-func _init_ability(_actor: CharacterBody2D) -> void:
+func _init_ability(_actor: Node2D) -> void:
 	pass
 	
-func _act(actor: CharacterBody2D, _delta: float) -> void:
+func _act(actor: Node2D, _delta: float) -> void:
 	#print("is on platform: " + str(actor.entity.is_on_platform))
 	if actor.entity.body_on_ground:
 		if actor.entity.is_on_platform && actor.entity.current_state == actor.entity.MoveState.CROUCH:

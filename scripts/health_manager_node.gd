@@ -1,5 +1,5 @@
 extends Node
-class_name HealthManager
+class_name HealthManagerNode
 
 #@onready var hurtbox = $Hurtbox
 #@onready var hurtbox = $"../Hurtbox"
@@ -19,7 +19,8 @@ func _physics_process(delta: float) -> void:
 	
 func _on_hurtbox_hit(area: Area2D):
 	if area is Hitbox:
-		hit.emit(area)
-		if !is_inanimate:
-			percent = percent + area.stats.dmg
-		print("percent: " + str(percent))
+		#hit.emit(area)
+		#if !is_inanimate:
+			#percent = percent + area.stats.dmg
+		#print("percent: " + str(percent))
+		pass

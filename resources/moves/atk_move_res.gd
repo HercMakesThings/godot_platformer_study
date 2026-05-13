@@ -22,14 +22,15 @@ var hitboxes: Array[Hitbox]
 
 var move_input_action: String
 
-func _init_ability(actor: CharacterBody2D) -> void:
+func _init_ability(actor: Node2D) -> void:
 	atk_initiated = false
 	frames = 0
 	active_frames_modifier = 0
-	actor.hitbox_manager.hit_something.connect(_on_hit_something)
+	#actor.hitbox_manager.hit_something.connect(_on_hit_something)
+	#actor.hitbox_manager.hitbox_shape_hit_something.connect(_on_hitbox_shape_hit_something)
 	init_hitboxes(actor.hitbox_manager.hitboxes, hitbox_prefix)
 	
-func _act(actor: CharacterBody2D, delta: float) -> void:
+func _act(actor: Node2D, delta: float) -> void:
 	
 	#if air_ok:
 		#handle_atk_input(
@@ -52,10 +53,15 @@ func _act(actor: CharacterBody2D, delta: float) -> void:
 	for box in hitboxes:
 		box.set_orientation(actor.entity.orientation)
 		if atk_initiated:
-			if frames >= box.stats.active_window_start && frames < box.stats.active_window_start + box.stats.active_window + active_frames_modifier:
-				box.is_active = true
-			else:
-				box.is_active = false
+			#if frames >= box.stats.active_window_start && frames < box.stats.active_window_start + box.stats.active_window + active_frames_modifier:
+				#box.is_active = true
+			#else:
+				#box.is_active = false
+			for statblock in box.stats_array:
+				if frames >= statblock.active_window_start && frames < statblock.active_window_start + statblock.active_window + active_frames_modifier:
+					statblock.is_active = true
+				else:
+					statblock.is_active = false
 		box.tick(delta)
 	
 	## Handle initiated attack
@@ -79,14 +85,16 @@ func init_hitboxes(boxes: Array, prefix: String) -> void:
 	for box in boxes:
 		if box is Hitbox && box.name.containsn(prefix):
 			#box.init_stats(hitbox_stats_arr[i])
-			box.init_stats(hitbox_stats_arr[initialized_count])
+			#box.init_stats(hitbox_stats_arr[initialized_count])
+			box.init_shape_stats(hitbox_stats_arr)
 			initialized_count += 1
 			hitboxes.append(box)
 		elif box is not Hitbox && box.get_child_count() > 0:
 			for child_box in box.get_children():
 				if child_box is Hitbox && box.name.containsn(prefix):
 					#child_box.init_stats(hitbox_stats_arr[i])
-					box.init_stats(hitbox_stats_arr[initialized_count])
+					#child_box.init_stats(hitbox_stats_arr[initialized_count])
+					child_box.init_shape_stats(hitbox_stats_arr)
 					initialized_count += 1
 					hitboxes.append(child_box)
 	#i += 1
@@ -95,6 +103,9 @@ func _on_hit_something(hit_box: Node2D, _hurt_box: Node2D):
 	for box in hitboxes:
 		if hit_box.name == box.name && atk_initiated:
 			active_frames_modifier = box.stats.lag
+			
+func _on_hitbox_shape_hit_something():
+	pass
 			
 func handle_atk_input(is_atk_initiated: bool) -> void:
 	if is_atk_initiated:

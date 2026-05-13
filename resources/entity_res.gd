@@ -91,17 +91,39 @@ func apply_gravity(extra: float = 0) -> void:
 func calc_accel(force: Vector2) -> Vector2:
 	return force / mass
 	
-func apply_force(force: Vector2, delta: float, use_dir = true) -> void:
+func apply_accel(force: Vector2, delta: float, use_dir = true) -> void:
 	accel = accel + calc_accel(force)
 	if use_dir:
 		var f: Vector2 = (body_vel + accel * direction)
-		body_vel = body_vel.move_toward(f, f.length() * delta * calc_friction())
+		#var f: Vector2 = (body_vel + accel * calc_friction())*direction
+		#body_vel = body_vel.move_toward(f, smoothstep(0, f.length(), delta * calc_friction()))
+		#body_vel = body_vel.move_toward(f, f.length() * calc_friction() * delta)
+		#body_vel = body_vel.move_toward(f, force.x * calc_friction() * delta)
+		body_vel = body_vel.move_toward(f, force.x * calc_friction() * delta)
+		#body_vel = body_vel.move_toward(f, force.x * delta)
 	else:
-		var f: Vector2 = (body_vel + accel)
-		body_vel = body_vel.move_toward(f, f.length() * delta * calc_friction())
+		#var f: Vector2 = (body_vel + accel)
+		#body_vel = body_vel.move_toward(f, f.length() * delta * calc_friction())
+		#body_vel = body_vel.move_toward(f, force.x * calc_friction() * delta)
+		print("body vel: " + str(body_vel))
+		body_vel = body_vel.move_toward(Vector2(abs(force.x)*orientation, force.y), force.x * calc_friction() * delta)
+		#body_vel = body_vel.move_toward(accel, accel.x * calc_friction() * delta)
+		
+func apply_force(force: Vector2, delta: float) -> void:
+	#var f: Vector2 = Vector2(force.x*direction.x, force.y*direction.y) / mass
+	var f: Vector2
+	if direction.x > 0:
+		f = Vector2(force.x*direction.ceil().x, force.y*direction.y)
+	elif direction.x < 0:
+		f = Vector2(force.x*direction.floor().x, force.y*direction.y)
+		
+	#body_vel = body_vel.move_toward(f, force.x*calc_friction() * delta)
+	body_vel = body_vel.move_toward(f, f.length()*calc_friction() * delta)
+	#body_vel = body_vel.move_toward(f, (force.x*calc_friction() * delta)/mass)
 		
 func decelerate(delta: float, mod: float = 1.0) -> void:
 	body_vel.x = move_toward(body_vel.x, 0.0, decel * delta * mod * calc_friction())
+	#body_vel.x = move_toward(body_vel.x, 0.0, decel * mod * calc_friction())
 	accel = accel.slerp(Vector2(0,0), 0.2)
 	
 func calc_nForce() -> float:
@@ -112,7 +134,9 @@ func calc_friction() -> float:
 	if body_on_ground:
 		return nf * friction
 	else:
-		return nf * (air_friction * 0.01)
+		#return nf * (air_friction * 0.01)
+		return nf * (air_friction * 0.05)
+		#return nf * air_friction
 		
 func get_weight() -> float:
 	weight = mass * gravity

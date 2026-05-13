@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://c4arjr6rbjxmy"]
+
+[ext_resource type="Script" uid="uid://c0s0srcfeymht" path="res://scenes/article/components/environment_collision_body.gd" id="1_6y2xo"]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_6y2xo"]
+points = PackedVector2Array(0, -24, 10, -16, 0, 0, -10, -16)
+
+[node name="EnvironmentCollisionBody" type="Area2D" unique_id=617907928]
+collision_mask = 3
+script = ExtResource("1_6y2xo")
+
+[node name="top" type="RayCast2D" parent="." unique_id=1382104200]
+unique_name_in_owner = true
+position = Vector2(0, -16)
+target_position = Vector2(0, -8)
+collision_mask = 11
+collide_with_areas = true
+
+[node name="right" type="RayCast2D" parent="." unique_id=1671687925]
+unique_name_in_owner = true
+position = Vector2(0, -16)
+target_position = Vector2(10, 0)
+collision_mask = 11
+collide_with_areas = true
+
+[node name="bottom" type="RayCast2D" parent="." unique_id=257775682]
+unique_name_in_owner = true
+position = Vector2(0, -16)
+target_position = Vector2(0, 16)
+collision_mask = 11
+collide_with_areas = true
+
+[node name="left" type="RayCast2D" parent="." unique_id=1083582086]
+unique_name_in_owner = true
+position = Vector2(0, -16)
+target_position = Vector2(-10, 0)
+collision_mask = 11
+collide_with_areas = true
+
+[node name="offset_bottom" type="RayCast2D" parent="." unique_id=751507386]
+unique_name_in_owner = true
+target_position = Vector2(0, 0)
+collision_mask = 11
+collide_with_areas = true
+
+[node name="shape" type="CollisionShape2D" parent="." unique_id=1939461875]
+unique_name_in_owner = true
+shape = SubResource("ConvexPolygonShape2D_6y2xo")
+debug_color = Color(2.5027991e-06, 0.61770195, 0.5861806, 0.41960785)

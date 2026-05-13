@@ -12,10 +12,10 @@ var release_frame: int = 0
 var shield_initiated: bool = false
 var shield_released: bool = false
 
-func _init_ability(_actor: CharacterBody2D) -> void:
+func _init_ability(_actor: Node2D) -> void:
 	pass
 	
-func _act(actor: CharacterBody2D, delta: float) -> void:
+func _act(actor: Node2D, delta: float) -> void:
 	if actor.shield == null || actor.hurtbox == null:
 		return
 	if (actor.entity.body_on_ground &&

@@ -17,14 +17,14 @@ var active_frames_modifier: int
 
 var hitboxes: Array[Hitbox]
 
-func _init_ability(actor: CharacterBody2D) -> void:
+func _init_ability(actor: Node2D) -> void:
 	atk_initiated = false
 	frames = 0
 	active_frames_modifier = 0
 	actor.hitbox_manager.hit_something.connect(_on_hit_something)
-	init_hitboxes(actor.hitbox_manager.hitboxes, hitbox_prefix)
+	#init_hitboxes(actor.hitbox_manager.hitboxes, hitbox_prefix)
 	
-func _act(actor: CharacterBody2D, delta: float) -> void:
+func _act(actor: Node2D, delta: float) -> void:
 	
 	## Get player input and initiate attack
 	#if (actor.input_game_component.btn_1_input &&

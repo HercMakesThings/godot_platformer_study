@@ -27,7 +27,7 @@
 [ext_resource type="Script" uid="uid://qx4caybjb0ku" path="res://scripts/player_walk.gd" id="24_31cv2"]
 [ext_resource type="Script" uid="uid://dhofre8nq6mf8" path="res://scripts/orientation_vis.gd" id="24_l71n6"]
 [ext_resource type="Script" uid="uid://c46wswv8xu5k4" path="res://scripts/player_run_skid.gd" id="25_31cv2"]
-[ext_resource type="Script" uid="uid://74ctiqofli1i" path="res://scripts/health_manager.gd" id="28_pf23h"]
+[ext_resource type="Script" uid="uid://74ctiqofli1i" path="res://scripts/health_manager_node.gd" id="28_pf23h"]
 [ext_resource type="Script" uid="uid://bjx5rtki0usbf" path="res://scripts/stamina_manager.gd" id="29_dt7fs"]
 [ext_resource type="PackedScene" uid="uid://b58d3k3tt4jsm" path="res://scenes/hurtbox.tscn" id="30_wqfne"]
 [ext_resource type="Script" uid="uid://bjk4djbuag7os" path="res://scripts/input_game_component.gd" id="31_wnwbv"]

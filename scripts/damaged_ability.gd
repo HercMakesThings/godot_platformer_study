@@ -1,6 +1,6 @@
 class_name DamagedAbilityOld extends Ability
 
-@export var health_manager: HealthManager
+@export var health_manager: HealthManagerNode
 @export var body: CharacterBody2D
 
 @export var hitstun_gravity: float = 4.0
@@ -70,13 +70,13 @@ func _on_hit(area: Area2D):
 	is_hit = true
 	stun_frames = 0
 	#hitbox = area
-	atk_angle = area.angle
+	atk_angle = area.stats.angle
 	atk_angle_vec = area.angle_vec
-	atk_dmg = area.dmg
-	atk_bkb = area.bkb
-	atk_kbg = area.kbg
-	atk_stun = area.stun
-	atk_lag = area.lag
+	atk_dmg = area.stats.dmg
+	atk_bkb = area.stats.bkb
+	atk_kbg = area.stats.kbg
+	atk_stun = area.stats.stun
+	atk_lag = area.stats.lag
 	#if hitbox != null:
 		#hitbox.bkb = area.bkb
 		#hitbox.kbg = area.kbg

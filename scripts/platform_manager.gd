@@ -22,7 +22,7 @@ func _ready():
 			#print("currently on platform: " + str(area.name))
 			#_pl_on_platform.emit(a.get_parent(), area.get_parent())
 func _on_platform_colliding(_plat: PlatformBasic, article: Node2D):
-	print("currently on platform: " + str(article.name))
+	#print("currently on platform: " + str(article.name))
 	#_article_on_platform.emit(plat, article)
 	article.entity.is_on_platform = true
 			

@@ -1,13 +1,16 @@
 class_name Sandbag extends CharacterBody2D
 
 #@onready var movement_manager: MovementManager = %MovementManager
-@onready var health_manager: HealthManager = %HealthManager
+#@onready var health_manager: HealthManagerNode = %HealthManager
 @onready var ability_manager: AbilityManager = %AbilityManager
 #@onready var platform_manager: PlatformManager = $"../PlatformManager"
 @onready var contact_point: RayCast2D = $ContactPoint
 
+@export var hurtbox: Hurtbox
+
 @export var movement: MovementRes
 @export var entity_movement: EntityMoveRes
+@export var status: EntityStatus
 
 @export var entity: Entity
 
@@ -16,6 +19,7 @@ class_name Sandbag extends CharacterBody2D
 func _ready() -> void:
 	#platform_manager._pl_on_platform.connect(_on_platform)
 	entity.init()
+	status.init_health(self)
 	for i in abilities:
 		abilities[i]._init_ability(self)
 		print(str(name) + " Ability Resource: " + str(abilities[i].name))

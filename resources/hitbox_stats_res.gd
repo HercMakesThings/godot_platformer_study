@@ -15,3 +15,7 @@ class_name HitboxStats extends Resource
 
 @export var active_window: int = 8
 @export var active_window_start: int = 6
+
+var angle_vec: Vector2 = Vector2(1,0)
+var is_active: bool = false
+var orientation: int = 1

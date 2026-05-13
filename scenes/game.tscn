@@ -3,16 +3,14 @@
 [ext_resource type="Texture2D" uid="uid://2g1oqqy0hmw6" path="res://assets/sprites/flushyGameTileset2-Sheet.png" id="1_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://ck61gkeynns21" path="res://scenes/platform_test.tscn" id="3_fnmy7"]
 [ext_resource type="Script" uid="uid://daqmmkqbywlws" path="res://scripts/platform_manager.gd" id="3_p57ef"]
-[ext_resource type="Script" uid="uid://b1tkw1yxmq21m" path="res://scripts/test_label.gd" id="4_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://dmxyajsvknhfv" path="res://scenes/platform_basic_1.tscn" id="4_c31sl"]
-[ext_resource type="Script" uid="uid://by62tcho3drwi" path="res://scripts/label_2.gd" id="5_vtaks"]
 [ext_resource type="PackedScene" uid="uid://cn2hl3dyvnbsd" path="res://scenes/sandbag.tscn" id="10_kvpfn"]
 [ext_resource type="PackedScene" uid="uid://dx1h5gjrv33tf" path="res://scenes/player_new.tscn" id="10_vtaks"]
 [ext_resource type="Script" uid="uid://bsfowl8fm16ji" path="res://scenes/test_rigid.gd" id="11_kvpfn"]
-[ext_resource type="Shader" path="res://shaders/rounded_corners.gdshader" id="12_dinhu"]
+[ext_resource type="Shader" uid="uid://dw5t7orxmcyin" path="res://shaders/rounded_corners.gdshader" id="12_dinhu"]
 [ext_resource type="Script" uid="uid://b7nwpiqypj75k" path="res://scripts/environment_collision_box.gd" id="12_trtic"]
 [ext_resource type="Script" uid="uid://b6ncwap61pjs1" path="res://scripts/movement_component.gd" id="13_kvuet"]
-[ext_resource type="Script" path="res://scripts/test_item_char_2d.gd" id="15_ir15t"]
+[ext_resource type="Script" uid="uid://b8ht4tsoo7t80" path="res://scripts/test_item_char_2d.gd" id="15_ir15t"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vtaks"]
 texture = ExtResource("1_0tnpc")
@@ -349,24 +347,6 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-
-[node name="Label" type="Label" parent="Control" unique_id=677540155]
-layout_mode = 0
-offset_left = -239.0
-offset_top = -117.0
-offset_right = -199.0
-offset_bottom = -94.0
-text = "test"
-script = ExtResource("4_0tnpc")
-
-[node name="Label2" type="Label" parent="Control" unique_id=144650404]
-layout_mode = 0
-offset_left = -203.0
-offset_top = -117.0
-offset_right = -163.0
-offset_bottom = -94.0
-text = "test"
-script = ExtResource("5_vtaks")
 
 [node name="Sandbag" parent="." unique_id=2090127047 instance=ExtResource("10_kvpfn")]
 position = Vector2(5, 26)

@@ -13,13 +13,13 @@ var ad_initiated: bool
 var ad_direction: Vector2
 var touched_ground: bool
 
-func _init_ability(_actor: CharacterBody2D) -> void:
+func _init_ability(_actor: Node2D) -> void:
 	air_dodge = air_dodge_count
 	ad_frame = 0
 	ad_initiated = false
 	touched_ground = false
 	
-func _act(actor: CharacterBody2D, delta: float) -> void:
+func _act(actor: Node2D, delta: float) -> void:
 	if (actor.input_game_component.guard_input && 
 		air_dodge > 0 &&
 		(actor.entity.current_state == actor.entity.MoveState.AIRBORNE ||
@@ -77,13 +77,19 @@ func _act(actor: CharacterBody2D, delta: float) -> void:
 				actor.timers.ad_flash_timer.stop()
 				actor.timers.ad_flash_timer.timeout.emit()
 				return
+			
 			## accessibility logic to snap actor to platform when
 			## travelling down in order to make wavelanding easier
 			if actor.entity.body_vel.y > 0.0:
 				if actor.hurtbox.has_overlapping_areas():
 					for a in actor.hurtbox.get_overlapping_areas():
-						if a.get_parent() is PlatformBasic:
-							actor.position.y = a.get_parent().position.y
+						#if a.get_parent() is PlatformBasic:
+							#actor.position.y = a.get_parent().position.y
+						if a is PlatformNew:
+							print("snapping to platform!")
+							#actor.position.y = a.position.y + a.collision_shape.size.y
+							actor.position.y = a.position.y - a.collision_shape.size.y*0.5
+			
 			if ad_frame < air_dodge_length - air_dodge_landlag:
 				actor.entity.body_vel = ad_direction * air_dodge_speed
 			elif ad_frame < air_dodge_length:
@@ -107,5 +113,5 @@ func _act(actor: CharacterBody2D, delta: float) -> void:
 	if (actor.entity.body_on_ground && air_dodge < air_dodge_count):
 		air_dodge = air_dodge_count
 		
-func _on_flash_timer_timeout(actor: CharacterBody2D) -> void:
+func _on_flash_timer_timeout(actor: Node2D) -> void:
 	actor.model.material.set_shader_parameter("flash_modifier", 0.0)
