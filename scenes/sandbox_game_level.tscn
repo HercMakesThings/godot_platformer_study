@@ -7,8 +7,10 @@
 [ext_resource type="Script" uid="uid://db3fuworsu3wx" path="res://resources/ability_res.gd" id="4_jkd5k"]
 [ext_resource type="Script" uid="uid://dccj2u2ecx18h" path="res://resources/abilities/air_jump_ability.gd" id="5_bpker"]
 [ext_resource type="PackedScene" uid="uid://dmxyajsvknhfv" path="res://scenes/platform_basic_1.tscn" id="5_unoc6"]
+[ext_resource type="Resource" uid="uid://tekh5ut02ob6" path="res://resources/default_control_scheme.tres" id="6_7beub"]
 [ext_resource type="Script" uid="uid://dw1h7g3hodgca" path="res://resources/abilities/air_dodge_ability.gd" id="6_s3sem"]
 [ext_resource type="Script" uid="uid://b3jv5j777lhr2" path="res://resources/abilities/damaged_ability.gd" id="7_8nwor"]
+[ext_resource type="Script" uid="uid://dryh713xatggd" path="res://resources/input_component.gd" id="7_jtydk"]
 [ext_resource type="Script" uid="uid://dmhk2lv3mrtf" path="res://scenes/pf_raycast_2d.gd" id="10_bpker"]
 [ext_resource type="Script" uid="uid://d1tqws1en3mmr" path="res://scripts/platform_new.gd" id="11_s3sem"]
 
@@ -16,7 +18,12 @@
 size = Vector2(1600, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jkd5k"]
-size = Vector2(37.35, 87.96)
+size = Vector2(4, 68.075)
+
+[sub_resource type="Resource" id="Resource_ru8pc"]
+script = ExtResource("7_jtydk")
+scheme = ExtResource("6_7beub")
+metadata/_custom_type_script = "uid://dryh713xatggd"
 
 [sub_resource type="Resource" id="Resource_5cvvn"]
 script = ExtResource("6_s3sem")
@@ -31,7 +38,7 @@ script = ExtResource("7_8nwor")
 metadata/_custom_type_script = "uid://b3jv5j777lhr2"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bpker"]
-size = Vector2(108.16, 20)
+size = Vector2(108.015, 4)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s3sem"]
 size = Vector2(600, 4)
@@ -63,15 +70,15 @@ position = Vector2(113, -52)
 scale = Vector2(0.01, 0.01)
 
 [node name="TerrainArea2D" type="Area2D" parent="." unique_id=1300640604]
-position = Vector2(183, -44)
+position = Vector2(182, -36)
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_3xut1")
 metadata/_custom_type_script = "uid://b8nj8u2wpdvlw"
 
 [node name="Sprite2D" type="Sprite2D" parent="TerrainArea2D" unique_id=216092882]
-position = Vector2(0.023805268, -0.042327568)
-scale = Vector2(0.29724705, 0.6868386)
+position = Vector2(7.6293945e-06, -0.042327568)
+scale = Vector2(0.031250004, 0.6868386)
 texture = ExtResource("2_e128x")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TerrainArea2D" unique_id=1043125565]
@@ -79,6 +86,7 @@ shape = SubResource("RectangleShape2D_jkd5k")
 
 [node name="Actor2D" parent="." unique_id=1086043803 instance=ExtResource("3_e128x")]
 position = Vector2(-42, -26)
+input_component = SubResource("Resource_ru8pc")
 abilities = Dictionary[String, ExtResource("4_jkd5k")]({
 "AirDodge": SubResource("Resource_5cvvn"),
 "AirJump": SubResource("Resource_7c7v4"),
@@ -90,29 +98,30 @@ offset = Vector2(0, -21.38)
 zoom = Vector2(4, 4)
 
 [node name="TerrainArea2D2" type="Area2D" parent="." unique_id=2006019362]
-position = Vector2(-158, -44)
+position = Vector2(-159, -26)
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_3xut1")
 metadata/_custom_type_script = "uid://b8nj8u2wpdvlw"
 
 [node name="Sprite2D" type="Sprite2D" parent="TerrainArea2D2" unique_id=567381468]
-position = Vector2(0.023805268, -0.042327568)
-scale = Vector2(0.29724705, 0.6868386)
+position = Vector2(1.04904175e-05, 3.33786e-06)
+scale = Vector2(0.031250067, 0.53125)
 texture = ExtResource("2_e128x")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TerrainArea2D2" unique_id=965450673]
 shape = SubResource("RectangleShape2D_jkd5k")
 
 [node name="TerrainArea2D3" type="Area2D" parent="." unique_id=2018547916]
-position = Vector2(-35, -90)
+position = Vector2(-211, -62)
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_3xut1")
 metadata/_custom_type_script = "uid://b8nj8u2wpdvlw"
 
 [node name="Sprite2D" type="Sprite2D" parent="TerrainArea2D3" unique_id=1572813029]
-scale = Vector2(0.84375, 0.15625006)
+position = Vector2(0, -4.7683716e-07)
+scale = Vector2(0.84375, 0.031249978)
 texture = ExtResource("2_e128x")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TerrainArea2D3" unique_id=162660061]

@@ -65,41 +65,68 @@ func tick(article: Article) -> void:
 		#offset_bottom.enabled = article.entity.body_vel.y >= 0
 		#if (bottom.is_colliding()):
 		#if (bottom.is_colliding() || offset_bottom.is_colliding()):
-		if ((bottom.is_colliding() && (bottom.get_collider() is TerrainArea2D || bottom.get_collider() is PlatformNew))
-			|| (offset_bottom.is_colliding() && (offset_bottom.get_collider() is PlatformNew || offset_bottom.get_collider() is TerrainArea2D))
-		):
-			var coll_point: Vector2 = bottom.get_collision_point()
-			#print("collision point: " + str(coll_point))
-			if (bottom.is_colliding() && bottom.get_collider() is TerrainArea2D):
-			#if (bottom.get_collider() is TerrainArea2D && coll_point.distance_to(bottom.global_position + bottom.target_position) <= COLLISION_POINT_THRESHOLD):
-				article.entity.body_on_ground = true
-				print("on ground!")
-				article.entity.body_vel.y = 0.0
-				#if offset_bottom.target_position.y < 0.0:
-				article.position.y = bottom.get_collider().position.y - (bottom.get_collider().collision_shape.size.y*0.5)
-			elif (bottom.is_colliding() && bottom.get_collider() is PlatformNew && coll_point.distance_to(bottom.global_position + bottom.target_position) <= COLLISION_POINT_THRESHOLD):
-				article.entity.body_on_ground = true
-				article.entity.is_on_platform = true
-				print("on platform!")
-				article.entity.body_vel.y = 0.0
-				#if offset_bottom.target_position.y <= 0.0:
-				article.position.y = bottom.get_collider().position.y - (bottom.get_collider().collision_shape.size.y*0.5)
-			#elif offset_bottom.is_colliding() && offset_bottom.get_collider() is TerrainArea2D:
+		#if ((bottom.is_colliding() && (bottom.get_collider() is TerrainArea2D || bottom.get_collider() is PlatformNew))
+			#|| (offset_bottom.is_colliding() && (offset_bottom.get_collider() is PlatformNew || offset_bottom.get_collider() is TerrainArea2D))
+		#):
+			#var coll_point: Vector2 = bottom.get_collision_point()
+			##print("collision point: " + str(coll_point))
+			#if (bottom.is_colliding() && bottom.get_collider() is TerrainArea2D):
+			##if (bottom.get_collider() is TerrainArea2D && coll_point.distance_to(bottom.global_position + bottom.target_position) <= COLLISION_POINT_THRESHOLD):
 				#article.entity.body_on_ground = true
-				##if article.entity.body_vel.y < 0.0:
+				#print("on ground!")
+				#article.entity.body_vel.y = 0.0
+				##if offset_bottom.target_position.y < 0.0:
+				#article.position.y = bottom.get_collider().position.y - (bottom.get_collider().collision_shape.size.y*0.5)
+			#elif (bottom.is_colliding() && bottom.get_collider() is PlatformNew && coll_point.distance_to(bottom.global_position + bottom.target_position) <= COLLISION_POINT_THRESHOLD):
+				#article.entity.body_on_ground = true
+				#article.entity.is_on_platform = true
+				#print("on platform!")
+				#article.entity.body_vel.y = 0.0
+				##if offset_bottom.target_position.y <= 0.0:
+				#article.position.y = bottom.get_collider().position.y - (bottom.get_collider().collision_shape.size.y*0.5)
+			##elif offset_bottom.is_colliding() && offset_bottom.get_collider() is TerrainArea2D:
+				##article.entity.body_on_ground = true
+				###if article.entity.body_vel.y < 0.0:
+				##if offset_bottom.target_position.y <= 0.0:
+					##article.entity.body_vel.y = 0.0
+					##article.position.y = offset_bottom.get_collider().position.y - (offset_bottom.get_collider().collision_shape.size.y*0.5)
+			#elif offset_bottom.is_colliding() && offset_bottom.get_collider() is PlatformNew:
+				#article.entity.body_on_ground = true
+				#article.entity.is_on_platform = true
+				##print("on platform!")
 				#if offset_bottom.target_position.y <= 0.0:
 					#article.entity.body_vel.y = 0.0
 					#article.position.y = offset_bottom.get_collider().position.y - (offset_bottom.get_collider().collision_shape.size.y*0.5)
-			elif offset_bottom.is_colliding() && offset_bottom.get_collider() is PlatformNew:
+		#else:
+			#article.entity.body_on_ground = false
+			#article.entity.is_on_platform = false
+			
+			
+		var coll_point: Vector2 = bottom.get_collision_point()
+		if ( bottom.is_colliding() &&
+			( bottom.get_collider() is TerrainArea2D ||
+				(  bottom.get_collider() is PlatformNew &&
+					coll_point.distance_to(bottom.global_position + bottom.target_position) <= COLLISION_POINT_THRESHOLD
+				)
+			)
+		):
+			if article.entity.body_vel.y >= 0:
 				article.entity.body_on_ground = true
-				article.entity.is_on_platform = true
-				#print("on platform!")
+				article.entity.is_on_platform = bottom.get_collider() is PlatformNew
+			#article.entity.body_vel.y = 0.0
+			article.position.y = bottom.get_collider().position.y - (bottom.get_collider().collision_shape.size.y*0.5)
+		elif (offset_bottom.is_colliding() && (offset_bottom.get_collider() is PlatformNew || offset_bottom.get_collider() is TerrainArea2D)):
+				if article.entity.body_vel.y >= 0:
+					article.entity.body_on_ground = true
+					article.entity.is_on_platform = true
 				if offset_bottom.target_position.y <= 0.0:
-					article.entity.body_vel.y = 0.0
+					#article.entity.body_vel.y = 0.0
 					article.position.y = offset_bottom.get_collider().position.y - (offset_bottom.get_collider().collision_shape.size.y*0.5)
 		else:
 			article.entity.body_on_ground = false
 			article.entity.is_on_platform = false
+			
+			
 			
 		#article.entity.body_on_ground = bottom.is_colliding() && (bottom.get_collider() is TerrainArea2D || bottom.get_collider() is PlatformNew)
 		#article.entity.is_on_platform = bottom.is_colliding() && bottom.get_collider() is PlatformNew
@@ -161,6 +188,11 @@ func _on_area_entered(area: Area2D) -> void:
 			#get_parent().velocity.y = 0
 			#get_parent().position.y = area.position.y
 			
-func handle_ground_collision() -> void:
-	pass
+#func handle_ground_collision(article: Article) -> void:
+	#var coll_point: Vector2 = bottom.get_collision_point()
+	#if (!bottom.is_colliding() && !offset_bottom.is_colliding()):
+		#article.entity.body_on_ground = false
+		#article.entity.is_on_platform = false
+		#return
+	#pass
 	

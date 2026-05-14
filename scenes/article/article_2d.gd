@@ -2,7 +2,10 @@ class_name Article extends Node2D
 
 @export var ecb: EnvironmentCollisionBody
 @export var hurtbox: Hurtbox
+
 @export var input_game_component: InputGameComponent
+@export var input_component: InputComponent
+
 @export var entity: Entity
 @export var entity_movement: EntityMoveRes
 @export var status: EntityStatus
@@ -17,6 +20,7 @@ var velocity: Vector2
 
 func _ready() -> void:
 	velocity = Vector2.ZERO
+	input_component.init()
 	entity.init()
 	status.init_health(self)
 	for i in abilities:
@@ -31,10 +35,17 @@ func _physics_process(delta: float) -> void:
 	# capture player input
 	input_game_component.update()
 	
-	entity.jump_pressed = input_game_component.btn_3_input
-	entity.jump_just_pressed = input_game_component.btn_3_just_pressed
-	entity.jump_released = input_game_component.btn_3_input_released
-	entity.direction = input_game_component.dir_input
+	#entity.jump_pressed = input_game_component.btn_3_input
+	#entity.jump_just_pressed = input_game_component.btn_3_just_pressed
+	#entity.jump_released = input_game_component.btn_3_input_released
+	#entity.direction = input_game_component.dir_input
+	
+	input_component.update()
+	var packet: InputPacket = input_component.get_current_packet()
+	entity.direction = packet.primary_direction
+	entity.jump_pressed = packet.jump_pressed
+	entity.jump_just_pressed = packet.jump_just_pressed
+	entity.jump_released = packet.jump_just_released
 	
 	entity_movement.compute_movement(entity, delta)
 	
