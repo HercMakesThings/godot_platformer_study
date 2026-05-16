@@ -20,6 +20,18 @@ func update() -> void:
 	packet.jump_pressed = false
 	packet.jump_just_pressed = false
 	packet.jump_just_released = false
+	packet.light_atk_pressed = false
+	packet.light_atk_just_pressed = false
+	packet.light_atk_released = false
+	packet.heavy_atk_pressed = false
+	packet.heavy_atk_just_pressed = false
+	packet.heavy_atk_released = false
+	packet.special_atk_pressed = false
+	packet.special_atk_just_pressed = false
+	packet.special_atk_released = false
+	packet.is_guard_pressed = false
+	packet.is_guard_just_pressed = false
+	packet.is_guard_released = false
 	## end reset
 	
 	packet.primary_direction = Input.get_vector("left_stick_left", "left_stick_right", "left_stick_down", "left_stick_up", deadzone_ls)
@@ -33,24 +45,24 @@ func update() -> void:
 		#if Input.is_action_pressed(scheme.jump[0]) || Input.is_action_pressed(scheme.jump[[1]]):
 		
 	for input in scheme.light_atk:
-		packet.light_atk_pressed = Input.is_action_pressed(input)
-		packet.light_atk_just_pressed = Input.is_action_just_pressed(input)
-		packet.light_atk_released = Input.is_action_just_released(input)
+		packet.light_atk_pressed = Input.is_action_pressed(input) if !packet.light_atk_pressed else packet.light_atk_pressed
+		packet.light_atk_just_pressed = Input.is_action_just_pressed(input) if !packet.light_atk_just_pressed else packet.light_atk_just_pressed
+		packet.light_atk_released = Input.is_action_just_released(input) if !packet.light_atk_released else packet.light_atk_released
 		
 	for input in scheme.heavy_atk:
-		packet.heavy_atk_pressed = Input.is_action_pressed(input)
-		packet.heavy_atk_just_pressed = Input.is_action_just_pressed(input)
-		packet.heavy_atk_released = Input.is_action_just_released(input)
+		packet.heavy_atk_pressed = Input.is_action_pressed(input) if !packet.heavy_atk_pressed else packet.heavy_atk_pressed
+		packet.heavy_atk_just_pressed = Input.is_action_just_pressed(input) if !packet.heavy_atk_just_pressed else packet.heavy_atk_just_pressed
+		packet.heavy_atk_released = Input.is_action_just_released(input) if !packet.heavy_atk_released else packet.heavy_atk_released
 		
 	for input in scheme.special_atk:
-		packet.special_atk_pressed = Input.is_action_pressed(input)
-		packet.special_atk_just_pressed = Input.is_action_just_pressed(input)
-		packet.special_atk_released = Input.is_action_just_released(input)
+		packet.special_atk_pressed = Input.is_action_pressed(input) if !packet.special_atk_pressed else packet.special_atk_pressed
+		packet.special_atk_just_pressed = Input.is_action_just_pressed(input) if !packet.special_atk_just_pressed else packet.special_atk_just_pressed
+		packet.special_atk_released = Input.is_action_just_released(input) if !packet.special_atk_released else packet.special_atk_released
 		
 	for input in scheme.guard:
-		packet.is_guard_pressed = Input.is_action_pressed(input)
-		packet.is_guard_just_pressed = Input.is_action_just_pressed(input)
-		packet.is_guard_released = Input.is_action_just_released(input)
+		packet.is_guard_pressed = Input.is_action_pressed(input) if !packet.is_guard_pressed else packet.is_guard_pressed
+		packet.is_guard_just_pressed = Input.is_action_just_pressed(input) if !packet.is_guard_just_pressed else packet.is_guard_just_pressed
+		packet.is_guard_released = Input.is_action_just_released(input) if !packet.is_guard_released else packet.is_guard_released
 		
 	#for input in scheme.start
 	

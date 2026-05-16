@@ -194,5 +194,23 @@ func _on_area_entered(area: Area2D) -> void:
 		#article.entity.body_on_ground = false
 		#article.entity.is_on_platform = false
 		#return
+	#if ( bottom.get_collider() is TerrainArea2D ||
+		#(  bottom.get_collider() is PlatformNew &&
+			#coll_point.distance_to(bottom.global_position + bottom.target_position) <= COLLISION_POINT_THRESHOLD
+		#)
+	#):
+		#if article.entity.body_vel.y >= 0:
+			#article.entity.body_on_ground = true
+			#article.entity.is_on_platform = bottom.get_collider() is PlatformNew
+			##article.entity.body_vel.y = 0.0
+		#article.position.y = bottom.get_collider().position.y - (bottom.get_collider().collision_shape.size.y*0.5)
+		#return
+	#if (offset_bottom.is_colliding() && (offset_bottom.get_collider() is PlatformNew || offset_bottom.get_collider() is TerrainArea2D)):
+		#if article.entity.body_vel.y >= 0:
+			#article.entity.body_on_ground = true
+			#article.entity.is_on_platform = true
+		#if offset_bottom.target_position.y <= 0.0:
+			##article.entity.body_vel.y = 0.0
+			#article.position.y = offset_bottom.get_collider().position.y - (offset_bottom.get_collider().collision_shape.size.y*0.5)
 	#pass
 	

@@ -81,8 +81,8 @@ func _act(actor: Node2D, delta: float) -> void:
 			## accessibility logic to snap actor to platform when
 			## travelling down in order to make wavelanding easier
 			if actor.entity.body_vel.y > 0.0:
-				if actor.hurtbox.has_overlapping_areas():
-					for a in actor.hurtbox.get_overlapping_areas():
+				if actor.ecb.has_overlapping_areas():
+					for a in actor.ecb.get_overlapping_areas():
 						#if a.get_parent() is PlatformBasic:
 							#actor.position.y = a.get_parent().position.y
 						if a is PlatformNew:
