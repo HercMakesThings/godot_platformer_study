@@ -8,6 +8,10 @@ points = PackedVector2Array(0, -24, 10, -16, 0, 0, -10, -16)
 [node name="EnvironmentCollisionBody" type="Area2D" unique_id=617907928]
 collision_mask = 3
 script = ExtResource("1_6y2xo")
+height = 6.0
+center = 3.0
+width = 6.0
+COLLISION_POINT_THRESHOLD = 2.0
 
 [node name="top" type="RayCast2D" parent="." unique_id=1382104200]
 unique_name_in_owner = true
@@ -38,6 +42,51 @@ collision_mask = 11
 collide_with_areas = true
 
 [node name="offset_bottom" type="RayCast2D" parent="." unique_id=751507386]
+unique_name_in_owner = true
+target_position = Vector2(0, 0)
+collision_mask = 11
+collide_with_areas = true
+
+[node name="offset_top" type="RayCast2D" parent="." unique_id=947825820]
+unique_name_in_owner = true
+position = Vector2(0, -24)
+target_position = Vector2(0, 0)
+collision_mask = 11
+collide_with_areas = true
+
+[node name="offset_left" type="RayCast2D" parent="." unique_id=1958831513]
+unique_name_in_owner = true
+position = Vector2(-10, -16)
+target_position = Vector2(0, 0)
+collision_mask = 11
+collide_with_areas = true
+
+[node name="offset_right" type="RayCast2D" parent="." unique_id=1925355820]
+unique_name_in_owner = true
+position = Vector2(10, -16)
+target_position = Vector2(0, 0)
+collision_mask = 11
+collide_with_areas = true
+
+[node name="top_detector" type="RayCast2D" parent="." unique_id=889676004]
+unique_name_in_owner = true
+target_position = Vector2(0, 0)
+collision_mask = 11
+collide_with_areas = true
+
+[node name="bottom_detector" type="RayCast2D" parent="." unique_id=431084496]
+unique_name_in_owner = true
+target_position = Vector2(0, 0)
+collision_mask = 11
+collide_with_areas = true
+
+[node name="left_detector" type="RayCast2D" parent="." unique_id=1893524859]
+unique_name_in_owner = true
+target_position = Vector2(0, 0)
+collision_mask = 11
+collide_with_areas = true
+
+[node name="right_detector" type="RayCast2D" parent="." unique_id=120462004]
 unique_name_in_owner = true
 target_position = Vector2(0, 0)
 collision_mask = 11

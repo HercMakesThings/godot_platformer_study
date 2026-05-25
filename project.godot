@@ -186,6 +186,7 @@ kb_btn_0={
 2d_physics/layer_1="Actors"
 2d_physics/layer_2="Terrain"
 2d_physics/layer_3="Articles"
+2d_physics/layer_5="Hurtboxes"
 
 [physics]
 

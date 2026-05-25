@@ -18,7 +18,7 @@
 size = Vector2(1600, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jkd5k"]
-size = Vector2(4, 68.075)
+size = Vector2(4, 132.455)
 
 [sub_resource type="Resource" id="Resource_ru8pc"]
 script = ExtResource("7_jtydk")
@@ -74,6 +74,7 @@ position = Vector2(182, -36)
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_3xut1")
+type = "Wall"
 metadata/_custom_type_script = "uid://b8nj8u2wpdvlw"
 
 [node name="Sprite2D" type="Sprite2D" parent="TerrainArea2D" unique_id=216092882]
@@ -98,22 +99,23 @@ offset = Vector2(0, -21.38)
 zoom = Vector2(4, 4)
 
 [node name="TerrainArea2D2" type="Area2D" parent="." unique_id=2006019362]
-position = Vector2(-159, -26)
+position = Vector2(-159, -50.785)
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_3xut1")
+type = "Wall"
 metadata/_custom_type_script = "uid://b8nj8u2wpdvlw"
 
 [node name="Sprite2D" type="Sprite2D" parent="TerrainArea2D2" unique_id=567381468]
-position = Vector2(1.04904175e-05, 3.33786e-06)
-scale = Vector2(0.031250067, 0.53125)
+position = Vector2(1.04904175e-05, 0.104994774)
+scale = Vector2(0.031250067, 1.03125)
 texture = ExtResource("2_e128x")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TerrainArea2D2" unique_id=965450673]
 shape = SubResource("RectangleShape2D_jkd5k")
 
 [node name="TerrainArea2D3" type="Area2D" parent="." unique_id=2018547916]
-position = Vector2(-211, -62)
+position = Vector2(-243, -70)
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_3xut1")

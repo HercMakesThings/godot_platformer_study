@@ -30,7 +30,7 @@ func _ready() -> void:
 			timers[timer.name] = timer
 		
 func _physics_process(delta: float) -> void:
-	ecb.tick(self)
+	ecb.tick(self, delta)
 	
 	# capture player input
 	input_game_component.update()
@@ -52,7 +52,8 @@ func _physics_process(delta: float) -> void:
 	for ability: AbilityRes in abilities.values():
 		ability._act(self, delta)
 		
-	handle_velocity(delta)
+	#handle_velocity(delta)
+	call_deferred("handle_velocity", delta)
 	
 	## debug prints
 	#debug_prints()

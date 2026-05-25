@@ -83,6 +83,7 @@ unique_name_in_owner = true
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=1198373754]
 unique_name_in_owner = true
+collision_layer = 16
 script = ExtResource("12_ep2j4")
 metadata/_custom_type_script = "uid://lpgo7mxv0d5h"
 
