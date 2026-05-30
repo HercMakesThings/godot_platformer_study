@@ -33,7 +33,7 @@ func _physics_process(delta: float) -> void:
 	ecb.tick(self, delta)
 	
 	# capture player input
-	input_game_component.update()
+	#input_game_component.update()
 	
 	#entity.jump_pressed = input_game_component.btn_3_input
 	#entity.jump_just_pressed = input_game_component.btn_3_just_pressed

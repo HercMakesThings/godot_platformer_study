@@ -99,7 +99,7 @@ offset = Vector2(0, -21.38)
 zoom = Vector2(4, 4)
 
 [node name="TerrainArea2D2" type="Area2D" parent="." unique_id=2006019362]
-position = Vector2(-159, -50.785)
+position = Vector2(-161.41, -58.195)
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_3xut1")
@@ -164,7 +164,7 @@ hit_from_inside = true
 collide_with_areas = true
 
 [node name="Area2D2" type="Area2D" parent="." unique_id=1629790985]
-position = Vector2(31, -38)
+position = Vector2(31, -20.21)
 script = ExtResource("11_s3sem")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D2" unique_id=1089365593]

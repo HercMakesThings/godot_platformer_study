@@ -11,7 +11,9 @@ func _init_ability(_actor: Node2D) -> void:
 	
 func _act(actor: Node2D, _delta: float) -> void:
 	if (air_jumps > 0 &&
-		actor.input_game_component.btn_3_just_pressed &&
+		#actor.input_game_component.btn_3_just_pressed &&
+		#actor.input_component.get_current_packet().jump_just_pressed &&
+		actor.entity.jump_just_pressed &&
 		actor.entity.current_state == actor.entity.MoveState.AIRBORNE &&
 		!actor.entity.body_on_ground &&
 		actor.entity.can_move

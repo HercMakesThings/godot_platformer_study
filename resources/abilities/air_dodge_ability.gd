@@ -20,7 +20,8 @@ func _init_ability(_actor: Node2D) -> void:
 	touched_ground = false
 	
 func _act(actor: Node2D, delta: float) -> void:
-	if (actor.input_game_component.guard_input && 
+	#if (actor.input_game_component.guard_input && 
+	if (actor.input_component.get_current_packet().is_guard_just_pressed && 
 		air_dodge > 0 &&
 		(actor.entity.current_state == actor.entity.MoveState.AIRBORNE ||
 		 actor.entity.current_state == actor.entity.MoveState.JUMPSQUAT)
