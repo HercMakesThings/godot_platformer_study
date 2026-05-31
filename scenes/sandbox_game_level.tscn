@@ -27,7 +27,7 @@ script = ExtResource("7_jtydk")
 scheme = ExtResource("6_7beub")
 metadata/_custom_type_script = "uid://dryh713xatggd"
 
-[sub_resource type="Resource" id="Resource_rg6m1"]
+[sub_resource type="Resource" id="Resource_muiyw"]
 resource_local_to_scene = true
 script = ExtResource("8_muiyw")
 walk_speed = 40.0
@@ -37,22 +37,22 @@ air_friction = 1.0
 decel = 100.0
 metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
 
-[sub_resource type="Resource" id="Resource_kjrm4"]
+[sub_resource type="Resource" id="Resource_m3s33"]
 resource_local_to_scene = true
 script = ExtResource("17_xdh4x")
 metadata/_custom_type_script = "uid://dw08ut0needd4"
 
-[sub_resource type="Resource" id="Resource_cs570"]
+[sub_resource type="Resource" id="Resource_wnid3"]
 resource_local_to_scene = true
 script = ExtResource("16_xdh4x")
 metadata/_custom_type_script = "uid://bb40p5rv6yjda"
 
-[sub_resource type="Resource" id="Resource_h43hl"]
+[sub_resource type="Resource" id="Resource_xdh4x"]
 resource_local_to_scene = true
 script = ExtResource("13_muiyw")
 metadata/_custom_type_script = "uid://dlodv3k4fug6k"
 
-[sub_resource type="Resource" id="Resource_vu8dy"]
+[sub_resource type="Resource" id="Resource_rg6m1"]
 resource_local_to_scene = true
 script = ExtResource("15_wnid3")
 metadata/_custom_type_script = "uid://f5ahaxigfebq"
@@ -108,8 +108,8 @@ shape = SubResource("RectangleShape2D_jkd5k")
 [node name="Actor2D" parent="." unique_id=1086043803 instance=ExtResource("3_e128x")]
 position = Vector2(-42, -26)
 input_component = SubResource("Resource_ru8pc")
-entity = SubResource("Resource_rg6m1")
-_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_kjrm4"), SubResource("Resource_cs570"), SubResource("Resource_h43hl"), SubResource("Resource_vu8dy")])
+entity = SubResource("Resource_muiyw")
+_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_m3s33"), SubResource("Resource_wnid3"), SubResource("Resource_xdh4x"), SubResource("Resource_rg6m1")])
 
 [node name="Camera2D" type="Camera2D" parent="Actor2D" unique_id=41672697]
 offset = Vector2(0, -21.38)
