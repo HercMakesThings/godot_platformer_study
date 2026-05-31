@@ -4,15 +4,17 @@
 [ext_resource type="Texture2D" uid="uid://2m725opgilo6" path="res://icon.svg" id="2_e128x"]
 [ext_resource type="PackedScene" uid="uid://b76sljggflsc0" path="res://scenes/article/actor/actor_2d.tscn" id="3_e128x"]
 [ext_resource type="Script" uid="uid://daqmmkqbywlws" path="res://scripts/platform_manager.gd" id="4_bcwco"]
-[ext_resource type="Script" uid="uid://db3fuworsu3wx" path="res://resources/ability_res.gd" id="4_jkd5k"]
-[ext_resource type="Script" uid="uid://dccj2u2ecx18h" path="res://resources/abilities/air_jump_ability.gd" id="5_bpker"]
 [ext_resource type="PackedScene" uid="uid://dmxyajsvknhfv" path="res://scenes/platform_basic_1.tscn" id="5_unoc6"]
 [ext_resource type="Resource" uid="uid://tekh5ut02ob6" path="res://resources/default_control_scheme.tres" id="6_7beub"]
-[ext_resource type="Script" uid="uid://dw1h7g3hodgca" path="res://resources/abilities/air_dodge_ability.gd" id="6_s3sem"]
-[ext_resource type="Script" uid="uid://b3jv5j777lhr2" path="res://resources/abilities/damaged_ability.gd" id="7_8nwor"]
 [ext_resource type="Script" uid="uid://dryh713xatggd" path="res://resources/input_component.gd" id="7_jtydk"]
+[ext_resource type="Script" uid="uid://b1r2eahjfa8hu" path="res://resources/entity_res.gd" id="8_muiyw"]
 [ext_resource type="Script" uid="uid://dmhk2lv3mrtf" path="res://scenes/pf_raycast_2d.gd" id="10_bpker"]
 [ext_resource type="Script" uid="uid://d1tqws1en3mmr" path="res://scripts/platform_new.gd" id="11_s3sem"]
+[ext_resource type="Script" uid="uid://bshgwe8ijq41o" path="res://resources/components/base_component.gd" id="12_ru8pc"]
+[ext_resource type="Script" uid="uid://dlodv3k4fug6k" path="res://resources/components/air_jump_comp.gd" id="13_muiyw"]
+[ext_resource type="Script" uid="uid://f5ahaxigfebq" path="res://resources/components/air_dodge_comp.gd" id="15_wnid3"]
+[ext_resource type="Script" uid="uid://bb40p5rv6yjda" path="res://resources/components/damaged_comp.gd" id="16_xdh4x"]
+[ext_resource type="Script" uid="uid://dw08ut0needd4" path="res://resources/components/base_movement_component.gd" id="17_xdh4x"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qepfu"]
 size = Vector2(1600, 80)
@@ -25,17 +27,35 @@ script = ExtResource("7_jtydk")
 scheme = ExtResource("6_7beub")
 metadata/_custom_type_script = "uid://dryh713xatggd"
 
-[sub_resource type="Resource" id="Resource_5cvvn"]
-script = ExtResource("6_s3sem")
-metadata/_custom_type_script = "uid://dw1h7g3hodgca"
+[sub_resource type="Resource" id="Resource_rg6m1"]
+resource_local_to_scene = true
+script = ExtResource("8_muiyw")
+walk_speed = 40.0
+MAX_WALK_SPD = 80.0
+friction = 0.744
+air_friction = 1.0
+decel = 100.0
+metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
 
-[sub_resource type="Resource" id="Resource_7c7v4"]
-script = ExtResource("5_bpker")
-metadata/_custom_type_script = "uid://dccj2u2ecx18h"
+[sub_resource type="Resource" id="Resource_kjrm4"]
+resource_local_to_scene = true
+script = ExtResource("17_xdh4x")
+metadata/_custom_type_script = "uid://dw08ut0needd4"
 
-[sub_resource type="Resource" id="Resource_4ut35"]
-script = ExtResource("7_8nwor")
-metadata/_custom_type_script = "uid://b3jv5j777lhr2"
+[sub_resource type="Resource" id="Resource_cs570"]
+resource_local_to_scene = true
+script = ExtResource("16_xdh4x")
+metadata/_custom_type_script = "uid://bb40p5rv6yjda"
+
+[sub_resource type="Resource" id="Resource_h43hl"]
+resource_local_to_scene = true
+script = ExtResource("13_muiyw")
+metadata/_custom_type_script = "uid://dlodv3k4fug6k"
+
+[sub_resource type="Resource" id="Resource_vu8dy"]
+resource_local_to_scene = true
+script = ExtResource("15_wnid3")
+metadata/_custom_type_script = "uid://f5ahaxigfebq"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bpker"]
 size = Vector2(108.015, 4)
@@ -88,11 +108,8 @@ shape = SubResource("RectangleShape2D_jkd5k")
 [node name="Actor2D" parent="." unique_id=1086043803 instance=ExtResource("3_e128x")]
 position = Vector2(-42, -26)
 input_component = SubResource("Resource_ru8pc")
-abilities = Dictionary[String, ExtResource("4_jkd5k")]({
-"AirDodge": SubResource("Resource_5cvvn"),
-"AirJump": SubResource("Resource_7c7v4"),
-"Damaged": SubResource("Resource_4ut35")
-})
+entity = SubResource("Resource_rg6m1")
+_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_kjrm4"), SubResource("Resource_cs570"), SubResource("Resource_h43hl"), SubResource("Resource_vu8dy")])
 
 [node name="Camera2D" type="Camera2D" parent="Actor2D" unique_id=41672697]
 offset = Vector2(0, -21.38)

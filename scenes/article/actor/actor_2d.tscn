@@ -5,15 +5,12 @@
 [ext_resource type="Script" uid="uid://by36nmf4yr75f" path="res://resources/entity_move_res.gd" id="3_uituq"]
 [ext_resource type="Script" uid="uid://byicdf4x4phfh" path="res://resources/entity_status_res.gd" id="4_0cbu4"]
 [ext_resource type="Script" uid="uid://bjk4djbuag7os" path="res://scripts/input_game_component.gd" id="5_et0di"]
-[ext_resource type="Script" uid="uid://db3fuworsu3wx" path="res://resources/ability_res.gd" id="5_l01n2"]
-[ext_resource type="Script" uid="uid://dccj2u2ecx18h" path="res://resources/abilities/air_jump_ability.gd" id="6_ep2j4"]
 [ext_resource type="PackedScene" uid="uid://c4arjr6rbjxmy" path="res://scenes/article/components/environment_collision_body.tscn" id="6_l01n2"]
-[ext_resource type="Script" uid="uid://dw1h7g3hodgca" path="res://resources/abilities/air_dodge_ability.gd" id="7_gj078"]
-[ext_resource type="Script" uid="uid://b3jv5j777lhr2" path="res://resources/abilities/damaged_ability.gd" id="8_dfi61"]
 [ext_resource type="Shader" uid="uid://b0gags4mo66xw" path="res://scenes/placeholder_flash.gdshader" id="9_ep2j4"]
 [ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="12_ep2j4"]
 
 [sub_resource type="Resource" id="Resource_ep2j4"]
+resource_local_to_scene = true
 script = ExtResource("2_2r8hj")
 walk_speed = 40.0
 MAX_WALK_SPD = 80.0
@@ -30,18 +27,6 @@ metadata/_custom_type_script = "uid://by36nmf4yr75f"
 script = ExtResource("4_0cbu4")
 metadata/_custom_type_script = "uid://byicdf4x4phfh"
 
-[sub_resource type="Resource" id="Resource_5cvvn"]
-script = ExtResource("7_gj078")
-metadata/_custom_type_script = "uid://dw1h7g3hodgca"
-
-[sub_resource type="Resource" id="Resource_7c7v4"]
-script = ExtResource("6_ep2j4")
-metadata/_custom_type_script = "uid://dccj2u2ecx18h"
-
-[sub_resource type="Resource" id="Resource_4ut35"]
-script = ExtResource("8_dfi61")
-metadata/_custom_type_script = "uid://b3jv5j777lhr2"
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gj078"]
 shader = ExtResource("9_ep2j4")
 shader_parameter/flash_color = Color(1, 1, 1, 1)
@@ -51,19 +36,13 @@ shader_parameter/flash_modifier = 0.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gj078"]
 
-[node name="Actor2D" type="Node2D" unique_id=1086043803 node_paths=PackedStringArray("ecb", "hurtbox", "input_game_component", "TIMERS", "model")]
+[node name="Actor2D" type="Node2D" unique_id=1086043803 node_paths=PackedStringArray("ecb", "hurtbox", "TIMERS", "model")]
 script = ExtResource("1_n7pms")
 ecb = NodePath("EnvironmentCollisionBody")
 hurtbox = NodePath("Hurtbox")
-input_game_component = NodePath("InputGameComponent")
 entity = SubResource("Resource_ep2j4")
 entity_movement = SubResource("Resource_gj078")
 status = SubResource("Resource_dfi61")
-abilities = Dictionary[String, ExtResource("5_l01n2")]({
-"AirDodge": SubResource("Resource_5cvvn"),
-"AirJump": SubResource("Resource_7c7v4"),
-"Damaged": SubResource("Resource_4ut35")
-})
 TIMERS = NodePath("Timers")
 model = NodePath("Sprite2D")
 
