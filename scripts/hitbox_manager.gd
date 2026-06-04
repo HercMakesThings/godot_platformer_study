@@ -26,5 +26,5 @@ func init_hitboxes() -> void:
 			for grandchild in child.get_children():
 				if grandchild is Hitbox:
 					grandchild.hit_something.connect(_hitbox_hit_something)
-					grandchild.hit_something.connect(_hitbox_shape_hit_something)
+					grandchild.shape_hit_something.connect(_hitbox_shape_hit_something)
 					hitboxes.append(grandchild)

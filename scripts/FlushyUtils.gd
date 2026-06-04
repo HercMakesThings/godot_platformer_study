@@ -3,7 +3,7 @@ class_name FlushyUtils
 
 ## function for calculating a character's knockback when they are hit
 static func calc_kb(area: Area2D, percent: float, weight: float)->float:
-	var angle = deg_to_rad(area.angle)
+	#var angle = deg_to_rad(area.angle)
 	#var force = Vector2(1,0).rotated(angle).normalized()
 	#var force = area.angle_vec.normalized()
 	var dmg = area.dmg

@@ -2,9 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dahxd18t1hj5t" path="res://scenes/article/article_2d.gd" id="1_n7pms"]
 [ext_resource type="Script" uid="uid://b1r2eahjfa8hu" path="res://resources/entity_res.gd" id="2_2r8hj"]
-[ext_resource type="Script" uid="uid://by36nmf4yr75f" path="res://resources/entity_move_res.gd" id="3_uituq"]
 [ext_resource type="Script" uid="uid://byicdf4x4phfh" path="res://resources/entity_status_res.gd" id="4_0cbu4"]
-[ext_resource type="Script" uid="uid://bjk4djbuag7os" path="res://scripts/input_game_component.gd" id="5_et0di"]
 [ext_resource type="PackedScene" uid="uid://c4arjr6rbjxmy" path="res://scenes/article/components/environment_collision_body.tscn" id="6_l01n2"]
 [ext_resource type="Shader" uid="uid://b0gags4mo66xw" path="res://scenes/placeholder_flash.gdshader" id="9_ep2j4"]
 [ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="12_ep2j4"]
@@ -18,10 +16,6 @@ friction = 0.744
 air_friction = 1.0
 decel = 100.0
 metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
-
-[sub_resource type="Resource" id="Resource_gj078"]
-script = ExtResource("3_uituq")
-metadata/_custom_type_script = "uid://by36nmf4yr75f"
 
 [sub_resource type="Resource" id="Resource_dfi61"]
 script = ExtResource("4_0cbu4")
@@ -41,10 +35,12 @@ script = ExtResource("1_n7pms")
 ecb = NodePath("EnvironmentCollisionBody")
 hurtbox = NodePath("Hurtbox")
 entity = SubResource("Resource_ep2j4")
-entity_movement = SubResource("Resource_gj078")
 status = SubResource("Resource_dfi61")
 TIMERS = NodePath("Timers")
 model = NodePath("Sprite2D")
+
+[node name="Hitboxes" type="Node2D" parent="." unique_id=377931384]
+unique_name_in_owner = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=2062571454]
 visible = false
@@ -52,10 +48,6 @@ material = SubResource("ShaderMaterial_gj078")
 position = Vector2(1.1920929e-07, -13)
 scale = Vector2(19.999998, 26)
 texture = SubResource("CanvasTexture_l01n2")
-
-[node name="InputGameComponent" type="Node" parent="." unique_id=157470154]
-script = ExtResource("5_et0di")
-metadata/_custom_type_script = "uid://bjk4djbuag7os"
 
 [node name="EnvironmentCollisionBody" parent="." unique_id=617907928 instance=ExtResource("6_l01n2")]
 unique_name_in_owner = true

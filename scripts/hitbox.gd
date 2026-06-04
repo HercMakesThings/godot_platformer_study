@@ -15,7 +15,9 @@ var orientation: int
 
 var hitbox_shape: CollisionShape2D
 
-signal hit_something(hitbox: Area2D, hurtbox: Area2D)
+var collided_hurtboxes: Array[Hurtbox]
+
+#signal hit_something(hitbox: Area2D, hurtbox: Area2D)
 signal shape_hit_something(hitbox: Area2D, shape_index: int, hurtbox: Area2D)
 
 func _ready() -> void:
@@ -89,7 +91,7 @@ func init_shape_stats(list: Array[HitboxStats]):
 	if stats_array.size() == 0:
 		stats_array = list
 	
-func _on_hit(body: Node2D):
+func _on_hit(_body: Node2D):
 	#hit_something.emit(self, body)
 	pass
 	
@@ -98,9 +100,12 @@ func _on_hurtbox_contacted(_area: Area2D):
 	#if area is Hurtbox:
 	
 func _on_area_2d_body_shape_entered(_body_rid, body, _body_shape_index, local_shape_index) -> void:
-	# Find the shape owner ID using the index
-	var shape_owner_id: int = shape_find_owner(local_shape_index)
-	# Get the actual CollisionShape2D node from that owner
-	#var shape_node: CollisionShape2D = shape_owner_get_owner(shape_owner_id)
-	shape_hit_something.emit(self, shape_owner_id, body)
+	# Add to list of hurtboxes hitbox has contacted (while move is active)
+	if body is Hurtbox && body not in collided_hurtboxes:
+		collided_hurtboxes.append(body)
+		# Find the shape owner ID using the index
+		var shape_owner_id: int = shape_find_owner(local_shape_index)
+		# Get the actual CollisionShape2D node from that owner
+		#var shape_node: CollisionShape2D = shape_owner_get_owner(shape_owner_id)
+		shape_hit_something.emit(self, shape_owner_id, body)
 	

@@ -2,6 +2,7 @@ class_name Article extends Node2D
 
 @export var ecb: EnvironmentCollisionBody
 @export var hurtbox: Hurtbox
+@onready var hitboxes: Node2D = %Hitboxes
 
 #@export var input_game_component: InputGameComponent
 @export var input_component: InputComponent
