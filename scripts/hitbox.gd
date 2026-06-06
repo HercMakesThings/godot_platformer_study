@@ -16,6 +16,7 @@ var orientation: int
 var hitbox_shape: CollisionShape2D
 
 var collided_hurtboxes: Array[Hurtbox]
+var owner_hurtbox: Hurtbox
 
 #signal hit_something(hitbox: Area2D, hurtbox: Area2D)
 signal shape_hit_something(hitbox: Area2D, shape_index: int, hurtbox: Area2D)
@@ -39,6 +40,7 @@ func _ready() -> void:
 				shapes_array.append(child)
 			elif child is RayCast2D:
 				angle_visual_array.append(child)
+	init_shape_stats()
 		
 	
 func tick(_delta: float) -> void:
@@ -54,6 +56,8 @@ func tick(_delta: float) -> void:
 		#hitbox_shape.set_disabled(true)
 	for i in range(stats_array.size()):
 		shapes_array[i].set_disabled(!stats_array[i].is_active)
+		shapes_array[i].visible = stats_array[i].is_active
+		angle_visual_array[i].visible = stats_array[i].is_active
 		shapes_array[i].position.x = abs(shapes_array[i].position.x)*orientation
 		angle_visual_array[i].position.x = abs(angle_visual_array[i].position.x)*orientation
 		shapes_array[i].rotation_degrees = abs(shapes_array[i].rotation_degrees)*orientation
@@ -79,17 +83,38 @@ func init_stats(s: HitboxStats) -> void:
 	var angle_dif: float = kb_dir_visual.target_position.angle_to(stats.angle_vec)
 	kb_dir_visual.target_position = kb_dir_visual.target_position.rotated(angle_dif)
 	
-func init_shape_stats(list: Array[HitboxStats]):
+#func init_shape_stats(list: Array[HitboxStats]):
+	##print(list)
+	##print(shapes_array)
+	#var count: int = 0
+	##if stats_array.size() == 0:
+		##stats_array = list
+	#stats_array = list
+	##for statblock in list:
+	#print("1st stat block rot: " + str(stats_array[0].rot))
+	#print("printing shapes array:")
+	#print(shapes_array)
+	#for statblock in stats_array:
+		#shapes_array[count].rotation_degrees = statblock.rot * orientation
+		##shapes_array[count].rotation_degrees = 90 * orientation
+		#var angle_radians: float = deg_to_rad(statblock.angle)
+		#statblock.angle_vec = statblock.angle_vec.rotated(angle_radians * orientation)
+		#var angle_dif: float = angle_visual_array[count].target_position.angle_to(statblock.angle_vec)
+		#angle_visual_array[count].target_position = angle_visual_array[count].target_position.rotated(angle_dif)
+		#count += 1
+func init_shape_stats():
+	if !stats_array:
+		return
 	var count: int = 0
-	for statblock in list:
+	for statblock in stats_array:
 		shapes_array[count].rotation_degrees = statblock.rot * orientation
 		var angle_radians: float = deg_to_rad(statblock.angle)
 		statblock.angle_vec = statblock.angle_vec.rotated(angle_radians * orientation)
 		var angle_dif: float = angle_visual_array[count].target_position.angle_to(statblock.angle_vec)
 		angle_visual_array[count].target_position = angle_visual_array[count].target_position.rotated(angle_dif)
+		shapes_array[count].visible = statblock.is_active
+		angle_visual_array[count].visible = statblock.is_active
 		count += 1
-	if stats_array.size() == 0:
-		stats_array = list
 	
 func _on_hit(_body: Node2D):
 	#hit_something.emit(self, body)
@@ -99,9 +124,14 @@ func _on_hurtbox_contacted(_area: Area2D):
 	pass
 	#if area is Hurtbox:
 	
-func _on_area_2d_body_shape_entered(_body_rid, body, _body_shape_index, local_shape_index) -> void:
+func _on_area_2d_body_shape_entered(body_rid, body, _body_shape_index, local_shape_index) -> void:
 	# Add to list of hurtboxes hitbox has contacted (while move is active)
-	if body is Hurtbox && body not in collided_hurtboxes:
+	print("collided hurtbox rid: " + str(body_rid))
+	print("owner hurtbox rid: " + str(owner_hurtbox.get_rid()))
+	if (body is Hurtbox && body not in collided_hurtboxes):
+		if owner_hurtbox != null:
+			if owner_hurtbox.get_rid() != body_rid:
+				return
 		collided_hurtboxes.append(body)
 		# Find the shape owner ID using the index
 		var shape_owner_id: int = shape_find_owner(local_shape_index)

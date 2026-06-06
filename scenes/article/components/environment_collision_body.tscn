@@ -13,79 +13,79 @@ script = ExtResource("1_6y2xo")
 unique_name_in_owner = true
 position = Vector2(0, -16)
 target_position = Vector2(0, -8)
-collision_mask = 11
+collision_mask = 2
 collide_with_areas = true
 
 [node name="right" type="RayCast2D" parent="." unique_id=1671687925]
 unique_name_in_owner = true
 position = Vector2(0, -16)
 target_position = Vector2(10, 0)
-collision_mask = 11
+collision_mask = 2
 collide_with_areas = true
 
 [node name="bottom" type="RayCast2D" parent="." unique_id=257775682]
 unique_name_in_owner = true
 position = Vector2(0, -16)
 target_position = Vector2(0, 16)
-collision_mask = 11
+collision_mask = 2
 collide_with_areas = true
 
 [node name="left" type="RayCast2D" parent="." unique_id=1083582086]
 unique_name_in_owner = true
 position = Vector2(0, -16)
 target_position = Vector2(-10, 0)
-collision_mask = 11
+collision_mask = 2
 collide_with_areas = true
 
 [node name="offset_bottom" type="RayCast2D" parent="." unique_id=751507386]
 unique_name_in_owner = true
 target_position = Vector2(0, 0)
-collision_mask = 11
+collision_mask = 2
 collide_with_areas = true
 
 [node name="offset_top" type="RayCast2D" parent="." unique_id=947825820]
 unique_name_in_owner = true
 position = Vector2(0, -24)
 target_position = Vector2(0, 0)
-collision_mask = 11
+collision_mask = 2
 collide_with_areas = true
 
 [node name="offset_left" type="RayCast2D" parent="." unique_id=1958831513]
 unique_name_in_owner = true
 position = Vector2(-10, -16)
 target_position = Vector2(0, 0)
-collision_mask = 11
+collision_mask = 2
 collide_with_areas = true
 
 [node name="offset_right" type="RayCast2D" parent="." unique_id=1925355820]
 unique_name_in_owner = true
 position = Vector2(10, -16)
 target_position = Vector2(0, 0)
-collision_mask = 11
+collision_mask = 2
 collide_with_areas = true
 
 [node name="top_detector" type="RayCast2D" parent="." unique_id=889676004]
 unique_name_in_owner = true
 target_position = Vector2(0, 0)
-collision_mask = 11
+collision_mask = 2
 collide_with_areas = true
 
 [node name="bottom_detector" type="RayCast2D" parent="." unique_id=431084496]
 unique_name_in_owner = true
 target_position = Vector2(0, 0)
-collision_mask = 11
+collision_mask = 2
 collide_with_areas = true
 
 [node name="left_detector" type="RayCast2D" parent="." unique_id=1893524859]
 unique_name_in_owner = true
 target_position = Vector2(0, 0)
-collision_mask = 11
+collision_mask = 2
 collide_with_areas = true
 
 [node name="right_detector" type="RayCast2D" parent="." unique_id=120462004]
 unique_name_in_owner = true
 target_position = Vector2(0, 0)
-collision_mask = 11
+collision_mask = 2
 collide_with_areas = true
 
 [node name="shape" type="CollisionShape2D" parent="." unique_id=1939461875]

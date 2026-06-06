@@ -15,7 +15,7 @@ func _on_hurtbox_area_entered(area: Area2D) -> void:
 		pass
 
 func _on_hurtbox_area_shape_entered(area_rid: RID, area: Area2D, area_shape_index: int, _local_shape_index: int):
-	if area is Hitbox:
+	if area is Hitbox && area.owner_hurtbox.get_rid() != get_rid():
 		#print("area_rid: " + str(area_rid))
 		#print("area_shape_index: " + str(area_shape_index))
 		#print("local_shape_index:" + str(local_shape_index))

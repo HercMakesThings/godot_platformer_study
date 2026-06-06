@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://b1r2eahjfa8hu" path="res://resources/entity_res.gd" id="2_2r8hj"]
 [ext_resource type="Script" uid="uid://byicdf4x4phfh" path="res://resources/entity_status_res.gd" id="4_0cbu4"]
 [ext_resource type="PackedScene" uid="uid://c4arjr6rbjxmy" path="res://scenes/article/components/environment_collision_body.tscn" id="6_l01n2"]
+[ext_resource type="Script" uid="uid://3yiwskv8i3aa" path="res://scenes/article/actor/debug_orientation_vis.gd" id="7_2r8hj"]
 [ext_resource type="Shader" uid="uid://b0gags4mo66xw" path="res://scenes/placeholder_flash.gdshader" id="9_ep2j4"]
 [ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="12_ep2j4"]
 
@@ -38,6 +39,7 @@ entity = SubResource("Resource_ep2j4")
 status = SubResource("Resource_dfi61")
 TIMERS = NodePath("Timers")
 model = NodePath("Sprite2D")
+debug = true
 
 [node name="Hitboxes" type="Node2D" parent="." unique_id=377931384]
 unique_name_in_owner = true
@@ -68,3 +70,10 @@ unique_name_in_owner = true
 
 [node name="ad_flash_timer" type="Timer" parent="Timers" unique_id=1518557901]
 wait_time = 0.2
+
+[node name="OrientationVisualizerDebug" type="RayCast2D" parent="." unique_id=822457595 node_paths=PackedStringArray("body")]
+position = Vector2(0, -23.405)
+enabled = false
+target_position = Vector2(20, 0)
+script = ExtResource("7_2r8hj")
+body = NodePath("..")

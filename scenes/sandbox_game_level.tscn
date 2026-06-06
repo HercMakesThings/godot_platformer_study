@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://b7s3x4i8cx2ep" path="res://resources/components/attack_component.gd" id="11_rg6m1"]
 [ext_resource type="Script" uid="uid://d1tqws1en3mmr" path="res://scripts/platform_new.gd" id="11_s3sem"]
 [ext_resource type="Script" uid="uid://by6ijc3wrcifp" path="res://resources/hitbox_shape_stats_list.gd" id="12_h43hl"]
+[ext_resource type="PackedScene" uid="uid://0kyknugop8ev" path="res://scenes/hitboxes/basic_side_atk_1_hitbox.tscn" id="12_rg6m1"]
 [ext_resource type="Script" uid="uid://bshgwe8ijq41o" path="res://resources/components/base_component.gd" id="12_ru8pc"]
 [ext_resource type="Script" uid="uid://dlodv3k4fug6k" path="res://resources/components/air_jump_comp.gd" id="13_muiyw"]
 [ext_resource type="Script" uid="uid://coptrl0topre1" path="res://resources/hitbox_stats_res.gd" id="13_vu8dy"]
@@ -19,7 +20,6 @@
 [ext_resource type="Script" uid="uid://f5ahaxigfebq" path="res://resources/components/air_dodge_comp.gd" id="15_wnid3"]
 [ext_resource type="Script" uid="uid://bb40p5rv6yjda" path="res://resources/components/damaged_comp.gd" id="16_xdh4x"]
 [ext_resource type="Script" uid="uid://dw08ut0needd4" path="res://resources/components/base_movement_component.gd" id="17_xdh4x"]
-[ext_resource type="Script" uid="uid://dpp1v6omyvpw6" path="res://scripts/hitbox.gd" id="18_kjrm4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qepfu"]
 size = Vector2(1600, 80)
@@ -32,7 +32,7 @@ script = ExtResource("7_jtydk")
 scheme = ExtResource("6_7beub")
 metadata/_custom_type_script = "uid://dryh713xatggd"
 
-[sub_resource type="Resource" id="Resource_5bxoa"]
+[sub_resource type="Resource" id="Resource_rg6m1"]
 resource_local_to_scene = true
 script = ExtResource("8_muiyw")
 walk_speed = 40.0
@@ -42,18 +42,18 @@ air_friction = 1.0
 decel = 100.0
 metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
 
-[sub_resource type="Resource" id="Resource_pe8fv"]
+[sub_resource type="Resource" id="Resource_h43hl"]
 resource_local_to_scene = true
 script = ExtResource("17_xdh4x")
 metadata/_custom_type_script = "uid://dw08ut0needd4"
 
 [sub_resource type="Resource" id="Resource_sv4m1"]
 script = ExtResource("13_vu8dy")
-angle = 276.0
+angle = 210.0
 bkb = 37.0
 kbg = 38.3
 lag = 6
-rot = 90.0
+rot = 139.0
 dmg = 6.0
 metadata/_custom_type_script = "uid://coptrl0topre1"
 
@@ -74,37 +74,30 @@ metadata/_custom_type_script = "uid://by6ijc3wrcifp"
 [sub_resource type="Resource" id="Resource_xen7v"]
 script = ExtResource("14_cs570")
 move_name = "BasicSideAtk1"
+default_hitbox_scenes = Array[PackedScene]([ExtResource("12_rg6m1")])
 default_hitbox_stats_collection = Array[ExtResource("12_h43hl")]([SubResource("Resource_1oj7r")])
 metadata/_custom_type_script = "uid://ceyk2xuwjcyt0"
 
-[sub_resource type="Resource" id="Resource_xwsm1"]
+[sub_resource type="Resource" id="Resource_vu8dy"]
 resource_local_to_scene = true
 script = ExtResource("11_rg6m1")
 side_attack_1 = SubResource("Resource_xen7v")
 metadata/_custom_type_script = "uid://b7s3x4i8cx2ep"
 
-[sub_resource type="Resource" id="Resource_0bkr6"]
+[sub_resource type="Resource" id="Resource_cs570"]
 resource_local_to_scene = true
 script = ExtResource("16_xdh4x")
 metadata/_custom_type_script = "uid://bb40p5rv6yjda"
 
-[sub_resource type="Resource" id="Resource_2qmks"]
+[sub_resource type="Resource" id="Resource_kjrm4"]
 resource_local_to_scene = true
 script = ExtResource("13_muiyw")
 metadata/_custom_type_script = "uid://dlodv3k4fug6k"
 
-[sub_resource type="Resource" id="Resource_0bxf5"]
+[sub_resource type="Resource" id="Resource_5bxoa"]
 resource_local_to_scene = true
 script = ExtResource("15_wnid3")
 metadata/_custom_type_script = "uid://f5ahaxigfebq"
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ryk12"]
-radius = 5.0
-height = 16.0
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gu7jp"]
-radius = 5.0
-height = 16.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bpker"]
 size = Vector2(108.015, 4)
@@ -157,32 +150,12 @@ shape = SubResource("RectangleShape2D_jkd5k")
 [node name="Actor2D" parent="." unique_id=1086043803 instance=ExtResource("3_e128x")]
 position = Vector2(-42, -26)
 input_component = SubResource("Resource_ru8pc")
-entity = SubResource("Resource_5bxoa")
-_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_pe8fv"), SubResource("Resource_xwsm1"), SubResource("Resource_0bkr6"), SubResource("Resource_2qmks"), SubResource("Resource_0bxf5")])
+entity = SubResource("Resource_rg6m1")
+_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_h43hl"), SubResource("Resource_vu8dy"), SubResource("Resource_cs570"), SubResource("Resource_kjrm4"), SubResource("Resource_5bxoa")])
 
 [node name="Camera2D" type="Camera2D" parent="Actor2D" unique_id=41672697]
 offset = Vector2(0, -21.38)
 zoom = Vector2(4, 4)
-
-[node name="BasicSideAtk1Hitbox" type="Area2D" parent="Actor2D" unique_id=381504065]
-script = ExtResource("18_kjrm4")
-metadata/_custom_type_script = "uid://dpp1v6omyvpw6"
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Actor2D/BasicSideAtk1Hitbox" unique_id=477647043]
-position = Vector2(13.255001, -9.575001)
-shape = SubResource("CapsuleShape2D_ryk12")
-
-[node name="RayCast2D2" type="RayCast2D" parent="Actor2D/BasicSideAtk1Hitbox" unique_id=1988263219]
-position = Vector2(13.255001, -9.575001)
-target_position = Vector2(4.8, 0)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Actor2D/BasicSideAtk1Hitbox" unique_id=1323855996]
-position = Vector2(16.61, -13.275)
-shape = SubResource("CapsuleShape2D_gu7jp")
-
-[node name="RayCast2D" type="RayCast2D" parent="Actor2D/BasicSideAtk1Hitbox" unique_id=559102451]
-position = Vector2(16.61, -13.275)
-target_position = Vector2(4.99, 0)
 
 [node name="TerrainArea2D2" type="Area2D" parent="." unique_id=2006019362]
 position = Vector2(-161.41, -58.195)
@@ -251,6 +224,8 @@ collide_with_areas = true
 
 [node name="Area2D2" type="Area2D" parent="." unique_id=1629790985]
 position = Vector2(31, -20.21)
+collision_layer = 2
+collision_mask = 3
 script = ExtResource("11_s3sem")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D2" unique_id=1089365593]

@@ -19,6 +19,8 @@ var timers: Dictionary[String, Timer]
 
 @export var model: Node
 
+@export var debug: bool = false
+
 var velocity: Vector2
 
 func _ready() -> void:

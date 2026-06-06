@@ -22,24 +22,34 @@ func bind(node: Object) -> void:
 	current_atk_state = AtkMoveState.IDLE
 	if side_attack_1:
 		side_attack_1._init_move(actor)
+		side_attack_1.move_completed.connect(_on_move_completed)
 	if side_attack_2:
 		side_attack_2._init_move(actor)
+		side_attack_2.move_completed.connect(_on_move_completed)
 	if side_attack_3:
 		side_attack_3._init_move(actor)
+		side_attack_3.move_completed.connect(_on_move_completed)
 	if down_attack_1:
 		down_attack_1._init_move(actor)
+		down_attack_1.move_completed.connect(_on_move_completed)
 	if down_attack_2:
 		down_attack_2._init_move(actor)
+		down_attack_2.move_completed.connect(_on_move_completed)
 	if down_attack_3:
 		down_attack_3._init_move(actor)
+		down_attack_3.move_completed.connect(_on_move_completed)
 	if up_attack_1:
 		up_attack_1._init_move(actor)
+		up_attack_1.move_completed.connect(_on_move_completed)
 	if up_attack_2:
 		up_attack_2._init_move(actor)
+		up_attack_2.move_completed.connect(_on_move_completed)
 	if up_attack_3:
 		up_attack_3._init_move(actor)
+		up_attack_3.move_completed.connect(_on_move_completed)
 
 func update(delta) -> void:
+	#print("current attack state: " + str(current_atk_state))
 	handle_attacks(delta)
 	
 func handle_attacks(delta: float) -> void:
@@ -65,9 +75,9 @@ func handle_attacks(delta: float) -> void:
 				change_state(AtkMoveState.IDLE)
 				return
 			#if atk_frame >= side_attack_1.ability_length + side_attack_1.active_frames_modifier:
-			if side_attack_1.frames >= side_attack_1.ability_length + side_attack_1.active_frames_modifier:
-				change_state(AtkMoveState.IDLE)
-				return
+			##if side_attack_1.frames >= side_attack_1.ability_length + side_attack_1.active_frames_modifier:
+				#change_state(AtkMoveState.IDLE)
+				#return
 			side_attack_1._update(delta)
 		AtkMoveState.ATK_2:
 			if !side_attack_2:
@@ -117,3 +127,6 @@ func handle_attacks(delta: float) -> void:
 func change_state(new: AtkMoveState) -> void:
 	atk_frame = 0
 	current_atk_state = new
+	
+func _on_move_completed(new: AtkMoveState) -> void:
+	change_state(new)
