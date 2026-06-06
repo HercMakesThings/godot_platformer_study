@@ -3,12 +3,9 @@
 [ext_resource type="Script" uid="uid://b8nj8u2wpdvlw" path="res://scripts/terrain_area_2d.gd" id="1_3xut1"]
 [ext_resource type="Texture2D" uid="uid://2m725opgilo6" path="res://icon.svg" id="2_e128x"]
 [ext_resource type="PackedScene" uid="uid://b76sljggflsc0" path="res://scenes/article/actor/actor_2d.tscn" id="3_e128x"]
-[ext_resource type="Script" uid="uid://daqmmkqbywlws" path="res://scripts/platform_manager.gd" id="4_bcwco"]
-[ext_resource type="PackedScene" uid="uid://dmxyajsvknhfv" path="res://scenes/platform_basic_1.tscn" id="5_unoc6"]
 [ext_resource type="Resource" uid="uid://tekh5ut02ob6" path="res://resources/default_control_scheme.tres" id="6_7beub"]
 [ext_resource type="Script" uid="uid://dryh713xatggd" path="res://resources/input_component.gd" id="7_jtydk"]
 [ext_resource type="Script" uid="uid://b1r2eahjfa8hu" path="res://resources/entity_res.gd" id="8_muiyw"]
-[ext_resource type="Script" uid="uid://dmhk2lv3mrtf" path="res://scenes/pf_raycast_2d.gd" id="10_bpker"]
 [ext_resource type="Script" uid="uid://b7s3x4i8cx2ep" path="res://resources/components/attack_component.gd" id="11_rg6m1"]
 [ext_resource type="Script" uid="uid://d1tqws1en3mmr" path="res://scripts/platform_new.gd" id="11_s3sem"]
 [ext_resource type="Script" uid="uid://by6ijc3wrcifp" path="res://resources/hitbox_shape_stats_list.gd" id="12_h43hl"]
@@ -53,7 +50,7 @@ angle = 210.0
 bkb = 37.0
 kbg = 38.3
 lag = 6
-rot = 139.0
+rot = 90.0
 dmg = 6.0
 metadata/_custom_type_script = "uid://coptrl0topre1"
 
@@ -122,14 +119,6 @@ texture = ExtResource("2_e128x")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=514381862]
 position = Vector2(0, 40)
 shape = SubResource("RectangleShape2D_qepfu")
-
-[node name="PlatformManager" type="Node" parent="." unique_id=590492531]
-unique_name_in_owner = true
-script = ExtResource("4_bcwco")
-
-[node name="platform_basic1" parent="PlatformManager" unique_id=949749642 instance=ExtResource("5_unoc6")]
-position = Vector2(113, -52)
-scale = Vector2(0.01, 0.01)
 
 [node name="TerrainArea2D" type="Area2D" parent="." unique_id=1300640604]
 position = Vector2(182, -36)
@@ -202,25 +191,6 @@ texture = ExtResource("2_e128x")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TerrainArea2D4" unique_id=1776640315]
 shape = SubResource("RectangleShape2D_s3sem")
-
-[node name="Node2D" type="Node2D" parent="." unique_id=1519406588]
-position = Vector2(56, -144)
-script = ExtResource("10_bpker")
-
-[node name="Sprite2D" type="Sprite2D" parent="Node2D" unique_id=1793315682]
-position = Vector2(-9.536743e-07, -4.7683716e-07)
-scale = Vector2(0.609375, 0.015625007)
-texture = ExtResource("2_e128x")
-
-[node name="RayCast2D" type="RayCast2D" parent="Node2D" unique_id=1717694554]
-target_position = Vector2(-40, 0)
-hit_from_inside = true
-collide_with_areas = true
-
-[node name="RayCast2D2" type="RayCast2D" parent="Node2D" unique_id=335764382]
-target_position = Vector2(40, 0)
-hit_from_inside = true
-collide_with_areas = true
 
 [node name="Area2D2" type="Area2D" parent="." unique_id=1629790985]
 position = Vector2(31, -20.21)

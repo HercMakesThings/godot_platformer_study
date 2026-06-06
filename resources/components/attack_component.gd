@@ -16,36 +16,48 @@ var current_atk_state: AtkMoveState
 
 var atk_frame: int = 0
 
+var atk_connected: bool
+
 func bind(node: Object) -> void:
 	super.bind(node)
 	atk_frame = 0
+	atk_connected = false
 	current_atk_state = AtkMoveState.IDLE
 	if side_attack_1:
 		side_attack_1._init_move(actor)
+		side_attack_1.atk_connected.connect(_on_atk_connected)
 		side_attack_1.move_completed.connect(_on_move_completed)
 	if side_attack_2:
 		side_attack_2._init_move(actor)
+		side_attack_2.atk_connected.connect(_on_atk_connected)
 		side_attack_2.move_completed.connect(_on_move_completed)
 	if side_attack_3:
 		side_attack_3._init_move(actor)
+		side_attack_3.atk_connected.connect(_on_atk_connected)
 		side_attack_3.move_completed.connect(_on_move_completed)
 	if down_attack_1:
 		down_attack_1._init_move(actor)
+		down_attack_1.atk_connected.connect(_on_atk_connected)
 		down_attack_1.move_completed.connect(_on_move_completed)
 	if down_attack_2:
 		down_attack_2._init_move(actor)
+		down_attack_2.atk_connected.connect(_on_atk_connected)
 		down_attack_2.move_completed.connect(_on_move_completed)
 	if down_attack_3:
 		down_attack_3._init_move(actor)
+		down_attack_3.atk_connected.connect(_on_atk_connected)
 		down_attack_3.move_completed.connect(_on_move_completed)
 	if up_attack_1:
 		up_attack_1._init_move(actor)
+		up_attack_1.atk_connected.connect(_on_atk_connected)
 		up_attack_1.move_completed.connect(_on_move_completed)
 	if up_attack_2:
 		up_attack_2._init_move(actor)
+		up_attack_2.atk_connected.connect(_on_atk_connected)
 		up_attack_2.move_completed.connect(_on_move_completed)
 	if up_attack_3:
 		up_attack_3._init_move(actor)
+		up_attack_3.atk_connected.connect(_on_atk_connected)
 		up_attack_3.move_completed.connect(_on_move_completed)
 
 func update(delta) -> void:
@@ -54,9 +66,9 @@ func update(delta) -> void:
 	
 func handle_attacks(delta: float) -> void:
 	atk_frame += 1
+	var packet: InputPacket = actor.input_component.get_current_packet()
 	match current_atk_state:
 		AtkMoveState.IDLE:
-			var packet: InputPacket = actor.input_component.get_current_packet()
 			if (packet.light_atk_just_pressed && actor.entity.body_on_ground):
 				if packet.primary_direction.y < actor.input_component.deadzone_ls:
 					side_attack_1.initiate_attack(true)
@@ -64,11 +76,11 @@ func handle_attacks(delta: float) -> void:
 					return
 				elif packet.primary_direction.y < -actor.input_component.deadzone_ls:
 					down_attack_1.initiate_attack(true)
-					change_state(AtkMoveState.UP_1)
+					change_state(AtkMoveState.DOWN_1)
 					return
 				elif packet.primary_direction.y > actor.input_component.deadzone_ls:
 					up_attack_1.initiate_attack(true)
-					change_state(AtkMoveState.DOWN_1)
+					change_state(AtkMoveState.UP_1)
 					return
 		AtkMoveState.ATK_1:
 			if !side_attack_1:
@@ -78,6 +90,19 @@ func handle_attacks(delta: float) -> void:
 			##if side_attack_1.frames >= side_attack_1.ability_length + side_attack_1.active_frames_modifier:
 				#change_state(AtkMoveState.IDLE)
 				#return
+			if atk_connected && packet.light_atk_just_pressed && actor.entity.body_on_ground:
+				if packet.primary_direction.y < actor.input_component.deadzone_ls:
+					side_attack_2.initiate_attack(true)
+					change_state(AtkMoveState.ATK_2)
+					return
+				if packet.primary_direction.y < -actor.input_component.deadzone_ls:
+					down_attack_2.initiate_attack(true)
+					change_state(AtkMoveState.DOWN_2)
+					return
+				if packet.primary_direction.y > actor.input_component.deadzone_ls:
+					up_attack_2.initiate_attack(true)
+					change_state(AtkMoveState.UP_2)
+					return
 			side_attack_1._update(delta)
 		AtkMoveState.ATK_2:
 			if !side_attack_2:
@@ -126,7 +151,11 @@ func handle_attacks(delta: float) -> void:
 ## to prevent an unclean state change
 func change_state(new: AtkMoveState) -> void:
 	atk_frame = 0
+	atk_connected = false
 	current_atk_state = new
+	
+func _on_atk_connected() -> void:
+	atk_connected = true
 	
 func _on_move_completed(new: AtkMoveState) -> void:
 	change_state(new)

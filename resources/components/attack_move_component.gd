@@ -19,6 +19,7 @@ var atk_initiated: bool
 var frames: int
 var active_frames_modifier: int
 
+signal atk_connected
 signal move_completed(newState: AttackComponent.AtkMoveState)
 
 func _init_move(owner: Node) -> void:
@@ -84,13 +85,13 @@ func init_default_hitboxes() -> void:
 	if !hitbox_owner:
 		hitbox_owner = Node2D.new()
 		hitbox_owner.name = move_name
-		hitbox_owner.owner = actor.hitboxes
 		actor.hitboxes.add_child(hitbox_owner)
-	#if hitbox_owner.get_child_count() > 0:
-		#for child: Hitbox in hitbox_owner.get_children():
-			#child.disconnect("shape_hit_something", _hitbox_shape_hit_something)
-			#hitbox_owner.remove_child(child)
-			#child.queue_free()
+		hitbox_owner.owner = actor.hitboxes
+	if hitbox_owner.get_child_count() > 0:
+		for child: Hitbox in hitbox_owner.get_children():
+			child.disconnect("shape_hit_something", _hitbox_shape_hit_something)
+			hitbox_owner.remove_child(child)
+			child.queue_free()
 	print(default_hitbox_stats_collection[0].hitbox_stats_array)
 	if default_hitboxes.size() == 0:
 		for i in range(default_hitbox_scenes.size()):
@@ -100,10 +101,10 @@ func init_default_hitboxes() -> void:
 			#box.init_shape_stats(default_hitbox_stats_collection[i].hitbox_stats_array)
 			box.stats_array = default_hitbox_stats_collection[i].hitbox_stats_array
 	for box: Hitbox in default_hitboxes:
-		box.owner = hitbox_owner
 		box.owner_hurtbox = actor.hurtbox
 		box.shape_hit_something.connect(_hitbox_shape_hit_something)
 		hitbox_owner.add_child(box)
+		box.owner = hitbox_owner
 		print(box.stats_array)
 			
 	#if actor.hitboxes.find_child(move_name, true, false) == null:
@@ -149,6 +150,7 @@ func _hitbox_shape_hit_something(hitbox: Area2D, shape_index: int, hurtbox: Area
 	for box in hitboxes:
 		if hitbox.name == box.name && atk_initiated:
 			active_frames_modifier = box.stats_array[shape_index].lag
+	atk_connected.emit()
 			
 func initiate_attack(is_atk_initiated: bool) -> void:
 	if is_atk_initiated:
