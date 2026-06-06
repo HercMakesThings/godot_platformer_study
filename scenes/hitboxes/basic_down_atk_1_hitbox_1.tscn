@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://cuimold41a37s"]
+
+[ext_resource type="Script" uid="uid://dpp1v6omyvpw6" path="res://scripts/hitbox.gd" id="1_h2h60"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bod7s"]
+radius = 4.6499996
+height = 18.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0m2ad"]
+radius = 3.8649998
+height = 14.0
+
+[node name="BasicDownAtk1Hitbox1" type="Area2D" unique_id=87790335 node_paths=PackedStringArray("shapes_array", "angle_visual_array")]
+collision_layer = 8
+collision_mask = 16
+script = ExtResource("1_h2h60")
+shapes_array = [NodePath("CollisionShape2D"), NodePath("CollisionShape2D2")]
+angle_visual_array = [NodePath("RayCast2D"), NodePath("RayCast2D2")]
+metadata/_custom_type_script = "uid://dpp1v6omyvpw6"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1203972072]
+position = Vector2(16.35, -6.08)
+shape = SubResource("CapsuleShape2D_bod7s")
+disabled = true
+debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
+
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=1783830634]
+position = Vector2(16.35, -6.08)
+enabled = false
+target_position = Vector2(4.93, 0)
+collide_with_bodies = false
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=1679082049]
+position = Vector2(25.135, -3.875)
+shape = SubResource("CapsuleShape2D_0m2ad")
+disabled = true
+debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
+
+[node name="RayCast2D2" type="RayCast2D" parent="." unique_id=891887451]
+position = Vector2(25.135, -3.875)
+enabled = false
+target_position = Vector2(3.84, 0)
+collide_with_bodies = false

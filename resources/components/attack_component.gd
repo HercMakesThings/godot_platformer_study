@@ -70,15 +70,15 @@ func handle_attacks(delta: float) -> void:
 	match current_atk_state:
 		AtkMoveState.IDLE:
 			if (packet.light_atk_just_pressed && actor.entity.body_on_ground):
-				if packet.primary_direction.y < actor.input_component.deadzone_ls:
+				if side_attack_1 && absf(packet.primary_direction.y) < actor.input_component.deadzone_ls:
 					side_attack_1.initiate_attack(true)
 					change_state(AtkMoveState.ATK_1)
 					return
-				elif packet.primary_direction.y < -actor.input_component.deadzone_ls:
+				elif down_attack_1 && packet.primary_direction.y < -actor.input_component.deadzone_ls:
 					down_attack_1.initiate_attack(true)
 					change_state(AtkMoveState.DOWN_1)
 					return
-				elif packet.primary_direction.y > actor.input_component.deadzone_ls:
+				elif up_attack_1 && packet.primary_direction.y > actor.input_component.deadzone_ls:
 					up_attack_1.initiate_attack(true)
 					change_state(AtkMoveState.UP_1)
 					return
@@ -108,6 +108,7 @@ func handle_attacks(delta: float) -> void:
 			if !side_attack_2:
 				change_state(AtkMoveState.IDLE)
 				return
+			side_attack_2._update(delta)
 		AtkMoveState.ATK_3:
 			if !side_attack_3:
 				change_state(AtkMoveState.IDLE)

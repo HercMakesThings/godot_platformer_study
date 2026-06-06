@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://dn4xbs6g17ab3"]
+
+[ext_resource type="Script" uid="uid://dpp1v6omyvpw6" path="res://scripts/hitbox.gd" id="1_m5gf2"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s7sr1"]
+radius = 6.0249996
+height = 24.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cwgfr"]
+radius = 6.0
+height = 24.0
+
+[node name="BasicSideAtk2Hitbox1" type="Area2D" unique_id=500672220 node_paths=PackedStringArray("shapes_array", "angle_visual_array")]
+script = ExtResource("1_m5gf2")
+shapes_array = [NodePath("CollisionShape2D"), NodePath("CollisionShape2D2")]
+angle_visual_array = [NodePath("RayCast2D"), NodePath("RayCast2D2")]
+metadata/_custom_type_script = "uid://dpp1v6omyvpw6"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=542028027]
+position = Vector2(20.975, -22.485)
+shape = SubResource("CapsuleShape2D_s7sr1")
+disabled = true
+debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
+
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=114123546]
+position = Vector2(20.975, -22.485)
+enabled = false
+target_position = Vector2(5.985, 0)
+collide_with_bodies = false
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=369936607]
+position = Vector2(20.995, -9.925)
+shape = SubResource("CapsuleShape2D_cwgfr")
+disabled = true
+debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
+
+[node name="RayCast2D2" type="RayCast2D" parent="." unique_id=1665052987]
+position = Vector2(20.995, -9.925)
+enabled = false
+target_position = Vector2(5.965, 0)
+collide_with_bodies = false
