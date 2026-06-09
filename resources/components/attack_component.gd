@@ -69,83 +69,58 @@ func handle_attacks(delta: float) -> void:
 	var packet: InputPacket = actor.input_component.get_current_packet()
 	match current_atk_state:
 		AtkMoveState.IDLE:
-			if (packet.light_atk_just_pressed && actor.entity.body_on_ground):
-				if side_attack_1 && absf(packet.primary_direction.y) < actor.input_component.deadzone_ls:
-					side_attack_1.initiate_attack(true)
-					change_state(AtkMoveState.ATK_1)
-					return
-				elif down_attack_1 && packet.primary_direction.y < -actor.input_component.deadzone_ls:
-					down_attack_1.initiate_attack(true)
-					change_state(AtkMoveState.DOWN_1)
-					return
-				elif up_attack_1 && packet.primary_direction.y > actor.input_component.deadzone_ls:
-					up_attack_1.initiate_attack(true)
-					change_state(AtkMoveState.UP_1)
-					return
+			_handle_atk_progression(packet, 1)
 		AtkMoveState.ATK_1:
 			if !side_attack_1:
 				change_state(AtkMoveState.IDLE)
 				return
-			#if atk_frame >= side_attack_1.ability_length + side_attack_1.active_frames_modifier:
-			##if side_attack_1.frames >= side_attack_1.ability_length + side_attack_1.active_frames_modifier:
-				#change_state(AtkMoveState.IDLE)
-				#return
-			if atk_connected && packet.light_atk_just_pressed && actor.entity.body_on_ground:
-				if packet.primary_direction.y < actor.input_component.deadzone_ls:
-					side_attack_2.initiate_attack(true)
-					change_state(AtkMoveState.ATK_2)
-					return
-				if packet.primary_direction.y < -actor.input_component.deadzone_ls:
-					down_attack_2.initiate_attack(true)
-					change_state(AtkMoveState.DOWN_2)
-					return
-				if packet.primary_direction.y > actor.input_component.deadzone_ls:
-					up_attack_2.initiate_attack(true)
-					change_state(AtkMoveState.UP_2)
-					return
 			side_attack_1._update(delta)
+			_handle_atk_progression(packet, 2)
 		AtkMoveState.ATK_2:
 			if !side_attack_2:
 				change_state(AtkMoveState.IDLE)
 				return
 			side_attack_2._update(delta)
+			_handle_atk_progression(packet, 3)
 		AtkMoveState.ATK_3:
 			if !side_attack_3:
 				change_state(AtkMoveState.IDLE)
 				return
+			side_attack_3._update(delta)
 		AtkMoveState.DOWN_1:
 			if !down_attack_1:
 				change_state(AtkMoveState.IDLE)
 				return
-			if down_attack_1.frames >= down_attack_1.ability_length + down_attack_1.active_frames_modifier:
-				change_state(AtkMoveState.IDLE)
-				return
 			down_attack_1._update(delta)
+			_handle_atk_progression(packet, 2)
 		AtkMoveState.DOWN_2:
 			if !down_attack_2:
 				change_state(AtkMoveState.IDLE)
 				return
+			down_attack_2._update(delta)
+			_handle_atk_progression(packet, 3)
 		AtkMoveState.DOWN_3:
 			if !down_attack_3:
 				change_state(AtkMoveState.IDLE)
 				return
+			down_attack_3._update(delta)
 		AtkMoveState.UP_1:
 			if !up_attack_1:
 				change_state(AtkMoveState.IDLE)
 				return
-			if up_attack_1.frames >= up_attack_1.ability_length + up_attack_1.active_frames_modifier:
-				change_state(AtkMoveState.IDLE)
-				return
 			up_attack_1._update(delta)
+			_handle_atk_progression(packet, 2)
 		AtkMoveState.UP_2:
 			if !up_attack_2:
 				change_state(AtkMoveState.IDLE)
 				return
+			up_attack_2._update(delta)
+			_handle_atk_progression(packet, 3)
 		AtkMoveState.UP_3:
 			if !up_attack_3:
 				change_state(AtkMoveState.IDLE)
 				return
-
+			up_attack_3._update(delta)
 
 ## Changes current state to @param new and resets frame count.
 ## Recommended to early return immediately after calling this function
@@ -160,3 +135,51 @@ func _on_atk_connected() -> void:
 	
 func _on_move_completed(new: AtkMoveState) -> void:
 	change_state(new)
+	
+func _handle_atk_progression(packet: InputPacket, next_atk_lvl: int) -> void:
+	if !atk_connected && next_atk_lvl != 1:
+		return
+	if !actor.entity.body_on_ground:
+		return
+	if !packet.light_atk_just_pressed:
+		return
+	match packet.primary_direction.y:
+		var y when absf(y) < actor.input_component.deadzone_ls:
+			match next_atk_lvl:
+				1:
+					side_attack_1.initiate_attack(true)
+					change_state(AtkMoveState.ATK_1)
+				2:
+					side_attack_2.initiate_attack(true)
+					change_state(AtkMoveState.ATK_2)
+				3:
+					side_attack_3.initiate_attack(true)
+					change_state(AtkMoveState.ATK_3)
+				_:
+					change_state(AtkMoveState.IDLE)
+		var y when y < -actor.input_component.deadzone_ls:
+			match next_atk_lvl:
+				1:
+					down_attack_1.initiate_attack(true)
+					change_state(AtkMoveState.DOWN_1)
+				2:
+					down_attack_2.initiate_attack(true)
+					change_state(AtkMoveState.DOWN_2)
+				3:
+					down_attack_3.initiate_attack(true)
+					change_state(AtkMoveState.DOWN_3)
+				_:
+					change_state(AtkMoveState.IDLE)
+		var y when y > actor.input_component.deadzone_ls:
+			match next_atk_lvl:
+				1:
+					up_attack_1.initiate_attack(true)
+					change_state(AtkMoveState.UP_1)
+				2:
+					up_attack_2.initiate_attack(true)
+					change_state(AtkMoveState.UP_2)
+				3:
+					up_attack_3.initiate_attack(true)
+					change_state(AtkMoveState.UP_3)
+				_:
+					change_state(AtkMoveState.IDLE)
