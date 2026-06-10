@@ -18,7 +18,7 @@ func bind(node: Object) -> void:
 	ad_initiated = false
 	touched_ground = false
 	
-func update(delta) -> void:
+func update(delta: float) -> void:
 	#if (actor.input_game_component.guard_input && 
 	if (actor.input_component.get_current_packet().is_guard_just_pressed && 
 		air_dodge > 0 &&

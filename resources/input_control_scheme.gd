@@ -16,3 +16,5 @@ class_name InputControlScheme extends Resource
 @export var special_atk: Array[String]
 
 @export var guard: Array[String]
+
+@export_enum("light", "heavy", "special") var second_stick_type: String = "light"

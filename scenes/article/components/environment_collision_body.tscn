@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c0s0srcfeymht" path="res://scenes/article/components/environment_collision_body.gd" id="1_6y2xo"]
 
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_6y2xo"]
+resource_local_to_scene = true
 points = PackedVector2Array(0, -24, 10, -16, 0, 0, -10, -16)
 
 [node name="EnvironmentCollisionBody" type="Area2D" unique_id=617907928]

@@ -1,0 +1,224 @@
+[gd_scene format=3 uid="uid://c4wpp4l6dn16g"]
+
+[ext_resource type="Script" uid="uid://bra56jgvkoh6d" path="res://scenes/article/actor/actor.gd" id="1_0ox80"]
+[ext_resource type="Script" uid="uid://dg15p8xrog4lg" path="res://resources/input_control_scheme.gd" id="2_gh2v7"]
+[ext_resource type="Script" uid="uid://dryh713xatggd" path="res://resources/input_component.gd" id="3_575nv"]
+[ext_resource type="Script" uid="uid://b1r2eahjfa8hu" path="res://resources/entity_res.gd" id="4_r10ug"]
+[ext_resource type="Script" uid="uid://byicdf4x4phfh" path="res://resources/entity_status_res.gd" id="5_xei5b"]
+[ext_resource type="Script" uid="uid://bshgwe8ijq41o" path="res://resources/components/base_component.gd" id="6_x0m5j"]
+[ext_resource type="Script" uid="uid://dw08ut0needd4" path="res://resources/components/base_movement_component.gd" id="7_d4g3s"]
+[ext_resource type="PackedScene" uid="uid://cuimold41a37s" path="res://scenes/hitboxes/basic_down_atk_1_hitbox_1.tscn" id="8_hot3e"]
+[ext_resource type="Script" uid="uid://by6ijc3wrcifp" path="res://resources/hitbox_shape_stats_list.gd" id="9_6m7wd"]
+[ext_resource type="Script" uid="uid://coptrl0topre1" path="res://resources/hitbox_stats_res.gd" id="10_fa75l"]
+[ext_resource type="Script" uid="uid://ceyk2xuwjcyt0" path="res://resources/components/attack_move_component.gd" id="11_1lewd"]
+[ext_resource type="Script" uid="uid://b7s3x4i8cx2ep" path="res://resources/components/attack_component.gd" id="12_uvshs"]
+[ext_resource type="PackedScene" uid="uid://0kyknugop8ev" path="res://scenes/hitboxes/basic_side_atk_1_hitbox.tscn" id="13_ryiwl"]
+[ext_resource type="PackedScene" uid="uid://bnlj6jtb3j274" path="res://scenes/hitboxes/basic_up_atk_1_hitbox_1.tscn" id="14_hrgl7"]
+[ext_resource type="Script" uid="uid://dlodv3k4fug6k" path="res://resources/components/air_jump_comp.gd" id="15_tn7vm"]
+[ext_resource type="Script" uid="uid://f5ahaxigfebq" path="res://resources/components/air_dodge_comp.gd" id="16_uec7j"]
+[ext_resource type="Script" uid="uid://bb40p5rv6yjda" path="res://resources/components/damaged_comp.gd" id="17_1vdv2"]
+[ext_resource type="PackedScene" uid="uid://c4arjr6rbjxmy" path="res://scenes/article/components/environment_collision_body.tscn" id="18_f5g5k"]
+[ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="19_37urj"]
+[ext_resource type="Script" uid="uid://3yiwskv8i3aa" path="res://scenes/article/actor/debug_orientation_vis.gd" id="20_3ocvu"]
+[ext_resource type="Shader" uid="uid://b0gags4mo66xw" path="res://scenes/placeholder_flash.gdshader" id="21_575nv"]
+
+[sub_resource type="Resource" id="Resource_bluiw"]
+script = ExtResource("2_gh2v7")
+jump = Array[String](["btn_3"])
+light_atk = Array[String](["btn_1"])
+heavy_atk = Array[String](["btn_0"])
+special_atk = Array[String](["btn_2"])
+guard = Array[String](["guard_left", "guard_right"])
+metadata/_custom_type_script = "uid://dg15p8xrog4lg"
+
+[sub_resource type="Resource" id="Resource_jbguk"]
+script = ExtResource("3_575nv")
+scheme = SubResource("Resource_bluiw")
+metadata/_custom_type_script = "uid://dryh713xatggd"
+
+[sub_resource type="Resource" id="Resource_m5inl"]
+script = ExtResource("4_r10ug")
+walk_speed = 60.0
+MAX_WALK_SPD = 100.0
+friction = 0.7058
+air_friction = 0.8547
+metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
+
+[sub_resource type="Resource" id="Resource_tr7rc"]
+script = ExtResource("5_xei5b")
+metadata/_custom_type_script = "uid://byicdf4x4phfh"
+
+[sub_resource type="Resource" id="Resource_7lc8x"]
+script = ExtResource("7_d4g3s")
+metadata/_custom_type_script = "uid://dw08ut0needd4"
+
+[sub_resource type="Resource" id="Resource_dv3qo"]
+script = ExtResource("10_fa75l")
+angle = 241.0
+bkb = 21.6
+kbg = 27.0
+rot = 105.0
+dmg = 4.0
+metadata/_custom_type_script = "uid://coptrl0topre1"
+
+[sub_resource type="Resource" id="Resource_ndf1g"]
+script = ExtResource("10_fa75l")
+angle = 222.0
+bkb = 18.9
+kbg = 27.0
+rot = 128.0
+dmg = 4.0
+metadata/_custom_type_script = "uid://coptrl0topre1"
+
+[sub_resource type="Resource" id="Resource_p2m1m"]
+script = ExtResource("9_6m7wd")
+hitbox_stats_array = Array[ExtResource("10_fa75l")]([SubResource("Resource_dv3qo"), SubResource("Resource_ndf1g")])
+metadata/_custom_type_script = "uid://by6ijc3wrcifp"
+
+[sub_resource type="Resource" id="Resource_hybsh"]
+script = ExtResource("11_1lewd")
+default_hitbox_scenes = Array[PackedScene]([ExtResource("8_hot3e")])
+default_hitbox_stats_collection = Array[ExtResource("9_6m7wd")]([SubResource("Resource_p2m1m")])
+metadata/_custom_type_script = "uid://ceyk2xuwjcyt0"
+
+[sub_resource type="Resource" id="Resource_hogu4"]
+script = ExtResource("10_fa75l")
+angle = 224.0
+bkb = 21.6
+kbg = 13.5
+rot = 74.0
+dmg = 6.0
+metadata/_custom_type_script = "uid://coptrl0topre1"
+
+[sub_resource type="Resource" id="Resource_km4vl"]
+script = ExtResource("10_fa75l")
+angle = 232.0
+bkb = 16.2
+kbg = 24.3
+dmg = 4.0
+metadata/_custom_type_script = "uid://coptrl0topre1"
+
+[sub_resource type="Resource" id="Resource_3x8he"]
+script = ExtResource("9_6m7wd")
+hitbox_stats_array = Array[ExtResource("10_fa75l")]([SubResource("Resource_hogu4"), SubResource("Resource_km4vl")])
+metadata/_custom_type_script = "uid://by6ijc3wrcifp"
+
+[sub_resource type="Resource" id="Resource_ss6gi"]
+script = ExtResource("11_1lewd")
+default_hitbox_scenes = Array[PackedScene]([ExtResource("13_ryiwl")])
+default_hitbox_stats_collection = Array[ExtResource("9_6m7wd")]([SubResource("Resource_3x8he")])
+metadata/_custom_type_script = "uid://ceyk2xuwjcyt0"
+
+[sub_resource type="Resource" id="Resource_557pd"]
+script = ExtResource("10_fa75l")
+angle = 197.0
+bkb = 18.9
+kbg = 32.4
+rot = 80.0
+metadata/_custom_type_script = "uid://coptrl0topre1"
+
+[sub_resource type="Resource" id="Resource_eui88"]
+script = ExtResource("10_fa75l")
+angle = 235.0
+bkb = 24.3
+kbg = 25.9
+rot = 95.0
+dmg = 4.0
+metadata/_custom_type_script = "uid://coptrl0topre1"
+
+[sub_resource type="Resource" id="Resource_6p4wm"]
+script = ExtResource("10_fa75l")
+angle = 218.0
+bkb = 24.3
+kbg = 21.6
+rot = 117.0
+dmg = 4.0
+metadata/_custom_type_script = "uid://coptrl0topre1"
+
+[sub_resource type="Resource" id="Resource_ikboy"]
+script = ExtResource("9_6m7wd")
+hitbox_stats_array = Array[ExtResource("10_fa75l")]([SubResource("Resource_557pd"), SubResource("Resource_eui88"), SubResource("Resource_6p4wm")])
+metadata/_custom_type_script = "uid://by6ijc3wrcifp"
+
+[sub_resource type="Resource" id="Resource_p4oba"]
+script = ExtResource("11_1lewd")
+default_hitbox_scenes = Array[PackedScene]([ExtResource("14_hrgl7")])
+default_hitbox_stats_collection = Array[ExtResource("9_6m7wd")]([SubResource("Resource_ikboy")])
+metadata/_custom_type_script = "uid://ceyk2xuwjcyt0"
+
+[sub_resource type="Resource" id="Resource_jx8yp"]
+script = ExtResource("12_uvshs")
+side_attack_1 = SubResource("Resource_ss6gi")
+down_attack_1 = SubResource("Resource_hybsh")
+up_attack_1 = SubResource("Resource_p4oba")
+metadata/_custom_type_script = "uid://b7s3x4i8cx2ep"
+
+[sub_resource type="Resource" id="Resource_b4fwj"]
+script = ExtResource("15_tn7vm")
+metadata/_custom_type_script = "uid://dlodv3k4fug6k"
+
+[sub_resource type="Resource" id="Resource_bbjfy"]
+script = ExtResource("16_uec7j")
+metadata/_custom_type_script = "uid://f5ahaxigfebq"
+
+[sub_resource type="Resource" id="Resource_r2uhx"]
+script = ExtResource("17_1vdv2")
+metadata/_custom_type_script = "uid://bb40p5rv6yjda"
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_01vf1"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r10ug"]
+shader = ExtResource("21_575nv")
+shader_parameter/flash_color = Color(1, 1, 1, 1)
+shader_parameter/flash_modifier = 0.0
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_12opc"]
+
+[node name="Actor" type="Node2D" unique_id=1557691037 node_paths=PackedStringArray("ecb", "hurtbox", "TIMERS", "model")]
+script = ExtResource("1_0ox80")
+input_component = SubResource("Resource_jbguk")
+ecb = NodePath("EnvironmentCollisionBody")
+hurtbox = NodePath("Hurtbox")
+entity = SubResource("Resource_m5inl")
+status = SubResource("Resource_tr7rc")
+_components = Array[ExtResource("6_x0m5j")]([SubResource("Resource_7lc8x"), SubResource("Resource_jx8yp"), SubResource("Resource_b4fwj"), SubResource("Resource_bbjfy"), SubResource("Resource_r2uhx")])
+TIMERS = NodePath("Timers")
+model = NodePath("Sprite2D")
+debug = true
+metadata/_custom_type_script = "uid://bra56jgvkoh6d"
+
+[node name="Hitboxes" type="Node2D" parent="." unique_id=779279283]
+unique_name_in_owner = true
+
+[node name="EnvironmentCollisionBody" parent="." unique_id=617907928 instance=ExtResource("18_f5g5k")]
+
+[node name="Timers" type="Node" parent="." unique_id=276487343]
+unique_name_in_owner = true
+
+[node name="ad_flash_timer" type="Timer" parent="Timers" unique_id=293745549]
+wait_time = 0.2
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=53342481]
+script = ExtResource("19_37urj")
+metadata/_custom_type_script = "uid://lpgo7mxv0d5h"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1108697135]
+position = Vector2(0, -15.08)
+shape = SubResource("CapsuleShape2D_01vf1")
+debug_color = Color(0.4993003, 0.57446873, 0.2679287, 0.41960785)
+
+[node name="DebugOrientationVisualizer" type="RayCast2D" parent="." unique_id=2128262922 node_paths=PackedStringArray("body")]
+position = Vector2(0, -22.235)
+enabled = false
+target_position = Vector2(18.66, 0)
+collide_with_bodies = false
+script = ExtResource("20_3ocvu")
+body = NodePath("..")
+metadata/_custom_type_script = "uid://3yiwskv8i3aa"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1950785628]
+visible = false
+material = SubResource("ShaderMaterial_r10ug")
+position = Vector2(4.7683716e-07, -14.750001)
+scale = Vector2(19.999998, 30.500002)
+texture = SubResource("PlaceholderTexture2D_12opc")

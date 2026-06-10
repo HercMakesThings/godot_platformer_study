@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://bghxp8l2hbil3"]
+
+[ext_resource type="Script" uid="uid://dgprxfae0ypfd" path="res://scenes/article/item/item_article.gd" id="1_3a2x0"]
+[ext_resource type="Script" uid="uid://b1r2eahjfa8hu" path="res://resources/entity_res.gd" id="2_3wdsd"]
+[ext_resource type="PackedScene" uid="uid://c4arjr6rbjxmy" path="res://scenes/article/components/environment_collision_body.tscn" id="2_4wbcq"]
+[ext_resource type="Script" uid="uid://bshgwe8ijq41o" path="res://resources/components/base_component.gd" id="3_jyc2g"]
+[ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="4_63u8s"]
+[ext_resource type="Script" uid="uid://bhc3xjo5ygfli" path="res://resources/components/apply_gravity_component.gd" id="4_gudfk"]
+[ext_resource type="Script" uid="uid://3yiwskv8i3aa" path="res://scenes/article/actor/debug_orientation_vis.gd" id="7_gudfk"]
+
+[sub_resource type="Resource" id="Resource_jyc2g"]
+script = ExtResource("2_3wdsd")
+metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
+
+[sub_resource type="Resource" id="Resource_xuwjt"]
+resource_local_to_scene = true
+script = ExtResource("4_gudfk")
+metadata/_custom_type_script = "uid://bhc3xjo5ygfli"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gudfk"]
+radius = 4.0
+
+[node name="Item" type="Node2D" unique_id=1781936434 node_paths=PackedStringArray("ecb", "hurtbox", "TIMERS", "model")]
+script = ExtResource("1_3a2x0")
+ecb = NodePath("EnvironmentCollisionBody")
+hurtbox = NodePath("Hurtbox")
+entity = SubResource("Resource_jyc2g")
+_components = Array[ExtResource("3_jyc2g")]([SubResource("Resource_xuwjt")])
+TIMERS = NodePath("Timers")
+model = NodePath("Sprite2D")
+debug = true
+metadata/_custom_type_script = "uid://dgprxfae0ypfd"
+
+[node name="EnvironmentCollisionBody" parent="." unique_id=617907928 instance=ExtResource("2_4wbcq")]
+height = 8.0
+center = 4.0
+left_span = 4.0
+right_span = 4.0
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=595200478]
+script = ExtResource("4_63u8s")
+metadata/_custom_type_script = "uid://lpgo7mxv0d5h"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1302287758]
+position = Vector2(0, -4.135)
+shape = SubResource("CircleShape2D_gudfk")
+debug_color = Color(0.4993003, 0.57446873, 0.2679287, 0.41960785)
+
+[node name="Timers" type="Node" parent="." unique_id=1360595019]
+unique_name_in_owner = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1156426645]
+
+[node name="DebugOrientationVisualizer" type="RayCast2D" parent="." unique_id=635522620 node_paths=PackedStringArray("body")]
+position = Vector2(0, -7.06)
+enabled = false
+target_position = Vector2(10.32, 0)
+collide_with_bodies = false
+script = ExtResource("7_gudfk")
+body = NodePath("..")
+metadata/_custom_type_script = "uid://3yiwskv8i3aa"
+
+[node name="Hitboxes" type="Node2D" parent="." unique_id=136000343]
+unique_name_in_owner = true

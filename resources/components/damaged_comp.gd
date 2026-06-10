@@ -17,7 +17,9 @@ var last_hitbox_rid: RID
 
 func bind(node: Object) -> void:
 	super.bind(node)
-	actor.status.hurtbox_hit.connect(_on_attacked)
+	#actor.status.hurtbox_hit.connect(_on_attacked)
+	if actor.hurtbox is Hurtbox:
+		actor.hurtbox.hurtbox_was_hit.connect(_on_attacked)
 	is_hit = false
 	stun_frames = 0
 	last_hitbox_rid = RID()

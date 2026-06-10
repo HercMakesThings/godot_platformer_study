@@ -4,13 +4,8 @@ class_name Article extends Node2D
 @export var hurtbox: Hurtbox
 @onready var hitboxes: Node2D = %Hitboxes
 
-#@export var input_game_component: InputGameComponent
-@export var input_component: InputComponent
-
 @export var entity: Entity
-#@export var entity_movement: EntityMoveRes
 @export var status: EntityStatus
-#@export var abilities: Dictionary[String, AbilityRes]
 
 @export var _components: Array[BaseComponent]
 
@@ -24,37 +19,21 @@ var timers: Dictionary[String, Timer]
 var velocity: Vector2
 
 func _ready() -> void:
-	velocity = Vector2.ZERO
-	input_component.init()
+	velocity = Vector2.ZERO 
 	entity.init()
-	status.init_health(self)
 	_bind_components()
-	#for i in abilities:
-		#abilities[i]._init_ability(self)
 	if TIMERS.get_child_count() > 0:
 		for timer in TIMERS.get_children():
 			timers[timer.name] = timer
 		
 func _physics_process(delta: float) -> void:
+	handle_velocity(delta)
 	ecb.tick(self, delta)
-	
-	# capture player input
-	input_component.update()
-	var packet: InputPacket = input_component.get_current_packet()
-	entity.direction = packet.primary_direction
-	entity.jump_pressed = packet.jump_pressed
-	entity.jump_just_pressed = packet.jump_just_pressed
-	entity.jump_released = packet.jump_just_released
-	
-	#entity_movement.compute_movement(entity, delta)
-	
-	#for ability: AbilityRes in abilities.values():
-		#ability._act(self, delta)
 		
 	_update_components(delta)
 		
 	#handle_velocity(delta)
-	call_deferred("handle_velocity", delta)
+	#call_deferred("handle_velocity", delta)
 	
 	## debug prints
 	#debug_prints()
@@ -70,7 +49,7 @@ func _bind_components() -> void:
 	for comp: BaseComponent in _components:
 		comp.bind(self)
 		
-func _update_components(delta) -> void:
+func _update_components(delta: float) -> void:
 	for comp: BaseComponent in _components:
 		comp.update(delta)
 		
@@ -80,7 +59,7 @@ func get_component(req: Object) -> BaseComponent:
 			return component
 	return null
 	
-func debug_prints():
+func debug_prints() -> void:
 	print(str(name) + " -> current movement state: " + str(entity.MoveState.keys()[entity.current_state]))
 	#print(str(name) + " -> body is on ground: " + str(entity.body_on_ground))
 	#print(str(name) + " -> body is on platform: " + str(entity.is_on_platform))

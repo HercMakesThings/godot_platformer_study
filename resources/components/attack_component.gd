@@ -60,7 +60,7 @@ func bind(node: Object) -> void:
 		up_attack_3.atk_connected.connect(_on_atk_connected)
 		up_attack_3.move_completed.connect(_on_move_completed)
 
-func update(delta) -> void:
+func update(delta: float) -> void:
 	#print("current attack state: " + str(current_atk_state))
 	handle_attacks(delta)
 	

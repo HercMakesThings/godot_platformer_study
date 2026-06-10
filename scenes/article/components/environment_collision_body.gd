@@ -35,12 +35,11 @@ var top_detected: bool
 func _ready() -> void:
 	set_shape(center, height, left_span, right_span)
 	area_entered.connect(_on_area_entered)
-	#offset_bottom.target_position = Vector2(0.0, 40.0)
 	last_global_position = global_position
 
 func tick(article: Article, delta: float) -> void:
 	## Check for collisions at the beginning of the physics frame (Article calls tick() first)
-	update_ecb_rays(article, delta)
+	#update_ecb_rays(article, delta)
 	## check for collisions again at the end of the physics frame
 	call_deferred("update_ecb_rays", article, delta)
 	## update last global position for offset vectors

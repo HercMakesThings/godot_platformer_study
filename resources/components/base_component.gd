@@ -2,7 +2,7 @@
 
 var actor: Article
 
-func update(_delta) -> void:
+func update(_delta: float) -> void:
 	pass
 
 ## call super.bind() in inherited components
