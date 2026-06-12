@@ -15,6 +15,8 @@ radius = 4.0
 height = 24.0
 
 [node name="BasicUpAtk1Hitbox1" type="Area2D" unique_id=860198658 node_paths=PackedStringArray("shapes_array", "angle_visual_array")]
+collision_layer = 8
+collision_mask = 16
 script = ExtResource("1_my53j")
 shapes_array = [NodePath("CollisionShape2D"), NodePath("CollisionShape2D2"), NodePath("CollisionShape2D3")]
 angle_visual_array = [NodePath("RayCast2D"), NodePath("RayCast2D2"), NodePath("RayCast2D3")]

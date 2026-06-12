@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://btkn0wxvuqc1b"]
+
+[ext_resource type="Script" uid="uid://dahxd18t1hj5t" path="res://scenes/article/article_2d.gd" id="1_gmntd"]
+[ext_resource type="PackedScene" uid="uid://c4arjr6rbjxmy" path="res://scenes/article/components/environment_collision_body.tscn" id="2_5fp7a"]
+[ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="3_u0bfk"]
+[ext_resource type="Script" uid="uid://3yiwskv8i3aa" path="res://scenes/article/actor/debug_orientation_vis.gd" id="4_arxeb"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dtdws"]
+
+[node name="BaseArticle" type="Node2D" unique_id=1988568871 node_paths=PackedStringArray("ecb", "hurtbox", "TIMERS", "model")]
+script = ExtResource("1_gmntd")
+ecb = NodePath("EnvironmentCollisionBody")
+hurtbox = NodePath("Hurtbox")
+TIMERS = NodePath("Timers")
+model = NodePath("Sprite2D")
+debug = true
+metadata/_custom_type_script = "uid://dahxd18t1hj5t"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1572615164]
+unique_name_in_owner = true
+position = Vector2(9.536743e-07, -15.099251)
+scale = Vector2(20, 29.801504)
+
+[node name="Hitboxes" type="Node2D" parent="." unique_id=1430010056]
+unique_name_in_owner = true
+
+[node name="EnvironmentCollisionBody" parent="." unique_id=617907928 instance=ExtResource("2_5fp7a")]
+
+[node name="Timers" type="Node" parent="." unique_id=1706691470]
+unique_name_in_owner = true
+
+[node name="ad_flash_timer" type="Timer" parent="Timers" unique_id=1597673174]
+wait_time = 0.2
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1064040748]
+collision_layer = 16
+collision_mask = 8
+script = ExtResource("3_u0bfk")
+metadata/_custom_type_script = "uid://lpgo7mxv0d5h"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1831866334]
+position = Vector2(0, -15)
+shape = SubResource("CapsuleShape2D_dtdws")
+debug_color = Color(0.55951476, 0.5564797, 0.19291288, 0.41960785)
+
+[node name="DebugOrientationVisualizer" type="RayCast2D" parent="." unique_id=438483277 node_paths=PackedStringArray("body")]
+position = Vector2(0, -21.635)
+enabled = false
+target_position = Vector2(17.465, 0)
+collide_with_bodies = false
+script = ExtResource("4_arxeb")
+body = NodePath("..")
+metadata/_custom_type_script = "uid://3yiwskv8i3aa"

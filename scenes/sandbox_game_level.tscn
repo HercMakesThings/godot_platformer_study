@@ -18,8 +18,13 @@
 [ext_resource type="Script" uid="uid://bb40p5rv6yjda" path="res://resources/components/damaged_comp.gd" id="16_xdh4x"]
 [ext_resource type="Script" uid="uid://dw08ut0needd4" path="res://resources/components/base_movement_component.gd" id="17_xdh4x"]
 [ext_resource type="PackedScene" uid="uid://bghxp8l2hbil3" path="res://scenes/article/item/item.tscn" id="18_xdh4x"]
+[ext_resource type="Script" uid="uid://bbscqxh2cahqg" path="res://resources/effects/on_hit_effect.gd" id="19_cs570"]
 [ext_resource type="Script" uid="uid://bhc3xjo5ygfli" path="res://resources/components/apply_gravity_component.gd" id="19_rg6m1"]
 [ext_resource type="PackedScene" uid="uid://c4wpp4l6dn16g" path="res://scenes/article/actor/base_actor.tscn" id="19_xdh4x"]
+[ext_resource type="Script" uid="uid://cnyeqtskugnni" path="res://resources/components/on_hit_component.gd" id="20_cs570"]
+[ext_resource type="Script" uid="uid://cxv81iysoi2b1" path="res://resources/effects/on_hit_effects/knockback_effect.gd" id="20_kjrm4"]
+[ext_resource type="PackedScene" uid="uid://btkn0wxvuqc1b" path="res://scenes/article/base_article.tscn" id="24_5bxoa"]
+[ext_resource type="Script" uid="uid://byicdf4x4phfh" path="res://resources/entity_status_res.gd" id="25_pe8fv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qepfu"]
 size = Vector2(1600, 80)
@@ -36,14 +41,14 @@ size = Vector2(600, 4)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8nwor"]
 size = Vector2(60, 2)
 
-[sub_resource type="Resource" id="Resource_rg6m1"]
+[sub_resource type="Resource" id="Resource_5bxoa"]
 resource_local_to_scene = true
 script = ExtResource("5_rg6m1")
 metadata/_custom_type_script = "uid://c7r4bmhxr5nip"
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_h43hl"]
 
-[sub_resource type="Resource" id="Resource_h43hl"]
+[sub_resource type="Resource" id="Resource_pe8fv"]
 resource_local_to_scene = true
 script = ExtResource("8_muiyw")
 walk_speed = 60.0
@@ -51,10 +56,10 @@ MAX_WALK_SPD = 100.0
 friction = 0.7058
 air_friction = 0.8547
 texture_2D = SubResource("PlaceholderTexture2D_h43hl")
-ecb_stats = SubResource("Resource_rg6m1")
+ecb_stats = SubResource("Resource_5bxoa")
 metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
 
-[sub_resource type="Resource" id="Resource_vu8dy"]
+[sub_resource type="Resource" id="Resource_sv4m1"]
 resource_local_to_scene = true
 script = ExtResource("17_xdh4x")
 metadata/_custom_type_script = "uid://dw08ut0needd4"
@@ -82,7 +87,7 @@ script = ExtResource("12_h43hl")
 hitbox_stats_array = Array[ExtResource("13_vu8dy")]([SubResource("Resource_dv3qo"), SubResource("Resource_ndf1g")])
 metadata/_custom_type_script = "uid://by6ijc3wrcifp"
 
-[sub_resource type="Resource" id="Resource_cs570"]
+[sub_resource type="Resource" id="Resource_e0a3l"]
 resource_local_to_scene = true
 script = ExtResource("14_cs570")
 move_name = "DownAtk1"
@@ -112,7 +117,7 @@ script = ExtResource("12_h43hl")
 hitbox_stats_array = Array[ExtResource("13_vu8dy")]([SubResource("Resource_hogu4"), SubResource("Resource_km4vl")])
 metadata/_custom_type_script = "uid://by6ijc3wrcifp"
 
-[sub_resource type="Resource" id="Resource_kjrm4"]
+[sub_resource type="Resource" id="Resource_1oj7r"]
 resource_local_to_scene = true
 script = ExtResource("14_cs570")
 move_name = "SideAtk1"
@@ -151,7 +156,7 @@ script = ExtResource("12_h43hl")
 hitbox_stats_array = Array[ExtResource("13_vu8dy")]([SubResource("Resource_557pd"), SubResource("Resource_eui88"), SubResource("Resource_6p4wm")])
 metadata/_custom_type_script = "uid://by6ijc3wrcifp"
 
-[sub_resource type="Resource" id="Resource_5bxoa"]
+[sub_resource type="Resource" id="Resource_xen7v"]
 resource_local_to_scene = true
 script = ExtResource("14_cs570")
 move_name = "UpAtk1"
@@ -159,30 +164,41 @@ default_hitbox_scenes = Array[PackedScene]([ExtResource("16_rg6m1")])
 default_hitbox_stats_collection = Array[ExtResource("12_h43hl")]([SubResource("Resource_ikboy")])
 metadata/_custom_type_script = "uid://ceyk2xuwjcyt0"
 
-[sub_resource type="Resource" id="Resource_pe8fv"]
+[sub_resource type="Resource" id="Resource_xwsm1"]
 resource_local_to_scene = true
 script = ExtResource("11_rg6m1")
-side_attack_1 = SubResource("Resource_kjrm4")
-down_attack_1 = SubResource("Resource_cs570")
-up_attack_1 = SubResource("Resource_5bxoa")
+side_attack_1 = SubResource("Resource_1oj7r")
+down_attack_1 = SubResource("Resource_e0a3l")
+up_attack_1 = SubResource("Resource_xen7v")
 metadata/_custom_type_script = "uid://b7s3x4i8cx2ep"
 
-[sub_resource type="Resource" id="Resource_sv4m1"]
+[sub_resource type="Resource" id="Resource_0bkr6"]
 resource_local_to_scene = true
 script = ExtResource("13_muiyw")
 metadata/_custom_type_script = "uid://dlodv3k4fug6k"
 
-[sub_resource type="Resource" id="Resource_e0a3l"]
+[sub_resource type="Resource" id="Resource_2qmks"]
 resource_local_to_scene = true
 script = ExtResource("15_wnid3")
 metadata/_custom_type_script = "uid://f5ahaxigfebq"
 
-[sub_resource type="Resource" id="Resource_1oj7r"]
+[sub_resource type="Resource" id="Resource_0bxf5"]
 resource_local_to_scene = true
 script = ExtResource("16_xdh4x")
 metadata/_custom_type_script = "uid://bb40p5rv6yjda"
 
-[sub_resource type="Resource" id="Resource_xen7v"]
+[sub_resource type="Resource" id="Resource_ryk12"]
+resource_local_to_scene = true
+script = ExtResource("20_kjrm4")
+metadata/_custom_type_script = "uid://cxv81iysoi2b1"
+
+[sub_resource type="Resource" id="Resource_gu7jp"]
+resource_local_to_scene = true
+script = ExtResource("20_cs570")
+on_hit_effects = Array[ExtResource("19_cs570")]([SubResource("Resource_ryk12")])
+metadata/_custom_type_script = "uid://cnyeqtskugnni"
+
+[sub_resource type="Resource" id="Resource_kdqob"]
 resource_local_to_scene = true
 script = ExtResource("5_rg6m1")
 height = 8.0
@@ -191,16 +207,57 @@ left_span = 4.0
 right_span = 4.0
 metadata/_custom_type_script = "uid://c7r4bmhxr5nip"
 
-[sub_resource type="Resource" id="Resource_xwsm1"]
+[sub_resource type="Resource" id="Resource_iajgh"]
 resource_local_to_scene = true
 script = ExtResource("8_muiyw")
-ecb_stats = SubResource("Resource_xen7v")
+ecb_stats = SubResource("Resource_kdqob")
 metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
 
-[sub_resource type="Resource" id="Resource_0bkr6"]
+[sub_resource type="Resource" id="Resource_kuj1c"]
 resource_local_to_scene = true
 script = ExtResource("19_rg6m1")
 metadata/_custom_type_script = "uid://bhc3xjo5ygfli"
+
+[sub_resource type="Resource" id="Resource_hj2df"]
+resource_local_to_scene = true
+script = ExtResource("5_rg6m1")
+metadata/_custom_type_script = "uid://c7r4bmhxr5nip"
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_pnxvg"]
+resource_local_to_scene = true
+
+[sub_resource type="Resource" id="Resource_2ey6k"]
+resource_local_to_scene = true
+script = ExtResource("8_muiyw")
+texture_2D = SubResource("PlaceholderTexture2D_pnxvg")
+ecb_stats = SubResource("Resource_hj2df")
+metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
+
+[sub_resource type="Resource" id="Resource_g7lnm"]
+resource_local_to_scene = true
+script = ExtResource("25_pe8fv")
+metadata/_custom_type_script = "uid://byicdf4x4phfh"
+
+[sub_resource type="Resource" id="Resource_absuy"]
+resource_local_to_scene = true
+script = ExtResource("17_xdh4x")
+metadata/_custom_type_script = "uid://dw08ut0needd4"
+
+[sub_resource type="Resource" id="Resource_7vo24"]
+resource_local_to_scene = true
+script = ExtResource("19_rg6m1")
+metadata/_custom_type_script = "uid://bhc3xjo5ygfli"
+
+[sub_resource type="Resource" id="Resource_gfu8r"]
+resource_local_to_scene = true
+script = ExtResource("20_kjrm4")
+metadata/_custom_type_script = "uid://cxv81iysoi2b1"
+
+[sub_resource type="Resource" id="Resource_g4vam"]
+resource_local_to_scene = true
+script = ExtResource("20_cs570")
+on_hit_effects = Array[ExtResource("19_cs570")]([SubResource("Resource_gfu8r")])
+metadata/_custom_type_script = "uid://cnyeqtskugnni"
 
 [node name="SandboxGame" type="Node2D" unique_id=1588085111]
 
@@ -291,14 +348,20 @@ debug_color = Color(0.4993003, 0.57446873, 0.2679287, 0.41960785)
 
 [node name="Actor" parent="." unique_id=1557691037 instance=ExtResource("19_xdh4x")]
 position = Vector2(-97, -21)
-entity = SubResource("Resource_h43hl")
-_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_vu8dy"), SubResource("Resource_pe8fv"), SubResource("Resource_sv4m1"), SubResource("Resource_e0a3l"), SubResource("Resource_1oj7r")])
+entity = SubResource("Resource_pe8fv")
+_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_sv4m1"), SubResource("Resource_xwsm1"), SubResource("Resource_0bkr6"), SubResource("Resource_2qmks"), SubResource("Resource_0bxf5"), SubResource("Resource_gu7jp")])
 
 [node name="Camera2D" type="Camera2D" parent="Actor" unique_id=41672697]
 offset = Vector2(0, -21.38)
 zoom = Vector2(4, 4)
 
 [node name="Item" parent="." unique_id=1781936434 instance=ExtResource("18_xdh4x")]
-position = Vector2(-40, -105)
-entity = SubResource("Resource_xwsm1")
-_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_0bkr6")])
+position = Vector2(75, -4)
+entity = SubResource("Resource_iajgh")
+_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_kuj1c")])
+
+[node name="Sandbag" parent="." unique_id=1988568871 instance=ExtResource("24_5bxoa")]
+position = Vector2(-37, -38)
+entity = SubResource("Resource_2ey6k")
+status = SubResource("Resource_g7lnm")
+_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_absuy"), SubResource("Resource_7vo24"), SubResource("Resource_g4vam")])
