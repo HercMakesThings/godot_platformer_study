@@ -20,7 +20,6 @@
 [ext_resource type="PackedScene" uid="uid://c4arjr6rbjxmy" path="res://scenes/article/components/environment_collision_body.tscn" id="18_f5g5k"]
 [ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="19_37urj"]
 [ext_resource type="Script" uid="uid://3yiwskv8i3aa" path="res://scenes/article/actor/debug_orientation_vis.gd" id="20_3ocvu"]
-[ext_resource type="Shader" uid="uid://b0gags4mo66xw" path="res://scenes/placeholder_flash.gdshader" id="21_575nv"]
 
 [sub_resource type="Resource" id="Resource_bluiw"]
 script = ExtResource("2_gh2v7")
@@ -167,13 +166,6 @@ metadata/_custom_type_script = "uid://bb40p5rv6yjda"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_01vf1"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_r10ug"]
-shader = ExtResource("21_575nv")
-shader_parameter/flash_color = Color(1, 1, 1, 1)
-shader_parameter/flash_modifier = 0.0
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_12opc"]
-
 [node name="Actor" type="Node2D" unique_id=1557691037 node_paths=PackedStringArray("ecb", "hurtbox", "TIMERS", "model")]
 script = ExtResource("1_0ox80")
 input_component = SubResource("Resource_jbguk")
@@ -187,10 +179,15 @@ model = NodePath("Sprite2D")
 debug = true
 metadata/_custom_type_script = "uid://bra56jgvkoh6d"
 
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1950785628]
+position = Vector2(9.536743e-07, -15.099251)
+scale = Vector2(20, 29.801504)
+
 [node name="Hitboxes" type="Node2D" parent="." unique_id=779279283]
 unique_name_in_owner = true
 
 [node name="EnvironmentCollisionBody" parent="." unique_id=617907928 instance=ExtResource("18_f5g5k")]
+collision_mask = 2
 
 [node name="Timers" type="Node" parent="." unique_id=276487343]
 unique_name_in_owner = true
@@ -199,6 +196,11 @@ unique_name_in_owner = true
 wait_time = 0.2
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=53342481]
+visible = false
+collision_layer = 16
+collision_mask = 16
+monitoring = false
+monitorable = false
 script = ExtResource("19_37urj")
 metadata/_custom_type_script = "uid://lpgo7mxv0d5h"
 
@@ -215,10 +217,3 @@ collide_with_bodies = false
 script = ExtResource("20_3ocvu")
 body = NodePath("..")
 metadata/_custom_type_script = "uid://3yiwskv8i3aa"
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1950785628]
-visible = false
-material = SubResource("ShaderMaterial_r10ug")
-position = Vector2(4.7683716e-07, -14.750001)
-scale = Vector2(19.999998, 30.500002)
-texture = SubResource("PlaceholderTexture2D_12opc")

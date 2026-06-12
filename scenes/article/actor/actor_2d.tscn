@@ -53,6 +53,7 @@ texture = SubResource("CanvasTexture_l01n2")
 
 [node name="EnvironmentCollisionBody" parent="." unique_id=617907928 instance=ExtResource("6_l01n2")]
 unique_name_in_owner = true
+collision_mask = 2
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=1198373754]
 unique_name_in_owner = true

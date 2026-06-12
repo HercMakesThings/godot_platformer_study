@@ -1,6 +1,7 @@
 class_name Article extends Node2D
 
 @export var ecb: EnvironmentCollisionBody
+
 @export var hurtbox: Hurtbox
 @onready var hitboxes: Node2D = %Hitboxes
 
@@ -21,6 +22,11 @@ var velocity: Vector2
 func _ready() -> void:
 	velocity = Vector2.ZERO 
 	entity.init()
+	ecb.init_stats(entity.ecb_stats)
+	if model is Sprite2D:
+		model.texture = entity.texture_2D
+		model.material = ShaderMaterial.new()
+		model.material.shader = preload("res://scenes/placeholder_flash.gdshader")
 	_bind_components()
 	if TIMERS.get_child_count() > 0:
 		for timer in TIMERS.get_children():

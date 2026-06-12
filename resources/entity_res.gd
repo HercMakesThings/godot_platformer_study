@@ -30,7 +30,10 @@ var weight: float
 @export_group("Model")
 @export var texture_2D: Texture2D
 @export var sprite_frames: SpriteFrames 
-@export var texture_3D: Texture3D 
+@export var texture_3D: Texture3D
+
+@export_group("Environmental Collision Box")
+@export var ecb_stats: EcbStatsRes
 
 
 var walk_force: Vector2

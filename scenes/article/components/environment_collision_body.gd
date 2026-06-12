@@ -25,6 +25,10 @@ class_name EnvironmentCollisionBody extends Area2D
 
 @export var COLLISION_POINT_THRESHOLD: float = 4.0
 
+@export var DEFAULT_ECB_STATS: EcbStatsRes
+
+var dimensions: EcbStatsRes
+
 var last_global_position: Vector2
 
 var bottom_detected: bool
@@ -33,9 +37,12 @@ var right_detected: bool
 var top_detected: bool
 
 func _ready() -> void:
-	set_shape(center, height, left_span, right_span)
+	#set_shape(center, height, left_span, right_span)
 	area_entered.connect(_on_area_entered)
 	last_global_position = global_position
+	
+func init_stats(stats: EcbStatsRes) -> void:
+	set_shape(stats)
 
 func tick(article: Article, delta: float) -> void:
 	## Check for collisions at the beginning of the physics frame (Article calls tick() first)
@@ -91,27 +98,27 @@ func update_ecb_rays(article: Article, delta: float):
 		right_detector.force_raycast_update()
 		
 		if left_detected && (left_detector.is_colliding() && left_detector.get_collider() is TerrainArea2D && left_detector.get_collider().type == "Wall"):
-			article.position.x = left_detector.get_collider().position.x + (left_detector.get_collider().collision_shape.size.x*0.5) + left_span
+			article.position.x = left_detector.get_collider().position.x + (left_detector.get_collider().collision_shape.size.x*0.5) + dimensions.left_span
 			if article.entity.body_vel.x < 0.0:
 				article.entity.body_vel.x = 0.0
 		if right_detected && (right_detector.is_colliding() && right_detector.get_collider() is TerrainArea2D && right_detector.get_collider().type == "Wall"):
-			article.position.x = right_detector.get_collider().position.x - (right_detector.get_collider().collision_shape.size.x*0.5) - right_span
+			article.position.x = right_detector.get_collider().position.x - (right_detector.get_collider().collision_shape.size.x*0.5) - dimensions.right_span
 			if article.entity.body_vel.x > 0.0:
 				article.entity.body_vel.x = 0.0
 		if top_detected && (top_detector.is_colliding() && top_detector.get_collider() is TerrainArea2D && top_detector.get_collider().type == "Floor"):
-			article.position.y = top_detector.get_collider().position.y + (top_detector.get_collider().collision_shape.size.y*0.5) + height
+			article.position.y = top_detector.get_collider().position.y + (top_detector.get_collider().collision_shape.size.y*0.5) + dimensions.height
 			if article.entity.body_vel.y < 0.0:
 				article.entity.body_vel.y = 0.0
 		
 		if (right.is_colliding() && (right.get_collider() is TerrainArea2D && right.get_collider().type == "Wall")):
 				if article.entity.body_vel.x > 0.0:
 					article.entity.body_vel.x = 0.0
-				article.position.x = right.get_collider().position.x - (right.get_collider().collision_shape.size.x*0.5) - right_span
+				article.position.x = right.get_collider().position.x - (right.get_collider().collision_shape.size.x*0.5) - dimensions.right_span
 		elif (offset_right.is_colliding() && (offset_right.get_collider() is TerrainArea2D && offset_right.get_collider().type == "Wall")):
 				if offset_right.target_position.x <= 0.0:
 					if article.entity.body_vel.x > 0.0:
 						article.entity.body_vel.x = 0.0
-					article.position.x = offset_right.get_collider().position.x - (offset_right.get_collider().collision_shape.size.x*0.5) - right_span
+					article.position.x = offset_right.get_collider().position.x - (offset_right.get_collider().collision_shape.size.x*0.5) - dimensions.right_span
 		elif (right_detector.is_colliding() && (right_detector.get_collider() is TerrainArea2D && right_detector.get_collider().type == "Wall")):
 			if article.entity.body_vel.x > 0.0:
 				right_detected = true
@@ -121,12 +128,12 @@ func update_ecb_rays(article: Article, delta: float):
 		if (left.is_colliding() && (left.get_collider() is TerrainArea2D && left.get_collider().type == "Wall")):
 				if article.entity.body_vel.x < 0.0:
 					article.entity.body_vel.x = 0.0
-				article.position.x = left.get_collider().position.x + (left.get_collider().collision_shape.size.x*0.5) + left_span
+				article.position.x = left.get_collider().position.x + (left.get_collider().collision_shape.size.x*0.5) + dimensions.left_span
 		elif (offset_left.is_colliding() && (offset_left.get_collider() is TerrainArea2D && offset_left.get_collider().type == "Wall")):
 				if offset_left.target_position.x >= 0.0:
 					if article.entity.body_vel.x < 0.0:
 						article.entity.body_vel.x = 0.0
-					article.position.x = offset_left.get_collider().position.x + (offset_left.get_collider().collision_shape.size.x*0.5) + left_span
+					article.position.x = offset_left.get_collider().position.x + (offset_left.get_collider().collision_shape.size.x*0.5) + dimensions.left_span
 		elif (left_detector.is_colliding() && (left_detector.get_collider() is TerrainArea2D && left_detector.get_collider().type == "Wall")):
 				if article.entity.body_vel.x < 0.0:
 					left_detected = true
@@ -136,11 +143,11 @@ func update_ecb_rays(article: Article, delta: float):
 		if (top.is_colliding() && top.get_collider() is TerrainArea2D):
 			if article.entity.body_vel.y < 0:
 				article.entity.body_vel.y = 0.0
-				article.position.y = top.get_collider().position.y + (top.get_collider().collision_shape.size.y*0.5) + height
+				article.position.y = top.get_collider().position.y + (top.get_collider().collision_shape.size.y*0.5) + dimensions.height
 		elif (offset_top.is_colliding() && offset_top.get_collider() is TerrainArea2D):
 			if article.entity.body_vel.y < 0:
 				article.entity.body_vel.y = 0.0
-				article.position.y = offset_top.get_collider().position.y + (offset_top.get_collider().collision_shape.size.y*0.5) + height
+				article.position.y = offset_top.get_collider().position.y + (offset_top.get_collider().collision_shape.size.y*0.5) + dimensions.height
 		elif (top_detector.is_colliding() && (top_detector.get_collider() is TerrainArea2D && top_detector.get_collider().type == "Floor")):
 			if article.entity.body_vel.y <= 0.0:
 					top_detected = true
@@ -196,16 +203,48 @@ func update_ecb_rays(article: Article, delta: float):
 			article.entity.body_vel.y = 0.0
 		
 		
-func set_shape(c: float, h: float, l: float, r: float) -> void:
-	top.position = Vector2(0.0, -c)
-	left.position = Vector2(0.0, -c)
-	right.position = Vector2(0.0, -c)
-	bottom.position = Vector2(0.0, -c)
+#func set_shape(c: float, h: float, l: float, r: float) -> void:
+	#top.position = Vector2(0.0, -c)
+	#left.position = Vector2(0.0, -c)
+	#right.position = Vector2(0.0, -c)
+	#bottom.position = Vector2(0.0, -c)
+	#
+	#top.target_position = Vector2(0, -h+c)
+	#left.target_position = Vector2(-l, 0.0)
+	#right.target_position = Vector2(r, 0.0)
+	#bottom.target_position = Vector2(0.0, c)
+	#
+	#offset_bottom.position = Vector2.ZERO
+	#offset_top.position = top.position + top.target_position
+	#offset_left.position = left.position + left.target_position
+	#offset_right.position = right.position + right.target_position
+	#
+	#offset_bottom.target_position = Vector2.ZERO
+	#offset_top.target_position = Vector2.ZERO
+	#offset_left.target_position = Vector2.ZERO
+	#offset_right.target_position = Vector2.ZERO
+	#
+	#bottom_detector.position = Vector2.ZERO
+	#top_detector.position = top.position + top.target_position
+	#left_detector.position = left.position + left.target_position
+	#right_detector.position = right.position + right.target_position
+	#
+	#bottom_detector.target_position = Vector2.ZERO
+	#top_detector.target_position = Vector2.ZERO
+	#left_detector.target_position = Vector2.ZERO
+	#right_detector.target_position = Vector2.ZERO
+func set_shape(stats: EcbStatsRes) -> void:
+	dimensions = stats
 	
-	top.target_position = Vector2(0, -h+c)
-	left.target_position = Vector2(-l, 0.0)
-	right.target_position = Vector2(r, 0.0)
-	bottom.target_position = Vector2(0.0, c)
+	top.position = Vector2(0.0, -stats.center)
+	left.position = Vector2(0.0, -stats.center)
+	right.position = Vector2(0.0, -stats.center)
+	bottom.position = Vector2(0.0, -stats.center)
+	
+	top.target_position = Vector2(0, -stats.height+stats.center)
+	left.target_position = Vector2(-stats.left_span, 0.0)
+	right.target_position = Vector2(stats.right_span, 0.0)
+	bottom.target_position = Vector2(0.0, stats.center)
 	
 	offset_bottom.position = Vector2.ZERO
 	offset_top.position = top.position + top.target_position
@@ -228,14 +267,15 @@ func set_shape(c: float, h: float, l: float, r: float) -> void:
 	right_detector.target_position = Vector2.ZERO
 	
 	shape.shape.points = PackedVector2Array([
-		Vector2(0, -h),
-		Vector2(r, -c),
+		Vector2(0, -stats.height),
+		Vector2(stats.right_span, -stats.center),
 		Vector2.ZERO,
-		Vector2(-l, -c)
+		Vector2(-stats.left_span, -stats.center)
 	])
 	
 func set_shape_to_default():
-	set_shape(center, height, left_span, right_span)
+	#set_shape(center, height, left_span, right_span)
+	set_shape(DEFAULT_ECB_STATS)
 	
 func update_last_position():
 	last_global_position = global_position
