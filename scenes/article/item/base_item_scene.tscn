@@ -24,6 +24,11 @@ model = NodePath("Sprite2D")
 debug = true
 metadata/_custom_type_script = "uid://dgprxfae0ypfd"
 
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1156426645]
+
+[node name="Hitboxes" type="Node2D" parent="." unique_id=136000343]
+unique_name_in_owner = true
+
 [node name="EnvironmentCollisionBody" parent="." unique_id=617907928 instance=ExtResource("2_4wbcq")]
 height = 8.0
 center = 4.0
@@ -42,8 +47,6 @@ debug_color = Color(0.4993003, 0.57446873, 0.2679287, 0.41960785)
 [node name="Timers" type="Node" parent="." unique_id=1360595019]
 unique_name_in_owner = true
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1156426645]
-
 [node name="DebugOrientationVisualizer" type="RayCast2D" parent="." unique_id=635522620 node_paths=PackedStringArray("body")]
 position = Vector2(0, -7.06)
 enabled = false
@@ -52,6 +55,3 @@ collide_with_bodies = false
 script = ExtResource("7_gudfk")
 body = NodePath("..")
 metadata/_custom_type_script = "uid://3yiwskv8i3aa"
-
-[node name="Hitboxes" type="Node2D" parent="." unique_id=136000343]
-unique_name_in_owner = true
