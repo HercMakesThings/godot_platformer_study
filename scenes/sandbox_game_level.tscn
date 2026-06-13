@@ -361,7 +361,7 @@ entity = SubResource("Resource_iajgh")
 _components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_kuj1c")])
 
 [node name="Sandbag" parent="." unique_id=1988568871 instance=ExtResource("24_5bxoa")]
-position = Vector2(-37, -38)
+position = Vector2(-36, -37)
 entity = SubResource("Resource_2ey6k")
 status = SubResource("Resource_g7lnm")
 _components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_absuy"), SubResource("Resource_7vo24"), SubResource("Resource_g4vam")])
