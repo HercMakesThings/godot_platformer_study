@@ -73,8 +73,9 @@ func _on_area_2d_body_shape_entered(area_rid: RID, area: Node2D, _area_shape_ind
 		return
 	collided_hurtboxes.append(area)
 	## Find the shape owner ID using the index
-	var shape_owner_id: int = shape_find_owner(local_shape_index)
+	#var shape_owner_id: int = shape_find_owner(local_shape_index)
 	## Get the actual CollisionShape2D node from that owner
 	##var shape_node: CollisionShape2D = shape_owner_get_owner(shape_owner_id)
-	shape_hit_something.emit(self, shape_owner_id, area)
+	#shape_hit_something.emit(self, shape_owner_id, area)
+	shape_hit_something.emit(self, local_shape_index, area)
 	area.contacted(self, get_rid(), local_shape_index)

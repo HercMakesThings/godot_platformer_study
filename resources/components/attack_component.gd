@@ -18,10 +18,13 @@ var atk_frame: int = 0
 
 var atk_connected: bool
 
+var can_atk: bool
+
 func bind(node: Object) -> void:
 	super.bind(node)
 	atk_frame = 0
 	atk_connected = false
+	can_atk = true
 	current_atk_state = AtkMoveState.IDLE
 	if side_attack_1:
 		side_attack_1._init_move(actor)
@@ -62,6 +65,8 @@ func bind(node: Object) -> void:
 
 func update(delta: float) -> void:
 	#print("current attack state: " + str(current_atk_state))
+	if !can_atk:
+		return
 	handle_attacks(delta)
 	
 func handle_attacks(delta: float) -> void:
@@ -183,3 +188,26 @@ func _handle_atk_progression(packet: InputPacket, next_atk_lvl: int) -> void:
 					change_state(AtkMoveState.UP_3)
 				_:
 					change_state(AtkMoveState.IDLE)
+					
+func _hitbox_cleanup() -> void:
+	if side_attack_1:
+		side_attack_1._free_all_hitboxes()
+	if side_attack_2:
+		side_attack_2._free_all_hitboxes()
+	if side_attack_3:
+		side_attack_3._free_all_hitboxes()
+	if down_attack_1:
+		down_attack_1._free_all_hitboxes()
+	if down_attack_2:
+		down_attack_2._free_all_hitboxes()
+	if down_attack_3:
+		down_attack_3._free_all_hitboxes()
+	if up_attack_1:
+		up_attack_1._free_all_hitboxes()
+	if up_attack_2:
+		up_attack_2._free_all_hitboxes()
+	if up_attack_3:
+		up_attack_3._free_all_hitboxes()
+		
+func _component_cleanup() -> void:
+	_hitbox_cleanup()

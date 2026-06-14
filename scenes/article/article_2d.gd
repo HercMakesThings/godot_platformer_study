@@ -35,7 +35,6 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	handle_velocity(delta)
 	ecb.tick(self, delta)
-		
 	_update_components(delta)
 		
 	#handle_velocity(delta)
@@ -65,7 +64,17 @@ func get_component(req: Object) -> BaseComponent:
 			return component
 	return null
 	
+func add_component(comp: BaseComponent, should_return: bool = false) -> Array[BaseComponent]:
+	_components.append(comp)
+	if should_return:
+		return _components
+	return []
+	
 func debug_prints() -> void:
 	print(str(name) + " -> current movement state: " + str(entity.MoveState.keys()[entity.current_state]))
 	#print(str(name) + " -> body is on ground: " + str(entity.body_on_ground))
 	#print(str(name) + " -> body is on platform: " + str(entity.is_on_platform))
+	
+func _exit_tree() -> void:
+	for comp: BaseComponent in _components:
+		comp._component_cleanup()
