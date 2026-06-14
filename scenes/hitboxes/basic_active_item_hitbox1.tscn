@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dpp1v6omyvpw6" path="res://scripts/hitbox.gd" id="1_w4jm6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rarex"]
-radius = 4.001128
+radius = 5.00064
 
 [node name="Hitbox" type="Area2D" unique_id=973517988 node_paths=PackedStringArray("shapes_array", "angle_visual_array")]
 script = ExtResource("1_w4jm6")
@@ -12,7 +12,7 @@ angle_visual_array = [NodePath("RayCast2D")]
 metadata/_custom_type_script = "uid://dpp1v6omyvpw6"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=47616823]
-position = Vector2(0, -4.08)
+position = Vector2(0, -5)
 shape = SubResource("CircleShape2D_rarex")
 disabled = true
 debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
