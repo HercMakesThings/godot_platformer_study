@@ -1,7 +1,7 @@
 class_name Actor extends Article
 
 @export var input_component: InputComponent
-@onready var item_spawn_location: Node2D = %ItemSpawnLocation
+#@onready var item_spawn_location: Node2D = %ItemSpawnLocation
 
 func _ready() -> void:
 	super._ready()
@@ -16,6 +16,6 @@ func _physics_process(delta: float) -> void:
 	entity.jump_just_pressed = packet.jump_just_pressed
 	entity.jump_released = packet.jump_just_released
 	
-	item_spawn_location.position.x = absf(item_spawn_location.position.x) * entity.orientation
+	#item_spawn_location.position.x = absf(item_spawn_location.position.x) * entity.orientation
 	
 	super._physics_process(delta)

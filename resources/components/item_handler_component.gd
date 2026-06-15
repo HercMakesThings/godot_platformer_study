@@ -1,31 +1,60 @@
 class_name ItemHandlerComponent extends BaseComponent
 
 var item_interact_box: Area2D
+var item_spawn_location: Node2D
+var held_item_visual: Sprite2D
+
 var is_item_in_range
 
 var items_in_range: Array[Item]
 
-signal pickup_item(actor: Article, item: Item)
+var _held_item_profile: ItemProfile
+
+#signal pickup_item(actor: Article, item: Item)
+signal throw_item(actor: Article, location: Node2D, profile: ItemProfile)
 
 func bind(node: Object) -> void:
 	super.bind(node)
 	_init_pickup_range()
+	_init_item_spawn_location()
+	_init_held_item_visual()
 	
 func update(_delta: float) -> void:
-	if !is_item_in_range:
-		return
-	var packet: InputPacket = actor.input_component.get_current_packet()
-	if packet.light_atk_just_pressed:
-		var item: Item = _get_highest_priority_item()
-		pickup_item.emit(actor, item)
+	if _held_item_profile:
+		_handle_throw_item()
+	if is_item_in_range && !_held_item_profile:
+		_handle_interact_with_item_in_range()
+	item_spawn_location.position.x = absf(item_spawn_location.position.x) * actor.entity.orientation
+	held_item_visual.position.x = absf(held_item_visual.position.x) * actor.entity.orientation
 		
-func grab_item(profile: ItemProfile) -> void:
-	pass
+func _handle_interact_with_item_in_range() -> void:
+	#if !is_item_in_range:
+		#return
+	var packet: InputPacket = actor.input_component.get_current_packet()
+	if packet.light_atk_just_pressed && actor.entity.can_move:
+		var item: Item = _get_highest_priority_item()
+		#pickup_item.emit(actor, item)
+		item.interact_with(actor)
+		
+func _handle_throw_item() -> void:
+	#if !_held_item_profile:
+		#return
+	var packet: InputPacket = actor.input_component.get_current_packet()
+	if packet.light_atk_just_pressed && actor.entity.can_move:
+		throw_item.emit(actor, item_spawn_location, _held_item_profile)
+		
+func hold_item(profile: ItemProfile) -> void:
+	_held_item_profile = profile
+	held_item_visual.texture = _held_item_profile.model
+	
+func drop_item() -> void:
+	_held_item_profile = null
+	held_item_visual.texture = null
 		
 func _get_highest_priority_item() -> Item:
 	var highest_priority: int = -int(INF)
 	var _item: Item
-	for item in items_in_range:
+	for item: Item in items_in_range:
 		if item.profile.pickup_priority > highest_priority:
 			highest_priority = item.profile.pickup_priority
 			_item = item
@@ -40,8 +69,8 @@ func _on_item_entered_range(area: Area2D) -> void:
 		return
 	print("item in range! Item: " + str(area.get_parent().name))
 	item_interact_box.visible = true
-	is_item_in_range = true
 	items_in_range.append(area.get_parent())
+	is_item_in_range = items_in_range.size() > 0
 	var atk_comp: AttackComponent = actor.get_component(AttackComponent)
 	if atk_comp:
 		atk_comp.can_atk = false
@@ -53,9 +82,9 @@ func _on_item_exited_range(area: Area2D) -> void:
 		return
 	print("item exited range! Item: " + str(area.get_parent().name))
 	item_interact_box.visible = false
-	is_item_in_range = false
 	if items_in_range.has(area.get_parent()):
 		items_in_range.erase(area.get_parent())
+	is_item_in_range = items_in_range.size() > 0
 	var atk_comp: AttackComponent = actor.get_component(AttackComponent)
 	if atk_comp:
 		atk_comp.can_atk = true
@@ -79,3 +108,17 @@ func _init_pickup_range() -> void:
 	item_interact_box.owner = actor
 	item_interact_box.area_entered.connect(_on_item_entered_range)
 	item_interact_box.area_exited.connect(_on_item_exited_range)
+	
+func _init_item_spawn_location() -> void:
+	item_spawn_location = Node2D.new()
+	item_spawn_location.position = Vector2(15, -16)
+	item_spawn_location.owner = actor
+	actor.add_child(item_spawn_location)
+	
+func _init_held_item_visual() -> void:
+	held_item_visual = Sprite2D.new()
+	held_item_visual.position = Vector2(16, -36)
+	if _held_item_profile:
+		held_item_visual.texture = _held_item_profile.model
+	held_item_visual.owner = actor
+	actor.add_child(held_item_visual)

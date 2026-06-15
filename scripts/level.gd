@@ -6,4 +6,4 @@ class_name Level extends Node2D
 var item_spawner: LevelItemSpawner
 
 func _ready() -> void:
-	item_spawner = LevelItemSpawner.new(articles)
+	item_spawner = LevelItemSpawner.new(self)

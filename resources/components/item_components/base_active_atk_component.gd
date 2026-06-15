@@ -5,27 +5,36 @@ class_name ItemActiveAtkComponent extends BaseComponent
 #@export var default_hitbox_stats_array: Array[HitboxStats]
 @export var default_hitbox_stats_collection: Array[HitboxShapeStatsList]
 
+@export var on_hit_effects: Array[OnHitEffect]
+
 var default_hitboxes: Array[Hitbox]
 #var hitboxes: Array[Hitbox]
 var hitbox_owner: Node2D
 
 signal atk_connected
 
+var deactivated: bool
+
 func bind(node: Object) -> void:
 	super.bind(node)
+	deactivated = false
 	init_default_hitboxes()
 		
 func update(delta: float) -> void:
 	for box: Hitbox in hitbox_owner.get_children():
 		box.set_orientation(actor.entity.orientation)
 		for statblock in box.stats_array:
-			statblock.is_active = !actor.entity.body_on_ground
+			statblock.is_active = !actor.entity.body_on_ground && !deactivated
 		box.tick(delta)
 		if actor.entity.body_on_ground:
-			box.collided_hurtboxes.clear()
+			deactivated = false
+			if box.collided_hurtboxes.size() > 0:
+				box.collided_hurtboxes.clear()
 		
 func _hitbox_shape_hit_something(hitbox: Area2D, shape_index: int, hurtbox: Area2D) -> void:
 	print(str(hitbox.name) + " hitbox hit " + str(hurtbox.name) + " at shape index " + str(shape_index))
+	for eff: OnHitEffect in on_hit_effects:
+		eff._execute(actor, hitbox, hitbox.get_rid(), shape_index)
 	atk_connected.emit()
 	
 func init_default_hitboxes() -> void:

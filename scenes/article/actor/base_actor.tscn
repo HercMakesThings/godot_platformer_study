@@ -37,8 +37,6 @@ metadata/_custom_type_script = "uid://byicdf4x4phfh"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_01vf1"]
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_0wj3o"]
-
 [node name="Actor" type="Node2D" unique_id=1557691037 node_paths=PackedStringArray("ecb", "hurtbox", "TIMERS", "model")]
 script = ExtResource("1_0ox80")
 input_component = SubResource("Resource_jbguk")
@@ -86,13 +84,3 @@ collide_with_bodies = false
 script = ExtResource("20_3ocvu")
 body = NodePath("..")
 metadata/_custom_type_script = "uid://3yiwskv8i3aa"
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1683323315]
-
-[node name="ItemSpawnLocation" type="Node2D" parent="." unique_id=1910609642]
-unique_name_in_owner = true
-position = Vector2(16, -19)
-
-[node name="Sprite2D" type="Sprite2D" parent="ItemSpawnLocation" unique_id=1656684981]
-scale = Vector2(2.64, 2.64)
-texture = SubResource("PlaceholderTexture2D_0wj3o")

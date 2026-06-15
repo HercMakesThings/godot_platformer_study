@@ -19,7 +19,6 @@ script = ExtResource("1_3a2x0")
 ecb = NodePath("EnvironmentCollisionBody")
 hurtbox = NodePath("Hurtbox")
 entity = SubResource("Resource_jyc2g")
-_components = null
 TIMERS = NodePath("Timers")
 model = NodePath("Sprite2D")
 debug = true

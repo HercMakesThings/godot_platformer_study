@@ -67,7 +67,7 @@ var move_state_frame: int
 enum MoveState {IDLE, WALK, DASH, RUN, RUNTURN, JUMPSQUAT, AIRBORNE, LANDLAG, CROUCH}
 
 func init() -> void:
-	orientation = 1
+	#orientation = 1
 	dir_normalized = Vector2(orientation, 0)
 	move_state_frame = 0
 	gravity = GRAVITY
