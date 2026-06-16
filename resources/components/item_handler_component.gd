@@ -112,13 +112,13 @@ func _init_pickup_range() -> void:
 func _init_item_spawn_location() -> void:
 	item_spawn_location = Node2D.new()
 	item_spawn_location.position = Vector2(15, -16)
-	item_spawn_location.owner = actor
 	actor.add_child(item_spawn_location)
+	item_spawn_location.owner = actor
 	
 func _init_held_item_visual() -> void:
 	held_item_visual = Sprite2D.new()
 	held_item_visual.position = Vector2(16, -36)
 	if _held_item_profile:
 		held_item_visual.texture = _held_item_profile.model
-	held_item_visual.owner = actor
 	actor.add_child(held_item_visual)
+	held_item_visual.owner = actor
