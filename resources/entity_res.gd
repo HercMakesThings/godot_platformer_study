@@ -10,6 +10,7 @@ class_name Entity extends Resource
 @export var MAX_WALK_SPD: float = 60.0
 @export var JUMP_VELOCITY: float = -250.0
 @export var SHORT_JUMP_MOD: float = 0.6
+@export var JUMP_SQUAT_LENGTH: int = 4
 @export var LANDING_LAG: int = 3
 @export var mass: float = 5.0
 @export_range(0.0, 1, 0.0001) var friction: float = 0.45

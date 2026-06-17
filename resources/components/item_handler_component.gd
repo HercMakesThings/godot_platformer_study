@@ -11,7 +11,7 @@ var items_in_range: Array[Item]
 var _held_item_profile: ItemProfile
 
 #signal pickup_item(actor: Article, item: Item)
-signal throw_item(actor: Article, location: Node2D, profile: ItemProfile)
+signal item_thrown(actor: Article, location: Node2D, profile: ItemProfile)
 
 func bind(node: Object) -> void:
 	super.bind(node)
@@ -31,7 +31,28 @@ func _handle_interact_with_item_in_range() -> void:
 	#if !is_item_in_range:
 		#return
 	var packet: InputPacket = actor.input_component.get_current_packet()
-	if packet.light_atk_just_pressed && actor.entity.can_move:
+	#var pickup_input_just_pressed: bool = packet.light_atk_just_pressed if actor.entity.body_on_ground else packet.is_guard_just_pressed
+	var pickup_input_just_pressed: bool
+	if packet.light_atk_just_pressed:
+		pickup_input_just_pressed = true
+	#if packet.is_guard_just_pressed && (actor.input_component.get_buffer(actor.entity.JUMP_SQUAT_LENGTH).find_custom(func(_p): return _p.)
+	#print("jump just pressed: " + str(actor.input_component.get_buffer(4)[0].jump_just_pressed))
+	if !pickup_input_just_pressed:
+		if !actor.entity.body_on_ground && packet.is_guard_just_pressed:
+			pickup_input_just_pressed = true
+	if !pickup_input_just_pressed:
+		#var is_jump_buffered: bool
+		for _p: InputPacket in (actor as Actor).input_component.get_buffer(actor.entity.JUMP_SQUAT_LENGTH):
+			print(str(_p.jump_pressed) + ", and " + str(packet.is_guard_pressed))
+			if _p.jump_pressed && packet.is_guard_pressed:
+				pickup_input_just_pressed = true
+				break
+			#if _p.jump_just_pressed:
+				#is_jump_buffered = true
+				#break
+		#if is_jump_buffered && packet.is_guard_pressed:
+			#pickup_input_just_pressed = true
+	if pickup_input_just_pressed && actor.entity.can_move:
 		var item: Item = _get_highest_priority_item()
 		#pickup_item.emit(actor, item)
 		item.interact_with(actor)
@@ -40,8 +61,12 @@ func _handle_throw_item() -> void:
 	#if !_held_item_profile:
 		#return
 	var packet: InputPacket = actor.input_component.get_current_packet()
+	#var throw_input_just_pressed: bool = packet.light_atk_just_pressed if actor.entity.body_on_ground else packet.is_guard_just_pressed
 	if packet.light_atk_just_pressed && actor.entity.can_move:
-		throw_item.emit(actor, item_spawn_location, _held_item_profile)
+		#var actor_dir_normalized: Vector2i = round(actor.entity.direction.normalized())
+		#if actor_dir_normalized.x != 0:
+			#actor.entity.orientation = actor_dir_normalized.x
+		item_thrown.emit(actor, item_spawn_location, _held_item_profile)
 		
 func hold_item(profile: ItemProfile) -> void:
 	_held_item_profile = profile

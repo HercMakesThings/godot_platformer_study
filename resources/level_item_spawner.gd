@@ -12,7 +12,7 @@ func _init(_level: Level) -> void:
 		if article is Actor:
 			var itemHandler: ItemHandlerComponent = article.get_component(ItemHandlerComponent)
 			if itemHandler:
-				itemHandler.throw_item.connect(_on_item_thrown)
+				itemHandler.item_thrown.connect(_on_item_thrown)
 
 func create_item_scene() -> Item:
 	var item: Item = base_item_scene.instantiate()
@@ -59,8 +59,13 @@ func _on_item_thrown(_actor: Article, _location: Node2D, _profile: ItemProfile) 
 	#item.entity.STARTING_VELOCITY.x = absf(item.entity.STARTING_VELOCITY.x) * item.entity.orientation
 	item.position = _actor.global_position + _location.position
 	item.entity.orientation = _actor.entity.orientation
-	item.entity.body_vel = Vector2(900, -50)
-	item.entity.body_vel.x = absf(item.entity.body_vel.x) * item.entity.orientation
+	if _actor.entity.direction.y < -_actor.entity.deadzone:
+		item.entity.body_vel = _actor.velocity + Vector2(0, 900)
+	elif _actor.entity.direction.y > _actor.entity.deadzone:
+		item.entity.body_vel = _actor.velocity + Vector2(0, -900)
+	else:
+		item.entity.body_vel = _actor.velocity + Vector2(900, -50)
+		item.entity.body_vel.x = absf(item.entity.body_vel.x) * item.entity.orientation
 	item.interacted.connect(_on_item_interacted_with)
 	level.articles.add_child(item)
 	item.owner = level.articles

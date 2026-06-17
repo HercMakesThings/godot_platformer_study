@@ -187,7 +187,7 @@ func handle_state(entity, delta) -> void:
 			if entity.body_on_ground:
 				if entity.jump_released:
 					entity.is_short_jump = true
-				if entity.move_state_frame >= 4:
+				if entity.move_state_frame >= entity.JUMP_SQUAT_LENGTH:
 					if entity.is_short_jump:
 						#apply_accel(Vector2(0,JUMP_VELOCITY))
 						#accel = calc_accel(Vector2(0,JUMP_VELOCITY))

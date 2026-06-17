@@ -53,6 +53,11 @@ resource_local_to_scene = true
 script = ExtResource("17_xdh4x")
 metadata/_custom_type_script = "uid://dw08ut0needd4"
 
+[sub_resource type="Resource" id="Resource_hj2df"]
+resource_local_to_scene = true
+script = ExtResource("19_e0a3l")
+metadata/_custom_type_script = "uid://cal8xdt3li4hx"
+
 [sub_resource type="Resource" id="Resource_dv3qo"]
 script = ExtResource("13_vu8dy")
 angle = 241.0
@@ -183,11 +188,6 @@ script = ExtResource("20_cs570")
 on_hit_effects = Array[ExtResource("19_cs570")]([SubResource("Resource_iajgh")])
 metadata/_custom_type_script = "uid://cnyeqtskugnni"
 
-[sub_resource type="Resource" id="Resource_hj2df"]
-resource_local_to_scene = true
-script = ExtResource("19_e0a3l")
-metadata/_custom_type_script = "uid://cal8xdt3li4hx"
-
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_xen7v"]
 
 [sub_resource type="Resource" id="Resource_pnxvg"]
@@ -303,7 +303,7 @@ unique_name_in_owner = true
 [node name="Actor" parent="Articles" unique_id=1557691037 instance=ExtResource("19_xdh4x")]
 position = Vector2(-97, -21)
 entity = SubResource("Resource_xen7v")
-_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_xwsm1"), SubResource("Resource_ryk12"), SubResource("Resource_gu7jp"), SubResource("Resource_kdqob"), SubResource("Resource_kuj1c"), SubResource("Resource_hj2df")])
+_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_xwsm1"), SubResource("Resource_hj2df"), SubResource("Resource_ryk12"), SubResource("Resource_gu7jp"), SubResource("Resource_kdqob"), SubResource("Resource_kuj1c")])
 
 [node name="Camera2D" type="Camera2D" parent="Articles/Actor" unique_id=41672697]
 offset = Vector2(0, -21.38)
