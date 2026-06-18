@@ -11,6 +11,8 @@ var default_hitboxes: Array[Hitbox]
 #var hitboxes: Array[Hitbox]
 var hitbox_owner: Node2D
 
+var initial_collided_hurtboxes: Array[Hurtbox]
+
 signal atk_connected
 
 var deactivated: bool
@@ -59,6 +61,9 @@ func init_default_hitboxes() -> void:
 			#box.init_shape_stats(default_hitbox_stats_collection[i].hitbox_stats_array)
 			box.stats_array = default_hitbox_stats_collection[i].hitbox_stats_array
 	for box: Hitbox in default_hitboxes:
+		if initial_collided_hurtboxes.size() > 0:
+			for _b in initial_collided_hurtboxes:
+				box.collided_hurtboxes.append(_b)
 		box.owner_hurtbox = actor.hurtbox
 		box.shape_hit_something.connect(_hitbox_shape_hit_something)
 		hitbox_owner.add_child(box)

@@ -20,16 +20,15 @@ func bind(node: Object) -> void:
 	_init_held_item_visual()
 	
 func update(_delta: float) -> void:
-	if _held_item_profile:
-		_handle_throw_item()
-	if is_item_in_range && !_held_item_profile:
-		_handle_interact_with_item_in_range()
+	_handle_throw_item()
+	_handle_interact_with_item_in_range()
 	item_spawn_location.position.x = absf(item_spawn_location.position.x) * actor.entity.orientation
-	held_item_visual.position.x = absf(held_item_visual.position.x) * actor.entity.orientation
 		
 func _handle_interact_with_item_in_range() -> void:
-	#if !is_item_in_range:
-		#return
+	if !is_item_in_range:
+		return
+	if _held_item_profile:
+		return
 	var packet: InputPacket = actor.input_component.get_current_packet()
 	#var pickup_input_just_pressed: bool = packet.light_atk_just_pressed if actor.entity.body_on_ground else packet.is_guard_just_pressed
 	var pickup_input_just_pressed: bool
@@ -43,7 +42,7 @@ func _handle_interact_with_item_in_range() -> void:
 	if !pickup_input_just_pressed:
 		#var is_jump_buffered: bool
 		for _p: InputPacket in (actor as Actor).input_component.get_buffer(actor.entity.JUMP_SQUAT_LENGTH):
-			print(str(_p.jump_pressed) + ", and " + str(packet.is_guard_pressed))
+			#print(str(_p.jump_pressed) + ", and " + str(packet.is_guard_pressed))
 			if _p.jump_pressed && packet.is_guard_pressed:
 				pickup_input_just_pressed = true
 				break
@@ -58,14 +57,13 @@ func _handle_interact_with_item_in_range() -> void:
 		item.interact_with(actor)
 		
 func _handle_throw_item() -> void:
-	#if !_held_item_profile:
-		#return
+	if !_held_item_profile:
+		return
 	var packet: InputPacket = actor.input_component.get_current_packet()
-	#var throw_input_just_pressed: bool = packet.light_atk_just_pressed if actor.entity.body_on_ground else packet.is_guard_just_pressed
 	if packet.light_atk_just_pressed && actor.entity.can_move:
-		#var actor_dir_normalized: Vector2i = round(actor.entity.direction.normalized())
-		#if actor_dir_normalized.x != 0:
-			#actor.entity.orientation = actor_dir_normalized.x
+		var actor_dir_normalized: Vector2i = round(actor.entity.direction.normalized())
+		if actor_dir_normalized.x != 0:
+			actor.entity.orientation = actor_dir_normalized.x
 		item_thrown.emit(actor, item_spawn_location, _held_item_profile)
 		
 func hold_item(profile: ItemProfile) -> void:
@@ -136,13 +134,17 @@ func _init_pickup_range() -> void:
 	
 func _init_item_spawn_location() -> void:
 	item_spawn_location = Node2D.new()
-	item_spawn_location.position = Vector2(15, -16)
+	item_spawn_location.position = Vector2(16, -16)
+	var spawn_point_vis: Sprite2D = Sprite2D.new()
+	spawn_point_vis.texture = PlaceholderTexture2D.new()
+	item_spawn_location.add_child(spawn_point_vis)
+	spawn_point_vis.owner = item_spawn_location
 	actor.add_child(item_spawn_location)
 	item_spawn_location.owner = actor
 	
 func _init_held_item_visual() -> void:
 	held_item_visual = Sprite2D.new()
-	held_item_visual.position = Vector2(16, -36)
+	held_item_visual.position = Vector2(0, -36)
 	if _held_item_profile:
 		held_item_visual.texture = _held_item_profile.model
 	actor.add_child(held_item_visual)

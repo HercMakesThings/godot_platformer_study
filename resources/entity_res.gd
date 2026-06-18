@@ -53,7 +53,7 @@ var body_on_ground: bool
 var accel: Vector2 = Vector2.ZERO
 var dir_normalized: Vector2i = Vector2i.ZERO
 var direction: Vector2 = Vector2.ZERO
-var orientation: int
+var orientation: int = 1
 var is_on_platform: bool
 var can_move: bool
 var move_paused: bool

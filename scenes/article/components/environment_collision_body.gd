@@ -46,7 +46,8 @@ func init_stats(stats: EcbStatsRes) -> void:
 
 func tick(article: Article, delta: float) -> void:
 	## Check for collisions at the beginning of the physics frame (Article calls tick() first)
-	#update_ecb_rays(article, delta)
+	if dimensions.CONTINUOUS_COLLISION_DETECTION:
+		update_ecb_rays(article, delta)
 	## check for collisions again at the end of the physics frame
 	call_deferred("update_ecb_rays", article, delta)
 	## update last global position for offset vectors
