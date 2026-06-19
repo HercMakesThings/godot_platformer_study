@@ -71,7 +71,8 @@ func add_component(comp: BaseComponent, should_return: bool = false) -> Array[Ba
 	return []
 	
 func debug_prints() -> void:
-	print(str(name) + " -> current movement state: " + str(entity.MoveState.keys()[entity.current_state]))
+	#print(str(name) + " -> current movement state: " + str(entity.MoveState.keys()[entity.current_state]))
+	print(str(name) + " can move: " + str(entity.can_move))
 	#print(str(name) + " -> body is on ground: " + str(entity.body_on_ground))
 	#print(str(name) + " -> body is on platform: " + str(entity.is_on_platform))
 	

@@ -54,7 +54,7 @@ resource_local_to_scene = true
 script = ExtResource("17_xdh4x")
 metadata/_custom_type_script = "uid://dw08ut0needd4"
 
-[sub_resource type="Resource" id="Resource_hj2df"]
+[sub_resource type="Resource" id="Resource_0bkr6"]
 resource_local_to_scene = true
 script = ExtResource("19_e0a3l")
 metadata/_custom_type_script = "uid://cal8xdt3li4hx"
@@ -83,7 +83,7 @@ script = ExtResource("12_h43hl")
 hitbox_stats_array = Array[ExtResource("13_vu8dy")]([SubResource("Resource_dv3qo"), SubResource("Resource_ndf1g")])
 metadata/_custom_type_script = "uid://by6ijc3wrcifp"
 
-[sub_resource type="Resource" id="Resource_0bkr6"]
+[sub_resource type="Resource" id="Resource_2qmks"]
 resource_local_to_scene = true
 script = ExtResource("14_cs570")
 move_name = "DownAtk1"
@@ -113,7 +113,7 @@ script = ExtResource("12_h43hl")
 hitbox_stats_array = Array[ExtResource("13_vu8dy")]([SubResource("Resource_hogu4"), SubResource("Resource_km4vl")])
 metadata/_custom_type_script = "uid://by6ijc3wrcifp"
 
-[sub_resource type="Resource" id="Resource_2qmks"]
+[sub_resource type="Resource" id="Resource_0bxf5"]
 resource_local_to_scene = true
 script = ExtResource("14_cs570")
 move_name = "SideAtk1"
@@ -152,7 +152,7 @@ script = ExtResource("12_h43hl")
 hitbox_stats_array = Array[ExtResource("13_vu8dy")]([SubResource("Resource_557pd"), SubResource("Resource_eui88"), SubResource("Resource_6p4wm")])
 metadata/_custom_type_script = "uid://by6ijc3wrcifp"
 
-[sub_resource type="Resource" id="Resource_0bxf5"]
+[sub_resource type="Resource" id="Resource_ryk12"]
 resource_local_to_scene = true
 script = ExtResource("14_cs570")
 move_name = "UpAtk1"
@@ -160,33 +160,33 @@ default_hitbox_scenes = Array[PackedScene]([ExtResource("16_rg6m1")])
 default_hitbox_stats_collection = Array[ExtResource("12_h43hl")]([SubResource("Resource_ikboy")])
 metadata/_custom_type_script = "uid://ceyk2xuwjcyt0"
 
-[sub_resource type="Resource" id="Resource_ryk12"]
+[sub_resource type="Resource" id="Resource_gu7jp"]
 resource_local_to_scene = true
 script = ExtResource("11_rg6m1")
-side_attack_1 = SubResource("Resource_2qmks")
-down_attack_1 = SubResource("Resource_0bkr6")
-up_attack_1 = SubResource("Resource_0bxf5")
+side_attack_1 = SubResource("Resource_0bxf5")
+down_attack_1 = SubResource("Resource_2qmks")
+up_attack_1 = SubResource("Resource_ryk12")
 metadata/_custom_type_script = "uid://b7s3x4i8cx2ep"
 
-[sub_resource type="Resource" id="Resource_gu7jp"]
+[sub_resource type="Resource" id="Resource_kdqob"]
 resource_local_to_scene = true
 script = ExtResource("13_muiyw")
 metadata/_custom_type_script = "uid://dlodv3k4fug6k"
 
-[sub_resource type="Resource" id="Resource_kdqob"]
+[sub_resource type="Resource" id="Resource_iajgh"]
 resource_local_to_scene = true
 script = ExtResource("15_wnid3")
 metadata/_custom_type_script = "uid://f5ahaxigfebq"
 
-[sub_resource type="Resource" id="Resource_iajgh"]
+[sub_resource type="Resource" id="Resource_kuj1c"]
 resource_local_to_scene = true
 script = ExtResource("20_kjrm4")
 metadata/_custom_type_script = "uid://cxv81iysoi2b1"
 
-[sub_resource type="Resource" id="Resource_kuj1c"]
+[sub_resource type="Resource" id="Resource_hj2df"]
 resource_local_to_scene = true
 script = ExtResource("20_cs570")
-on_hit_effects = Array[ExtResource("19_cs570")]([SubResource("Resource_iajgh")])
+on_hit_effects = Array[ExtResource("19_cs570")]([SubResource("Resource_kuj1c")])
 metadata/_custom_type_script = "uid://cnyeqtskugnni"
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_xen7v"]
@@ -304,7 +304,7 @@ unique_name_in_owner = true
 [node name="Actor" parent="Articles" unique_id=1557691037 instance=ExtResource("19_xdh4x")]
 position = Vector2(-97, -21)
 entity = SubResource("Resource_xen7v")
-_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_xwsm1"), SubResource("Resource_hj2df"), SubResource("Resource_ryk12"), SubResource("Resource_gu7jp"), SubResource("Resource_kdqob"), SubResource("Resource_kuj1c")])
+_components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_xwsm1"), SubResource("Resource_0bkr6"), SubResource("Resource_gu7jp"), SubResource("Resource_kdqob"), SubResource("Resource_iajgh"), SubResource("Resource_hj2df")])
 
 [node name="Camera2D" type="Camera2D" parent="Articles/Actor" unique_id=41672697]
 offset = Vector2(0, -36.35)

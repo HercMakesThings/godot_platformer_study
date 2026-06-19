@@ -60,19 +60,19 @@ func _on_item_thrown(_actor: Article, _location: Node2D, _profile: ItemProfile) 
 	#item = _assemble_item_entity_and_components(item, _build_entity(_profile.model), [BaseMovementComponent.new(), atk_comp])
 	item = _assemble_item_entity_and_components(item, _build_entity(_profile.model), [ApplyGravityComp.new(), ApplyFrictionComponent.new(), atk_comp])
 	item.profile = _profile
-	#item.entity.STARTING_VELOCITY = Vector2(900, -50)
-	#item.entity.STARTING_VELOCITY.x = absf(item.entity.STARTING_VELOCITY.x) * _actor.entity.orientation
-	#item.entity.STARTING_VELOCITY.x = absf(item.entity.STARTING_VELOCITY.x) * item.entity.orientation
 	item.position = _actor.global_position + _location.position
 	item.entity.orientation = _actor.entity.orientation
 	print("item orientation: " + str(item.entity.orientation))
 	print("actor's orientation: " + str(_actor.entity.orientation))
 	if _actor.entity.direction.y < -_actor.entity.deadzone:
 		item.entity.body_vel = _actor.velocity + Vector2(0, 900)
+		#item.entity.STARTING_VELOCITY = _actor.velocity + Vector2(0, 900)
 	elif _actor.entity.direction.y > _actor.entity.deadzone:
 		item.entity.body_vel = _actor.velocity + Vector2(0, -900)
+		#item.entity.STARTING_VELOCITY = _actor.velocity + Vector2(0, -900)
 	else:
-		item.entity.body_vel = _actor.velocity + Vector2(900, -50)
+		item.entity.body_vel = _actor.velocity + Vector2(900, -100)
+		#item.entity.STARTING_VELOCITY = _actor.velocity + Vector2(900, -50)
 		item.entity.body_vel.x = absf(item.entity.body_vel.x) * item.entity.orientation
 	item.interacted.connect(_on_item_interacted_with)
 	level.articles.add_child(item)

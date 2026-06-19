@@ -146,48 +146,90 @@ func _handle_atk_progression(packet: InputPacket, next_atk_lvl: int) -> void:
 		return
 	if !actor.entity.body_on_ground:
 		return
-	if !packet.light_atk_just_pressed:
+	if !packet.light_atk_just_pressed && absf(packet.secondary_direction.y) < actor.entity.deadzone && absf(packet.secondary_direction.x) < actor.entity.deadzone:
 		return
-	match packet.primary_direction.y:
-		var y when absf(y) < actor.input_component.deadzone_ls:
-			match next_atk_lvl:
-				1:
-					side_attack_1.initiate_attack(true)
-					change_state(AtkMoveState.ATK_1)
-				2:
-					side_attack_2.initiate_attack(true)
-					change_state(AtkMoveState.ATK_2)
-				3:
-					side_attack_3.initiate_attack(true)
-					change_state(AtkMoveState.ATK_3)
-				_:
-					change_state(AtkMoveState.IDLE)
-		var y when y < -actor.input_component.deadzone_ls:
-			match next_atk_lvl:
-				1:
-					down_attack_1.initiate_attack(true)
-					change_state(AtkMoveState.DOWN_1)
-				2:
-					down_attack_2.initiate_attack(true)
-					change_state(AtkMoveState.DOWN_2)
-				3:
-					down_attack_3.initiate_attack(true)
-					change_state(AtkMoveState.DOWN_3)
-				_:
-					change_state(AtkMoveState.IDLE)
-		var y when y > actor.input_component.deadzone_ls:
-			match next_atk_lvl:
-				1:
-					up_attack_1.initiate_attack(true)
-					change_state(AtkMoveState.UP_1)
-				2:
-					up_attack_2.initiate_attack(true)
-					change_state(AtkMoveState.UP_2)
-				3:
-					up_attack_3.initiate_attack(true)
-					change_state(AtkMoveState.UP_3)
-				_:
-					change_state(AtkMoveState.IDLE)
+	if packet.is_down_light_pressed(actor.input_component.scheme, actor.entity.deadzone):
+		match next_atk_lvl:
+			1:
+				down_attack_1.initiate_attack(true)
+				change_state(AtkMoveState.DOWN_1)
+			2:
+				down_attack_2.initiate_attack(true)
+				change_state(AtkMoveState.DOWN_2)
+			3:
+				down_attack_3.initiate_attack(true)
+				change_state(AtkMoveState.DOWN_3)
+			_:
+				change_state(AtkMoveState.IDLE)
+		return
+	if packet.is_up_light_pressed(actor.input_component.scheme, actor.entity.deadzone):
+		match next_atk_lvl:
+			1:
+				up_attack_1.initiate_attack(true)
+				change_state(AtkMoveState.UP_1)
+			2:
+				up_attack_2.initiate_attack(true)
+				change_state(AtkMoveState.UP_2)
+			3:
+				up_attack_3.initiate_attack(true)
+				change_state(AtkMoveState.UP_3)
+			_:
+				change_state(AtkMoveState.IDLE)
+		return
+	if packet.is_neutral_light_pressed(actor.input_component.scheme, actor.entity.deadzone):
+		match next_atk_lvl:
+			1:
+				side_attack_1.initiate_attack(true)
+				change_state(AtkMoveState.ATK_1)
+			2:
+				side_attack_2.initiate_attack(true)
+				change_state(AtkMoveState.ATK_2)
+			3:
+				side_attack_3.initiate_attack(true)
+				change_state(AtkMoveState.ATK_3)
+			_:
+				change_state(AtkMoveState.IDLE)
+		return
+	#match packet.primary_direction.y:
+		#var y when absf(y) < actor.input_component.deadzone_ls:
+			#match next_atk_lvl:
+				#1:
+					#side_attack_1.initiate_attack(true)
+					#change_state(AtkMoveState.ATK_1)
+				#2:
+					#side_attack_2.initiate_attack(true)
+					#change_state(AtkMoveState.ATK_2)
+				#3:
+					#side_attack_3.initiate_attack(true)
+					#change_state(AtkMoveState.ATK_3)
+				#_:
+					#change_state(AtkMoveState.IDLE)
+		#var y when y < -actor.input_component.deadzone_ls:
+			#match next_atk_lvl:
+				#1:
+					#down_attack_1.initiate_attack(true)
+					#change_state(AtkMoveState.DOWN_1)
+				#2:
+					#down_attack_2.initiate_attack(true)
+					#change_state(AtkMoveState.DOWN_2)
+				#3:
+					#down_attack_3.initiate_attack(true)
+					#change_state(AtkMoveState.DOWN_3)
+				#_:
+					#change_state(AtkMoveState.IDLE)
+		#var y when y > actor.input_component.deadzone_ls:
+			#match next_atk_lvl:
+				#1:
+					#up_attack_1.initiate_attack(true)
+					#change_state(AtkMoveState.UP_1)
+				#2:
+					#up_attack_2.initiate_attack(true)
+					#change_state(AtkMoveState.UP_2)
+				#3:
+					#up_attack_3.initiate_attack(true)
+					#change_state(AtkMoveState.UP_3)
+				#_:
+					#change_state(AtkMoveState.IDLE)
 					
 func _hitbox_cleanup() -> void:
 	if side_attack_1:
