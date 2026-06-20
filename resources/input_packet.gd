@@ -53,6 +53,15 @@ func is_neutral_light_pressed(scheme: InputControlScheme, deadzone: float) -> bo
 		return absf(secondary_direction.y) < deadzone || is_atk_pressed
 	return is_atk_pressed
 	
+func is_any_atk_just_pressed(scheme: InputControlScheme, deadzone: float) -> bool:
+	#var is_atk_pressed: bool = light_atk_just_pressed || light_atk_pressed
+	var is_atk_pressed: bool = light_atk_just_pressed
+	if scheme.second_stick_type == "light" && !is_secondary_direction_locked:
+		if absf(secondary_direction.x) > deadzone || absf(secondary_direction.y) > deadzone:
+			lock_secondary_direction()
+		return is_atk_pressed || (absf(secondary_direction.x) > deadzone || absf(secondary_direction.y) > deadzone)
+	return is_atk_pressed
+	
 func lock_secondary_direction() -> void:
 	if !is_secondary_direction_locked:
 		is_secondary_direction_locked = true

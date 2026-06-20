@@ -20,6 +20,7 @@ func _create_item_scene() -> Item:
 	
 func _assemble_item_entity_and_components(item: Item, entity: Entity, components: Array[BaseComponent]) -> Item:
 	item.entity = entity
+	item.status = _build_item_status_resource()
 	for comp:BaseComponent in components:
 		item.add_component(comp)
 	return item
@@ -57,8 +58,14 @@ func _on_item_thrown(_actor: Article, _location: Node2D, _profile: ItemProfile) 
 		itemHandler.drop_item()
 	var item: Item = _create_item_scene()
 	var atk_comp: ItemActiveAtkComponent = _build_item_active_atk_component(_actor)
+	#var on_hit_comp: OnHitComponent = _build_item_on_hit_component()
 	#item = _assemble_item_entity_and_components(item, _build_entity(_profile.model), [BaseMovementComponent.new(), atk_comp])
-	item = _assemble_item_entity_and_components(item, _build_entity(_profile.model), [ApplyGravityComp.new(), ApplyFrictionComponent.new(), atk_comp])
+	item = _assemble_item_entity_and_components(
+		item, 
+		_build_entity(_profile.model), 
+		#[ApplyGravityComp.new(), ApplyFrictionComponent.new(), atk_comp, on_hit_comp]
+		[ApplyGravityComp.new(), ApplyFrictionComponent.new(), atk_comp]
+	)
 	item.profile = _profile
 	item.position = _actor.global_position + _location.position
 	item.entity.orientation = _actor.entity.orientation
@@ -83,6 +90,11 @@ func _on_item_thrown(_actor: Article, _location: Node2D, _profile: ItemProfile) 
 		actor_atk_comp.can_atk = true
 	_actor.entity.can_move = true
 	
+func _build_item_status_resource() -> EntityStatus:
+	var s: EntityStatus = EntityStatus.new()
+	s.is_inanimate = true
+	return s
+	
 func _build_item_active_atk_component(owner: Actor) -> ItemActiveAtkComponent:
 	var c: ItemActiveAtkComponent = ItemActiveAtkComponent.new()
 	c.initial_collided_hurtboxes.append(owner.hurtbox)
@@ -95,6 +107,13 @@ func _build_item_active_atk_component(owner: Actor) -> ItemActiveAtkComponent:
 	stats.kbg = 16.0
 	c.default_hitbox_stats_collection[0].hitbox_stats_array.append(stats)
 	c.on_hit_effects.append(BounceBackEffect.new())
+	return c
+	
+func _build_item_on_hit_component() -> OnHitComponent:
+	var c: OnHitComponent = OnHitComponent.new()
+	var on_hit_effects: Array[OnHitEffect]
+	on_hit_effects.append(KnockbackEffect.new())
+	c.on_hit_effects = on_hit_effects
 	return c
 	
 #func _on_item_picked_up(actor: Article, item: Item) -> void:

@@ -30,12 +30,14 @@ func _handle_interact_with_item_in_range() -> void:
 	if _held_item_profile:
 		return
 	var packet: InputPacket = actor.input_component.get_current_packet()
-	#var pickup_input_just_pressed: bool = packet.light_atk_just_pressed if actor.entity.body_on_ground else packet.is_guard_just_pressed
-	var pickup_input_just_pressed: bool
-	if packet.light_atk_just_pressed:
-		pickup_input_just_pressed = true
-	#if packet.is_guard_just_pressed && (actor.input_component.get_buffer(actor.entity.JUMP_SQUAT_LENGTH).find_custom(func(_p): return _p.)
-	#print("jump just pressed: " + str(actor.input_component.get_buffer(4)[0].jump_just_pressed))
+	#var pickup_input_just_pressed: bool
+	#if (packet.light_atk_just_pressed ||
+		#packet.is_down_light_pressed(actor.input_component.scheme, actor.entity.deadzone) ||
+		#packet.is_up_light_pressed(actor.input_component.scheme, actor.entity.deadzone)
+		##packet.is_neutral_light_pressed(actor.input_component.scheme, actor.entity.deadzone)
+		#):
+		#pickup_input_just_pressed = true
+	var pickup_input_just_pressed: bool = packet.is_any_atk_just_pressed(actor.input_component.scheme, actor.entity.deadzone)
 	if !pickup_input_just_pressed:
 		if !actor.entity.body_on_ground && packet.is_guard_just_pressed:
 			pickup_input_just_pressed = true
@@ -60,7 +62,8 @@ func _handle_throw_item() -> void:
 	if !_held_item_profile:
 		return
 	var packet: InputPacket = actor.input_component.get_current_packet()
-	if packet.light_atk_just_pressed && actor.entity.can_move:
+	#if packet.light_atk_just_pressed && actor.entity.can_move:
+	if packet.is_any_atk_just_pressed(actor.input_component.scheme, actor.entity.deadzone) && actor.entity.can_move:
 		var actor_dir_normalized: Vector2i = round(actor.entity.direction.normalized())
 		if actor_dir_normalized.x != 0:
 			actor.entity.orientation = actor_dir_normalized.x
@@ -94,9 +97,9 @@ func _on_item_entered_range(area: Area2D) -> void:
 	item_interact_box.visible = true
 	items_in_range.append(area.get_parent())
 	is_item_in_range = items_in_range.size() > 0
-	var atk_comp: AttackComponent = actor.get_component(AttackComponent)
-	if atk_comp:
-		atk_comp.can_atk = false
+	#var atk_comp: AttackComponent = actor.get_component(AttackComponent)
+	#if atk_comp:
+		#atk_comp.can_atk = false
 	
 func _on_item_exited_range(area: Area2D) -> void:
 	if area is not Hurtbox:
@@ -108,9 +111,9 @@ func _on_item_exited_range(area: Area2D) -> void:
 	if items_in_range.has(area.get_parent()):
 		items_in_range.erase(area.get_parent())
 	is_item_in_range = items_in_range.size() > 0
-	var atk_comp: AttackComponent = actor.get_component(AttackComponent)
-	if atk_comp:
-		atk_comp.can_atk = true
+	#var atk_comp: AttackComponent = actor.get_component(AttackComponent)
+	#if atk_comp:
+		#atk_comp.can_atk = true
 		
 func _init_pickup_range() -> void:
 	item_interact_box = Area2D.new()

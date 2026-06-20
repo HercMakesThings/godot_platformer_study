@@ -158,14 +158,14 @@ func update_ecb_rays(article: Article, delta: float):
 		bottom.enabled = article.entity.body_vel.y >= 0
 			
 		var coll_point: Vector2 = bottom.get_collision_point()
-		#if (
-			#bottom_detected &&
-			#(bottom_detector.is_colliding() && 
-			#((bottom_detector.get_collider() is TerrainArea2D && bottom_detector.get_collider().type == "Floor") ||
-			#(bottom_detector.get_collider() is PlatformNew && coll_point.distance_to(bottom.global_position + bottom.target_position) <= COLLISION_POINT_THRESHOLD)))
-		#):
-			#article.position.y = bottom_detector.get_collider().position.y - (bottom_detector.get_collider().collision_shape.size.y*0.5)
-			#article.entity.body_vel.y = 0.0
+		if (
+			bottom_detected &&
+			(bottom_detector.is_colliding() && 
+			((bottom_detector.get_collider() is TerrainArea2D && bottom_detector.get_collider().type == "Floor") ||
+			(bottom_detector.get_collider() is PlatformNew && coll_point.distance_to(bottom.global_position + bottom.target_position) <= COLLISION_POINT_THRESHOLD)))
+		):
+			article.position.y = bottom_detector.get_collider().position.y - (bottom_detector.get_collider().collision_shape.size.y*0.5)
+			article.entity.body_vel.y = 0.0
 		if ( bottom.is_colliding() &&
 			( (bottom.get_collider() is TerrainArea2D && bottom.get_collider().type == "Floor") ||
 				(  bottom.get_collider() is PlatformNew &&
@@ -193,15 +193,15 @@ func update_ecb_rays(article: Article, delta: float):
 			article.entity.is_on_platform = false
 			bottom_detected = false
 			
-		if (
-			bottom_detected &&
-			(bottom_detector.is_colliding() && 
-			((bottom_detector.get_collider() is TerrainArea2D && bottom_detector.get_collider().type == "Floor") ||
-			#(bottom_detector.get_collider() is PlatformNew && coll_point.distance_to(bottom.global_position + bottom.target_position) <= COLLISION_POINT_THRESHOLD)))
-			(bottom_detector.get_collider() is PlatformNew)))
-		):
-			article.position.y = bottom_detector.get_collider().position.y - (bottom_detector.get_collider().collision_shape.size.y*0.5)
-			article.entity.body_vel.y = 0.0
+		#if (
+			#bottom_detected &&
+			#(bottom_detector.is_colliding() && 
+			#((bottom_detector.get_collider() is TerrainArea2D && bottom_detector.get_collider().type == "Floor") ||
+			##(bottom_detector.get_collider() is PlatformNew && coll_point.distance_to(bottom.global_position + bottom.target_position) <= COLLISION_POINT_THRESHOLD)))
+			#(bottom_detector.get_collider() is PlatformNew)))
+		#):
+			#article.position.y = bottom_detector.get_collider().position.y - (bottom_detector.get_collider().collision_shape.size.y*0.5)
+			#article.entity.body_vel.y = 0.0
 		
 		
 #func set_shape(c: float, h: float, l: float, r: float) -> void:

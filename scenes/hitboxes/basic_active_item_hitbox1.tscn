@@ -6,7 +6,7 @@
 radius = 5.00064
 
 [node name="Hitbox" type="Area2D" unique_id=973517988 node_paths=PackedStringArray("shapes_array", "angle_visual_array")]
-collision_layer = 8
+collision_layer = 0
 collision_mask = 16
 script = ExtResource("1_w4jm6")
 shapes_array = [NodePath("CollisionShape2D")]

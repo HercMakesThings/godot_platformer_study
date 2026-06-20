@@ -17,8 +17,4 @@ func _physics_process(delta: float) -> void:
 	entity.jump_released = packet.jump_just_released
 	packet.unlock_secondary_direction(entity.deadzone)
 	
-	print("is on ground: " + str(entity.body_on_ground))
-	
-	#item_spawn_location.position.x = absf(item_spawn_location.position.x) * entity.orientation
-	
 	super._physics_process(delta)

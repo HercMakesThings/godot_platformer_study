@@ -33,6 +33,7 @@
 [sub_resource type="Resource" id="Resource_1oj7r"]
 resource_local_to_scene = true
 script = ExtResource("5_rg6m1")
+CONTINUOUS_COLLISION_DETECTION = true
 metadata/_custom_type_script = "uid://c7r4bmhxr5nip"
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_h43hl"]
@@ -40,11 +41,11 @@ metadata/_custom_type_script = "uid://c7r4bmhxr5nip"
 [sub_resource type="Resource" id="Resource_xen7v"]
 resource_local_to_scene = true
 script = ExtResource("8_muiyw")
-walk_speed = 60.0
+walk_speed = 100.0
 MAX_WALK_SPD = 100.0
-friction = 0.8059
-air_friction = 0.9359
-decel = 160.0
+friction = 0.8503
+air_friction = 0.8031
+decel = 100.0
 texture_2D = SubResource("PlaceholderTexture2D_h43hl")
 ecb_stats = SubResource("Resource_1oj7r")
 metadata/_custom_type_script = "uid://b1r2eahjfa8hu"
@@ -295,6 +296,9 @@ size = Vector2(600, 4)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8nwor"]
 size = Vector2(60, 2)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1oj7r"]
+size = Vector2(64.69, 2)
+
 [node name="SandboxLevel" type="Node2D" unique_id=1588085111]
 script = ExtResource("1_sv4m1")
 
@@ -401,11 +405,21 @@ texture = ExtResource("2_e128x")
 shape = SubResource("RectangleShape2D_s3sem")
 
 [node name="Area2D2" type="Area2D" parent="Terrain" unique_id=1629790985]
-position = Vector2(27, -50.55)
+position = Vector2(100, -22)
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("11_s3sem")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/Area2D2" unique_id=1089365593]
 shape = SubResource("RectangleShape2D_8nwor")
+debug_color = Color(0.4993003, 0.57446873, 0.2679287, 0.41960785)
+
+[node name="PlatformNew" type="Area2D" parent="Terrain" unique_id=1750502685]
+position = Vector2(23, -44)
+collision_layer = 2
+script = ExtResource("11_s3sem")
+metadata/_custom_type_script = "uid://d1tqws1en3mmr"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/PlatformNew" unique_id=1545515933]
+shape = SubResource("RectangleShape2D_1oj7r")
 debug_color = Color(0.4993003, 0.57446873, 0.2679287, 0.41960785)
