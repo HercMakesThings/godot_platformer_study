@@ -62,10 +62,12 @@ func _handle_throw_item() -> void:
 	if !_held_item_profile:
 		return
 	var packet: InputPacket = actor.input_component.get_current_packet()
-	#if packet.light_atk_just_pressed && actor.entity.can_move:
 	if packet.is_any_atk_just_pressed(actor.input_component.scheme, actor.entity.deadzone) && actor.entity.can_move:
 		var actor_dir_normalized: Vector2i = round(actor.entity.direction.normalized())
-		if actor_dir_normalized.x != 0:
+		var secondary_dir_normalized: Vector2i = round(packet.secondary_direction.normalized())
+		if secondary_dir_normalized.x != 0:
+			actor.entity.orientation = secondary_dir_normalized.x
+		elif actor_dir_normalized.x != 0:
 			actor.entity.orientation = actor_dir_normalized.x
 		item_thrown.emit(actor, item_spawn_location, _held_item_profile)
 		
@@ -137,7 +139,7 @@ func _init_pickup_range() -> void:
 	
 func _init_item_spawn_location() -> void:
 	item_spawn_location = Node2D.new()
-	item_spawn_location.position = Vector2(16, -16)
+	item_spawn_location.position = Vector2(8, -16)
 	var spawn_point_vis: Sprite2D = Sprite2D.new()
 	spawn_point_vis.texture = PlaceholderTexture2D.new()
 	item_spawn_location.add_child(spawn_point_vis)

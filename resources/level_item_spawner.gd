@@ -71,14 +71,23 @@ func _on_item_thrown(_actor: Article, _location: Node2D, _profile: ItemProfile) 
 	item.entity.orientation = _actor.entity.orientation
 	print("item orientation: " + str(item.entity.orientation))
 	print("actor's orientation: " + str(_actor.entity.orientation))
-	if _actor.entity.direction.y < -_actor.entity.deadzone:
+	var packet: InputPacket = _actor.input_component.get_current_packet()
+	var secondary_dir_normalized: Vector2i = round(packet.secondary_direction.normalized())
+	if secondary_dir_normalized.x != 0:
+		item.entity.body_vel = _actor.velocity + Vector2(450, -50)
+		item.entity.body_vel.x = absf(item.entity.body_vel.x) * secondary_dir_normalized.x
+	elif secondary_dir_normalized.y != 0:
+		item.entity.body_vel = _actor.velocity + Vector2(0, 450)
+		item.entity.body_vel.y = absf(item.entity.body_vel.y) * -secondary_dir_normalized.y
+	elif _actor.entity.direction.y < -_actor.entity.deadzone:
 		item.entity.body_vel = _actor.velocity + Vector2(0, 900)
 		#item.entity.STARTING_VELOCITY = _actor.velocity + Vector2(0, 900)
 	elif _actor.entity.direction.y > _actor.entity.deadzone:
 		item.entity.body_vel = _actor.velocity + Vector2(0, -900)
 		#item.entity.STARTING_VELOCITY = _actor.velocity + Vector2(0, -900)
 	else:
-		item.entity.body_vel = _actor.velocity + Vector2(900, -100)
+		#item.entity.body_vel = _actor.velocity + Vector2(900, -100)
+		item.entity.body_vel = _actor.velocity + Vector2(450, -50)
 		#item.entity.STARTING_VELOCITY = _actor.velocity + Vector2(900, -50)
 		item.entity.body_vel.x = absf(item.entity.body_vel.x) * item.entity.orientation
 	item.interacted.connect(_on_item_interacted_with)

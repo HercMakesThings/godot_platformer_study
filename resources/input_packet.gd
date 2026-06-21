@@ -33,7 +33,8 @@ func is_down_light_pressed(scheme: InputControlScheme, deadzone: float) -> bool:
 	var is_atk_pressed: bool = primary_direction.y < -deadzone && (light_atk_just_pressed || light_atk_pressed)
 	if scheme.second_stick_type == "light" && !is_secondary_direction_locked:
 		if secondary_direction.y < -deadzone:
-			lock_secondary_direction()
+			#lock_secondary_direction()
+			call_deferred("lock_secondary_direction")
 		return secondary_direction.y < -deadzone || is_atk_pressed
 	return is_atk_pressed
 	
@@ -41,7 +42,8 @@ func is_up_light_pressed(scheme: InputControlScheme, deadzone: float) -> bool:
 	var is_atk_pressed: bool = primary_direction.y > deadzone && (light_atk_just_pressed || light_atk_pressed)
 	if scheme.second_stick_type == "light" && !is_secondary_direction_locked:
 		if secondary_direction.y > deadzone:
-			lock_secondary_direction()
+			#lock_secondary_direction()
+			call_deferred("lock_secondary_direction")
 		return secondary_direction.y > deadzone || is_atk_pressed
 	return is_atk_pressed
 	
@@ -49,7 +51,8 @@ func is_neutral_light_pressed(scheme: InputControlScheme, deadzone: float) -> bo
 	var is_atk_pressed: bool = absf(primary_direction.y) < deadzone && (light_atk_just_pressed || light_atk_pressed)
 	if scheme.second_stick_type == "light" && !is_secondary_direction_locked:
 		if absf(secondary_direction.y) < deadzone:
-			lock_secondary_direction()
+			#lock_secondary_direction()
+			call_deferred("lock_secondary_direction")
 		return absf(secondary_direction.y) < deadzone || is_atk_pressed
 	return is_atk_pressed
 	
@@ -58,7 +61,8 @@ func is_any_atk_just_pressed(scheme: InputControlScheme, deadzone: float) -> boo
 	var is_atk_pressed: bool = light_atk_just_pressed
 	if scheme.second_stick_type == "light" && !is_secondary_direction_locked:
 		if absf(secondary_direction.x) > deadzone || absf(secondary_direction.y) > deadzone:
-			lock_secondary_direction()
+			#lock_secondary_direction()
+			call_deferred("lock_secondary_direction")
 		return is_atk_pressed || (absf(secondary_direction.x) > deadzone || absf(secondary_direction.y) > deadzone)
 	return is_atk_pressed
 	

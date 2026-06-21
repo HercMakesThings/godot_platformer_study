@@ -64,7 +64,6 @@ func bind(node: Object) -> void:
 		up_attack_3.move_completed.connect(_on_move_completed)
 
 func update(delta: float) -> void:
-	#print("current attack state: " + str(current_atk_state))
 	if !can_atk:
 		return
 	handle_attacks(delta)
@@ -74,6 +73,11 @@ func handle_attacks(delta: float) -> void:
 	var packet: InputPacket = actor.input_component.get_current_packet()
 	match current_atk_state:
 		AtkMoveState.IDLE:
+			#if actor is Actor && absf(packet.secondary_direction.x) > actor.entity.deadzone:
+			if actor is Actor && packet.is_any_atk_just_pressed(actor.input_component.scheme, actor.entity.deadzone):
+				var secondary_dir_normalized: Vector2i = round(packet.secondary_direction.normalized())
+				if secondary_dir_normalized.x != 0:
+					actor.entity.orientation = secondary_dir_normalized.x
 			_handle_atk_progression(packet, 1)
 		AtkMoveState.ATK_1:
 			if !side_attack_1:
@@ -146,10 +150,8 @@ func _handle_atk_progression(packet: InputPacket, next_atk_lvl: int) -> void:
 		return
 	if !actor.entity.body_on_ground:
 		return
-	if !packet.light_atk_just_pressed && absf(packet.secondary_direction.y) < actor.entity.deadzone && absf(packet.secondary_direction.x) < actor.entity.deadzone:
+	if !packet.is_any_atk_just_pressed(actor.input_component.scheme, actor.entity.deadzone):
 		return
-	#if !packet.is_any_atk_just_pressed(actor.input_component.scheme, actor.entity.deadzone):
-		#return
 	if packet.is_down_light_pressed(actor.input_component.scheme, actor.entity.deadzone):
 		match next_atk_lvl:
 			1:

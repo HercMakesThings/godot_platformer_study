@@ -89,7 +89,10 @@ func change_state(new: MoveState) -> void:
 	
 func apply_gravity(extra: float = 0) -> void:
 	if body_vel.y <= TERMINAL_VELOCITY:
-		body_vel.y = move_toward(body_vel.y, TERMINAL_VELOCITY, gravity + extra)
+		if body_vel.y > 0.0:
+			body_vel.y = move_toward(body_vel.y, TERMINAL_VELOCITY, gravity * 1.5 + extra)
+		else:
+			body_vel.y = move_toward(body_vel.y, TERMINAL_VELOCITY, gravity + extra)
 	body_vel.y = clamp(body_vel.y, -TERMINAL_VELOCITY, TERMINAL_VELOCITY)
 	
 func calc_accel(force: Vector2) -> Vector2:
