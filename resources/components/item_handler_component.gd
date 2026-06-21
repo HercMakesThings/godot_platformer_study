@@ -19,8 +19,8 @@ func bind(node: Object) -> void:
 	_init_item_spawn_location()
 	_init_held_item_visual()
 	
-func update(_delta: float) -> void:
-	_handle_throw_item()
+func update(delta: float) -> void:
+	_handle_throw_item(delta)
 	_handle_interact_with_item_in_range()
 	item_spawn_location.position.x = absf(item_spawn_location.position.x) * actor.entity.orientation
 		
@@ -58,19 +58,34 @@ func _handle_interact_with_item_in_range() -> void:
 		#pickup_item.emit(actor, item)
 		item.interact_with(actor)
 		
-func _handle_throw_item() -> void:
+func _handle_throw_item(delta: float) -> void:
 	if !_held_item_profile:
 		return
 	var packet: InputPacket = actor.input_component.get_current_packet()
 	if packet.is_any_atk_just_pressed(actor.input_component.scheme, actor.entity.deadzone) && actor.entity.can_move:
+		var actor_atk_comp: AttackComponent = actor.get_component(AttackComponent)
+		if actor_atk_comp:
+			#actor_atk_comp.disable_attacks()
+			actor_atk_comp.can_atk = false
 		var actor_dir_normalized: Vector2i = round(actor.entity.direction.normalized())
 		var secondary_dir_normalized: Vector2i = round(packet.secondary_direction.normalized())
 		if secondary_dir_normalized.x != 0:
 			actor.entity.orientation = secondary_dir_normalized.x
 		elif actor_dir_normalized.x != 0:
 			actor.entity.orientation = actor_dir_normalized.x
+		actor.entity.can_move = false
+		if actor_dir_normalized != Vector2i.ZERO && secondary_dir_normalized != Vector2i.ZERO:
+			for i in range(8):
+				if actor.entity.body_on_ground:
+					actor.entity.decelerate(delta)
+				await actor.get_tree().physics_frame
 		item_thrown.emit(actor, item_spawn_location, _held_item_profile)
-		
+		for i in range(8):
+			await actor.get_tree().physics_frame
+		actor.entity.can_move = true
+		if actor_atk_comp:
+			actor_atk_comp.can_atk = true
+			#actor_atk_comp.enable_attacks()
 func hold_item(profile: ItemProfile) -> void:
 	_held_item_profile = profile
 	held_item_visual.texture = _held_item_profile.model

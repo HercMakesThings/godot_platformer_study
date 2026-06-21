@@ -255,5 +255,11 @@ func _hitbox_cleanup() -> void:
 	if up_attack_3:
 		up_attack_3._free_all_hitboxes()
 		
+func disable_attacks() -> void:
+	self.set_deferred("can_atk", false)
+	
+func enable_attacks() -> void:
+	self.set_deferred("can_atk", true)
+		
 func _component_cleanup() -> void:
 	_hitbox_cleanup()

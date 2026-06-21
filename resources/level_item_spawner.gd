@@ -48,23 +48,22 @@ func _on_item_interacted_with(item: Item, user: Article) -> void:
 	
 func _on_item_thrown(_actor: Article, _location: Node2D, _profile: ItemProfile) -> void:
 	print("actor currently throwing: " + str(_actor.name) + ", actor orientation: " + str(_actor.entity.orientation))
-	_actor.entity.can_move = false
 	var actor_atk_comp: AttackComponent = _actor.get_component(AttackComponent)
 	if actor_atk_comp:
 		actor_atk_comp.can_atk = false
-	_actor.entity.can_move = false
 	var itemHandler: ItemHandlerComponent = _actor.get_component(ItemHandlerComponent)
 	if itemHandler:
 		itemHandler.drop_item()
 	var item: Item = _create_item_scene()
 	var atk_comp: ItemActiveAtkComponent = _build_item_active_atk_component(_actor)
-	#var on_hit_comp: OnHitComponent = _build_item_on_hit_component()
+	var on_hit_comp: OnHitComponent = _build_item_on_hit_component()
 	#item = _assemble_item_entity_and_components(item, _build_entity(_profile.model), [BaseMovementComponent.new(), atk_comp])
 	item = _assemble_item_entity_and_components(
 		item, 
-		_build_entity(_profile.model), 
-		#[ApplyGravityComp.new(), ApplyFrictionComponent.new(), atk_comp, on_hit_comp]
-		[ApplyGravityComp.new(), ApplyFrictionComponent.new(), atk_comp]
+		_build_entity(_profile.model),
+		[ApplyGravityComp.new(), ApplyFrictionComponent.new(), atk_comp, on_hit_comp]
+		#[ApplyGravityComp.new(), ApplyFrictionComponent.new(), atk_comp]
+		#[BaseMovementComponent.new(), atk_comp]
 	)
 	item.profile = _profile
 	item.position = _actor.global_position + _location.position
@@ -72,32 +71,21 @@ func _on_item_thrown(_actor: Article, _location: Node2D, _profile: ItemProfile) 
 	print("item orientation: " + str(item.entity.orientation))
 	print("actor's orientation: " + str(_actor.entity.orientation))
 	var packet: InputPacket = _actor.input_component.get_current_packet()
+	var actor_dir_normalized: Vector2i = round(_actor.entity.direction.normalized())
 	var secondary_dir_normalized: Vector2i = round(packet.secondary_direction.normalized())
 	if secondary_dir_normalized.x != 0:
-		item.entity.body_vel = _actor.velocity + Vector2(450, -50)
-		item.entity.body_vel.x = absf(item.entity.body_vel.x) * secondary_dir_normalized.x
+		item.entity.body_vel = Vector2((300 + absf(_actor.entity.body_vel.x)) * secondary_dir_normalized.x, -50)
 	elif secondary_dir_normalized.y != 0:
-		item.entity.body_vel = _actor.velocity + Vector2(0, 450)
-		item.entity.body_vel.y = absf(item.entity.body_vel.y) * -secondary_dir_normalized.y
-	elif _actor.entity.direction.y < -_actor.entity.deadzone:
-		item.entity.body_vel = _actor.velocity + Vector2(0, 900)
-		#item.entity.STARTING_VELOCITY = _actor.velocity + Vector2(0, 900)
-	elif _actor.entity.direction.y > _actor.entity.deadzone:
-		item.entity.body_vel = _actor.velocity + Vector2(0, -900)
-		#item.entity.STARTING_VELOCITY = _actor.velocity + Vector2(0, -900)
-	else:
-		#item.entity.body_vel = _actor.velocity + Vector2(900, -100)
-		item.entity.body_vel = _actor.velocity + Vector2(450, -50)
-		#item.entity.STARTING_VELOCITY = _actor.velocity + Vector2(900, -50)
-		item.entity.body_vel.x = absf(item.entity.body_vel.x) * item.entity.orientation
+		item.entity.body_vel = Vector2(0, -450 * secondary_dir_normalized.y)
+	elif actor_dir_normalized.x != 0:
+		item.entity.body_vel = Vector2((300 + absf(_actor.entity.body_vel.x)) * actor_dir_normalized.x, -50)
+	elif actor_dir_normalized.y != 0:
+		item.entity.body_vel = Vector2(0, -450 * actor_dir_normalized.y)
+	elif actor_dir_normalized != Vector2i.ZERO && secondary_dir_normalized != Vector2i.ZERO:
+		item.entity.body_vel = Vector2((300 + absf(_actor.entity.body_vel.x)) * item.entity.orientation, -50)
 	item.interacted.connect(_on_item_interacted_with)
 	level.articles.add_child(item)
 	item.owner = level.articles
-	for i in range(8):
-		await level.get_tree().physics_frame
-	if actor_atk_comp:
-		actor_atk_comp.can_atk = true
-	_actor.entity.can_move = true
 	
 func _build_item_status_resource() -> EntityStatus:
 	var s: EntityStatus = EntityStatus.new()
