@@ -36,6 +36,8 @@ var left_detected: bool
 var right_detected: bool
 var top_detected: bool
 
+var right_collider: Object = null
+
 func _ready() -> void:
 	#set_shape(center, height, left_span, right_span)
 	area_entered.connect(_on_area_entered)
@@ -98,33 +100,85 @@ func update_ecb_rays(article: Article, delta: float):
 		left_detector.force_raycast_update()
 		right_detector.force_raycast_update()
 		
+		###### experiment
+		#right_detected = false
+		#right_detected = (_is_ecb_ray_colliding(right, "Wall") || _is_ecb_ray_colliding(offset_right, "Wall") || _is_ecb_ray_colliding(right_detector, "Wall"))
+		#if right_detected:
+			#var right_collider: Object
+			#if right.is_colliding():
+				#right_collider = right.get_collider()
+			#elif offset_right.is_colliding():
+				#right_collider = offset_right.get_collider()
+			#elif right_detector.is_colliding():
+				#right_collider = right_detector.get_collider()
+			#article.position.x = right_detector.get_collider().position.x - (right_detector.get_collider().collision_shape.size.x*0.5) - dimensions.right_span
+			#if article.entity.body_vel.x > 0.0:
+				#article.entity.body_vel.x = 0.0
+		###### end experiment
+		###### experiment
+		#var right_collider: Object = _get_ecb_collider(right, "Wall")
+		#if right_collider:
+			##article.position.x = right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span
+			#article.position.x = clamp(article.position.x, -INF, right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span)
+			#if article.entity.body_vel.x > 0.0:
+				#article.entity.body_vel.x = 0.0
+		if right_detected:
+			article.position.x = right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span
+			if article.entity.body_vel.x > 0.0:
+				article.entity.body_vel.x = 0.0
+		right_collider = _get_ecb_collider(right, "Wall")
+		if right_collider:
+			print("standard collided!")
+			#article.position.x = right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span
+			article.position.x = clamp(article.position.x, -INF, right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span)
+			if article.entity.body_vel.x > 0.0:
+				article.entity.body_vel.x = 0.0
+		if !right_collider:
+			right_collider = _get_ecb_collider(offset_right, "Wall")
+			if right_collider:
+				print("offset collided!")
+				#article.position.x = right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span
+				article.position.x = clamp(article.position.x, -INF, right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span)
+				if article.entity.body_vel.x > 0.0:
+					article.entity.body_vel.x = 0.0
+		if !right_collider:
+			right_collider = _get_ecb_collider(right_detector, "Wall")
+			if right_collider:
+				right_detected = true
+				print("detector collided!")
+				#article.position.x = right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span
+				#article.position.x = clamp(article.position.x, -INF, right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span)
+				#if article.entity.body_vel.x > 0.0:
+					#article.entity.body_vel.x = 0.0
+		###### end experiment
+		
 		if left_detected && (left_detector.is_colliding() && left_detector.get_collider() is TerrainArea2D && left_detector.get_collider().type == "Wall"):
 			article.position.x = left_detector.get_collider().position.x + (left_detector.get_collider().collision_shape.size.x*0.5) + dimensions.left_span
 			if article.entity.body_vel.x < 0.0:
 				article.entity.body_vel.x = 0.0
-		if right_detected && (right_detector.is_colliding() && right_detector.get_collider() is TerrainArea2D && right_detector.get_collider().type == "Wall"):
-			article.position.x = right_detector.get_collider().position.x - (right_detector.get_collider().collision_shape.size.x*0.5) - dimensions.right_span
-			if article.entity.body_vel.x > 0.0:
-				article.entity.body_vel.x = 0.0
+		#if right_detected && (right_detector.is_colliding() && right_detector.get_collider() is TerrainArea2D && right_detector.get_collider().type == "Wall"):
+			#article.position.x = right_detector.get_collider().position.x - (right_detector.get_collider().collision_shape.size.x*0.5) - dimensions.right_span
+			#if article.entity.body_vel.x > 0.0:
+				#article.entity.body_vel.x = 0.0
 		if top_detected && (top_detector.is_colliding() && top_detector.get_collider() is TerrainArea2D && top_detector.get_collider().type == "Floor"):
 			article.position.y = top_detector.get_collider().position.y + (top_detector.get_collider().collision_shape.size.y*0.5) + dimensions.height
 			if article.entity.body_vel.y < 0.0:
 				article.entity.body_vel.y = 0.0
 		
-		if (right.is_colliding() && (right.get_collider() is TerrainArea2D && right.get_collider().type == "Wall")):
-				if article.entity.body_vel.x > 0.0:
-					article.entity.body_vel.x = 0.0
-				article.position.x = right.get_collider().position.x - (right.get_collider().collision_shape.size.x*0.5) - dimensions.right_span
-		elif (offset_right.is_colliding() && (offset_right.get_collider() is TerrainArea2D && offset_right.get_collider().type == "Wall")):
-				if offset_right.target_position.x <= 0.0:
-					if article.entity.body_vel.x > 0.0:
-						article.entity.body_vel.x = 0.0
-					article.position.x = offset_right.get_collider().position.x - (offset_right.get_collider().collision_shape.size.x*0.5) - dimensions.right_span
-		elif (right_detector.is_colliding() && (right_detector.get_collider() is TerrainArea2D && right_detector.get_collider().type == "Wall")):
-			if article.entity.body_vel.x > 0.0:
-				right_detected = true
-		else:
-			right_detected = false
+		#if (right.is_colliding() && (right.get_collider() is TerrainArea2D && right.get_collider().type == "Wall")):
+				#if article.entity.body_vel.x > 0.0:
+					#article.entity.body_vel.x = 0.0
+				#article.position.x = right.get_collider().position.x - (right.get_collider().collision_shape.size.x*0.5) - dimensions.right_span
+		#elif (offset_right.is_colliding() && (offset_right.get_collider() is TerrainArea2D && offset_right.get_collider().type == "Wall")):
+				#if offset_right.target_position.x <= 0.0:
+					#if article.entity.body_vel.x > 0.0:
+						#article.entity.body_vel.x = 0.0
+					#article.position.x = offset_right.get_collider().position.x - (offset_right.get_collider().collision_shape.size.x*0.5) - dimensions.right_span
+		#elif (right_detector.is_colliding() && (right_detector.get_collider() is TerrainArea2D && right_detector.get_collider().type == "Wall")):
+			#if article.entity.body_vel.x > 0.0:
+				#right_detected = true
+		#else:
+			#right_detected = false
 				
 		if (left.is_colliding() && (left.get_collider() is TerrainArea2D && left.get_collider().type == "Wall")):
 				if article.entity.body_vel.x < 0.0:
@@ -192,18 +246,38 @@ func update_ecb_rays(article: Article, delta: float):
 			article.entity.body_on_ground = false
 			article.entity.is_on_platform = false
 			bottom_detected = false
-			
-		#if (
-			#bottom_detected &&
-			#(bottom_detector.is_colliding() && 
-			#((bottom_detector.get_collider() is TerrainArea2D && bottom_detector.get_collider().type == "Floor") ||
-			##(bottom_detector.get_collider() is PlatformNew && coll_point.distance_to(bottom.global_position + bottom.target_position) <= COLLISION_POINT_THRESHOLD)))
-			#(bottom_detector.get_collider() is PlatformNew)))
-		#):
-			#article.position.y = bottom_detector.get_collider().position.y - (bottom_detector.get_collider().collision_shape.size.y*0.5)
-			#article.entity.body_vel.y = 0.0
 		
-		
+func _is_ecb_ray_colliding(ray: RayCast2D, terrain_type: String, is_bottom_ray: bool = false) -> bool:
+	if !ray.is_colliding():
+		return false
+	if ray.get_collider() is not TerrainArea2D:
+		if is_bottom_ray:
+			if ray.get_collider() is not PlatformNew:
+				return false
+		return false
+	if ray.get_collider().type != terrain_type:
+		return false
+	if is_bottom_ray:
+		var coll_point: Vector2 = ray.get_collision_point()
+		if ray.get_collider() is PlatformNew && coll_point.distance_to(ray.global_position + ray.target_position) >= COLLISION_POINT_THRESHOLD:
+			return false
+	return true
+	
+func _get_ecb_collider(ray: RayCast2D, terrain_type: String, is_bottom_ray: bool = false) -> Object:
+	if !ray.is_colliding():
+		return null
+	if ray.get_collider() is not TerrainArea2D:
+		if is_bottom_ray:
+			if ray.get_collider() is not PlatformNew:
+				return null
+		return null
+	if ray.get_collider().type != terrain_type:
+		return null
+	if is_bottom_ray:
+		var coll_point: Vector2 = ray.get_collision_point()
+		if ray.get_collider() is PlatformNew && coll_point.distance_to(ray.global_position + ray.target_position) >= COLLISION_POINT_THRESHOLD:
+			return null
+	return ray.get_collider()
 #func set_shape(c: float, h: float, l: float, r: float) -> void:
 	#top.position = Vector2(0.0, -c)
 	#left.position = Vector2(0.0, -c)
