@@ -82,15 +82,12 @@ func update(delta: float) -> void:
 			
 			## accessibility logic to snap actor to platform when
 			## travelling down in order to make wavelanding easier
-			if actor.entity.body_vel.y > 0.0:
-				if actor.ecb.has_overlapping_areas():
-					for a in actor.ecb.get_overlapping_areas():
-						#if a.get_parent() is PlatformBasic:
-							#actor.position.y = a.get_parent().position.y
-						if a is PlatformNew:
-							print("snapping to platform!")
-							#actor.position.y = a.position.y + a.collision_shape.size.y
-							actor.position.y = a.position.y - a.collision_shape.size.y*0.5
+			#if actor.entity.body_vel.y > 0.0:
+				#if actor.ecb.has_overlapping_areas():
+					#for a in actor.ecb.get_overlapping_areas():
+						#if a is PlatformNew:
+							##print("snapping to platform!")
+							#actor.position.y = a.position.y - a.collision_shape.size.y*0.5
 			
 			if ad_frame < air_dodge_length - air_dodge_landlag:
 				actor.entity.body_vel = ad_direction * air_dodge_speed

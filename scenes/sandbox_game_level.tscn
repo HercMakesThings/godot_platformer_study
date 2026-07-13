@@ -415,7 +415,7 @@ shape = SubResource("RectangleShape2D_8nwor")
 debug_color = Color(0.4993003, 0.57446873, 0.2679287, 0.41960785)
 
 [node name="PlatformNew" type="Area2D" parent="Terrain" unique_id=1750502685]
-position = Vector2(23, -44)
+position = Vector2(17, -32)
 collision_layer = 2
 script = ExtResource("11_s3sem")
 metadata/_custom_type_script = "uid://d1tqws1en3mmr"
