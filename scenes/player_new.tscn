@@ -30,7 +30,7 @@
 [ext_resource type="Script" uid="uid://m7g2ic7fmnm4" path="res://scripts/ShieldAbility.gd" id="18_pqqny"]
 [ext_resource type="Script" uid="uid://cbh0ct731cyy3" path="res://scripts/medium_attacks.gd" id="19_ic7wx"]
 [ext_resource type="Script" uid="uid://b3lqiaibrgqrn" path="res://scripts/platform_behavior_ability_node.gd" id="20_gs3cc"]
-[ext_resource type="Script" uid="uid://uubyevs7hmlh" path="res://scripts/environment_collision_diamond.gd" id="23_s8ti4"]
+[ext_resource type="Script" uid="uid://uubyevs7hmlh" path="res://scenes/article/components/environment_collision_diamond.gd" id="23_s8ti4"]
 [ext_resource type="Script" uid="uid://cjkfeb23cki15" path="res://scripts/air_jump_ability_node.gd" id="26_0idwx"]
 [ext_resource type="Script" uid="uid://brf0y0hshgpn4" path="res://scripts/damaged_ability_node.gd" id="29_0idwx"]
 
@@ -172,12 +172,10 @@ TIMERS = NodePath("Timers")
 unique_name_in_owner = true
 script = ExtResource("5_16kr7")
 
-[node name="Jab1" type="Area2D" parent="HitboxManager" unique_id=1751743212 node_paths=PackedStringArray("default_hitbox_shape", "kb_dir_visual")]
+[node name="Jab1" type="Area2D" parent="HitboxManager" unique_id=1751743212]
 unique_name_in_owner = true
 position = Vector2(21, -19.125)
 script = ExtResource("16_0gvfs")
-default_hitbox_shape = NodePath("hitbox_shape")
-kb_dir_visual = NodePath("RayCast2D")
 
 [node name="hitbox_shape" type="CollisionShape2D" parent="HitboxManager/Jab1" unique_id=626510771]
 shape = SubResource("CapsuleShape2D_c8p0i")
@@ -187,11 +185,9 @@ debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
 [node name="RayCast2D" type="RayCast2D" parent="HitboxManager/Jab1" unique_id=165138576]
 target_position = Vector2(3.999998, 0)
 
-[node name="dm_1" type="Area2D" parent="HitboxManager" unique_id=1177752704 node_paths=PackedStringArray("default_hitbox_shape", "kb_dir_visual")]
+[node name="dm_1" type="Area2D" parent="HitboxManager" unique_id=1177752704]
 position = Vector2(18.635, -5.105)
 script = ExtResource("16_0gvfs")
-default_hitbox_shape = NodePath("CollisionShape2D")
-kb_dir_visual = NodePath("RayCast2D")
 metadata/_custom_type_script = "uid://dpp1v6omyvpw6"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxManager/dm_1" unique_id=1971510329]
@@ -202,11 +198,9 @@ debug_color = Color(0.90986425, 0.26710114, 0.3503031, 0.41960785)
 [node name="RayCast2D" type="RayCast2D" parent="HitboxManager/dm_1" unique_id=29463099]
 target_position = Vector2(3.96, 0)
 
-[node name="dm_2" type="Area2D" parent="HitboxManager" unique_id=1578985981 node_paths=PackedStringArray("default_hitbox_shape", "kb_dir_visual")]
+[node name="dm_2" type="Area2D" parent="HitboxManager" unique_id=1578985981]
 position = Vector2(29.7, -5.105)
 script = ExtResource("16_0gvfs")
-default_hitbox_shape = NodePath("CollisionShape2D")
-kb_dir_visual = NodePath("RayCast2D")
 metadata/_custom_type_script = "uid://dpp1v6omyvpw6"
 
 [node name="RayCast2D" type="RayCast2D" parent="HitboxManager/dm_2" unique_id=1937659061]

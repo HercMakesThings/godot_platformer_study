@@ -1,1 +1,0 @@
-class_name EnvironmentCollisionDiamond extends CollisionPolygon2D

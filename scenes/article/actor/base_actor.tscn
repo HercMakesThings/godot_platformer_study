@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://dryh713xatggd" path="res://resources/input_component.gd" id="3_575nv"]
 [ext_resource type="Script" uid="uid://b1r2eahjfa8hu" path="res://resources/entity_res.gd" id="4_r10ug"]
 [ext_resource type="Script" uid="uid://byicdf4x4phfh" path="res://resources/entity_status_res.gd" id="5_xei5b"]
-[ext_resource type="PackedScene" uid="uid://c4arjr6rbjxmy" path="res://scenes/article/components/environment_collision_body.tscn" id="18_f5g5k"]
+[ext_resource type="Script" uid="uid://uubyevs7hmlh" path="res://scenes/article/components/environment_collision_diamond.gd" id="9_8kk3p"]
 [ext_resource type="Script" uid="uid://lpgo7mxv0d5h" path="res://scripts/hurtbox.gd" id="19_37urj"]
 [ext_resource type="Script" uid="uid://3yiwskv8i3aa" path="res://scenes/article/actor/debug_orientation_vis.gd" id="20_3ocvu"]
 
@@ -37,10 +37,12 @@ metadata/_custom_type_script = "uid://byicdf4x4phfh"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_01vf1"]
 
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_7r5d6"]
+
 [node name="Actor" type="Node2D" unique_id=1557691037 node_paths=PackedStringArray("ecb", "hurtbox", "TIMERS", "model")]
 script = ExtResource("1_0ox80")
 input_component = SubResource("Resource_jbguk")
-ecb = NodePath("EnvironmentCollisionBody")
+ecb = NodePath("EnvironmentCollisionDiamond")
 hurtbox = NodePath("Hurtbox")
 entity = SubResource("Resource_m5inl")
 status = SubResource("Resource_tr7rc")
@@ -55,9 +57,6 @@ scale = Vector2(20, 29.801504)
 
 [node name="Hitboxes" type="Node2D" parent="." unique_id=779279283]
 unique_name_in_owner = true
-
-[node name="EnvironmentCollisionBody" parent="." unique_id=617907928 instance=ExtResource("18_f5g5k")]
-collision_mask = 2
 
 [node name="Timers" type="Node" parent="." unique_id=276487343]
 unique_name_in_owner = true
@@ -84,3 +83,12 @@ collide_with_bodies = false
 script = ExtResource("20_3ocvu")
 body = NodePath("..")
 metadata/_custom_type_script = "uid://3yiwskv8i3aa"
+
+[node name="EnvironmentCollisionDiamond" type="Area2D" parent="." unique_id=1315620430]
+collision_mask = 3
+script = ExtResource("9_8kk3p")
+metadata/_custom_type_script = "uid://uubyevs7hmlh"
+
+[node name="shape" type="CollisionShape2D" parent="EnvironmentCollisionDiamond" unique_id=1336665376]
+unique_name_in_owner = true
+shape = SubResource("ConvexPolygonShape2D_7r5d6")

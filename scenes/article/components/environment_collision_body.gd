@@ -76,106 +76,110 @@ func _on_area_entered(_area: Area2D) -> void:
 			#get_parent().position.y = area.position.y
 	
 func update_ecb_rays(article: Article, delta: float) -> void:
-		bottom.force_raycast_update()
-		top.force_raycast_update()
-		left.force_raycast_update()
-		right.force_raycast_update()
+		#bottom.force_raycast_update()
+		#top.force_raycast_update()
+		#left.force_raycast_update()
+		#right.force_raycast_update()
 		
 		var velocity_vec: Vector2 = global_position - last_global_position
-		offset_bottom.target_position = offset_bottom.to_local(global_position - velocity_vec)
-		offset_top.target_position = offset_top.to_local(global_position - velocity_vec) + offset_top.position
-		offset_left.target_position = offset_left.to_local(global_position - velocity_vec) + offset_left.position
-		offset_right.target_position = offset_right.to_local(global_position - velocity_vec) + offset_right.position
+		#offset_bottom.target_position = offset_bottom.to_local(global_position - velocity_vec)
+		#offset_top.target_position = offset_top.to_local(global_position - velocity_vec) + offset_top.position
+		#offset_left.target_position = offset_left.to_local(global_position - velocity_vec) + offset_left.position
+		#offset_right.target_position = offset_right.to_local(global_position - velocity_vec) + offset_right.position
 		
-		offset_bottom.force_raycast_update()
-		offset_top.force_raycast_update()
-		offset_left.force_raycast_update()
-		offset_right.force_raycast_update()
+		#offset_bottom.force_raycast_update()
+		#offset_top.force_raycast_update()
+		#offset_left.force_raycast_update()
+		#offset_right.force_raycast_update()
 		
 		var velocity_projection: Vector2 = article.entity.body_vel * delta
-		bottom_detector.target_position = bottom_detector.to_local(global_position + velocity_projection)
-		top_detector.target_position = top_detector.to_local(global_position + velocity_projection) + offset_top.position
-		left_detector.target_position = left_detector.to_local(global_position + velocity_projection) + offset_left.position
-		right_detector.target_position = right_detector.to_local(global_position + velocity_projection) + offset_right.position
+		#bottom_detector.target_position = bottom_detector.to_local(global_position + velocity_projection)
+		#top_detector.target_position = top_detector.to_local(global_position + velocity_projection) + offset_top.position
+		#left_detector.target_position = left_detector.to_local(global_position + velocity_projection) + offset_left.position
+		#right_detector.target_position = right_detector.to_local(global_position + velocity_projection) + offset_right.position
 		
-		bottom_detector.force_raycast_update()
-		top_detector.force_raycast_update()
-		left_detector.force_raycast_update()
-		right_detector.force_raycast_update()
+		#bottom_detector.force_raycast_update()
+		#top_detector.force_raycast_update()
+		#left_detector.force_raycast_update()
+		#right_detector.force_raycast_update()
 		
-		###### experiment
-		#if right_detected && right_collider:
-			##article.position.x = clamp(article.position.x, -INF, right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span)
-			#if article.entity.body_vel.x > 0.0:
-				#article.position.x = right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span
-				#article.entity.body_vel.x = 0.0
-		#right_collider = _get_ecb_collider(right, "Wall")
-		##if right_collider:
-			##print("standard collided!")
-			###article.position.x = right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span
-			##article.position.x = clamp(article.position.x, -INF, right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span)
-			##if article.entity.body_vel.x > 0.0:
-				##article.entity.body_vel.x = 0.0
-		#if !right_collider:
-			#right_collider = _get_ecb_collider(offset_right, "Wall")
-			##if right_collider:
-				##print("offset collided!")
-				###article.position.x = right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span
-				##article.position.x = clamp(article.position.x, -INF, right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span)
-				##if article.entity.body_vel.x > 0.0:
-					##article.entity.body_vel.x = 0.0
-		#if !right_collider:
-			#right_collider = _get_ecb_collider(right_detector, "Wall")
-			##if right_collider:
-				##right_detected = true
-				##print("detector collided!")
-				##article.position.x = right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span
-				##article.position.x = clamp(article.position.x, -INF, right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span)
-				##if article.entity.body_vel.x > 0.0:
-					##article.entity.body_vel.x = 0.0
-		##else:
-			##right_detected = false
-		#right_detected = right_collider != null
-		###### end experiment
-		###### experiment
-		right_collider = _get_ecb_collider(right, "Wall")
-		if !right_collider:
-			right_collider = _get_ecb_collider(offset_right, "Wall")
-		if !right_collider:
-			right_collider = _get_ecb_collider(right_detector, "Wall")
-		if right_collider:
-			if article.entity.body_vel.x > 0.0:
-				article.position.x = right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span
-				article.entity.body_vel.x = 0.0
-		###### end experiment
-		###### experiment
-		left_collider = _get_ecb_collider(left, "Wall")
+		###### query physics state experiment
+		var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+		### left
+		left_collider = _get_ecb_collider_from_query(
+			_cast_ecb_ray(space_state, global_position + Vector2(0.0, -dimensions.center), global_position + Vector2(-dimensions.left_span, -dimensions.center)),
+			"Wall"
+		)
 		if !left_collider:
-			left_collider = _get_ecb_collider(offset_left, "Wall")
+			left_collider = _get_ecb_collider_from_query(
+				_cast_ecb_ray(space_state, global_position + Vector2(-dimensions.left_span, -dimensions.center), global_position + Vector2(-dimensions.left_span, -dimensions.center) - velocity_vec),
+				"Wall"
+			)
 		if !left_collider:
-			left_collider = _get_ecb_collider(left_detector, "Wall")
+			left_collider = _get_ecb_collider_from_query(
+				_cast_ecb_ray(space_state, global_position + Vector2(-dimensions.left_span, -dimensions.center), global_position + Vector2(-dimensions.left_span, -dimensions.center) + velocity_projection),
+				"Wall"
+			)
 		if left_collider:
 			if article.entity.body_vel.x < 0.0:
 				article.position.x = left_collider.position.x + (left_collider.collision_shape.size.x*0.5) + dimensions.left_span
 				article.entity.body_vel.x = 0.0
-		###### end experiment
-		###### experiment
-		top_collider = _get_ecb_collider(top, "Floor")
+		### right
+		right_collider = _get_ecb_collider_from_query(
+			_cast_ecb_ray(space_state, global_position + Vector2(0.0, -dimensions.center), global_position + Vector2(dimensions.right_span, -dimensions.center)),
+			"Wall"
+		)
+		if !right_collider:
+			right_collider = _get_ecb_collider_from_query(
+				_cast_ecb_ray(space_state, global_position + Vector2(dimensions.right_span, -dimensions.center), global_position + Vector2(dimensions.right_span, -dimensions.center) - velocity_vec),
+				"Wall"
+			)
+		if !right_collider:
+			right_collider = _get_ecb_collider_from_query(
+				_cast_ecb_ray(space_state, global_position + Vector2(dimensions.right_span, -dimensions.center), global_position + Vector2(dimensions.right_span, -dimensions.center) + velocity_projection),
+				"Wall"
+			)
+		if right_collider:
+			if article.entity.body_vel.x > 0.0:
+				article.position.x = right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span
+				article.entity.body_vel.x = 0.0
+		### top
+		top_collider = _get_ecb_collider_from_query(
+			_cast_ecb_ray(space_state, global_position + Vector2(0.0, -dimensions.center), global_position + Vector2(0.0, -dimensions.height)),
+			"Floor"
+		)
 		if !top_collider:
-			top_collider = _get_ecb_collider(offset_top, "Floor")
+			top_collider = _get_ecb_collider_from_query(
+				_cast_ecb_ray(space_state, global_position + Vector2(0.0, -dimensions.height), global_position + Vector2(0.0, -dimensions.height) - velocity_vec),
+				"Floor"
+			)
 		if !top_collider:
-			top_collider = _get_ecb_collider(top_detector, "Floor")
+			top_collider = _get_ecb_collider_from_query(
+				_cast_ecb_ray(space_state, global_position + Vector2(0.0, -dimensions.height), global_position + Vector2(0.0, -dimensions.height) + velocity_projection),
+				"Floor"
+			)
 		if top_collider:
 			if article.entity.body_vel.y < 0.0:
 				article.position.y = top_collider.position.y + (top_collider.collision_shape.size.y*0.5) + dimensions.height
 				article.entity.body_vel.y = 0.0 ## may or may not need this
-		###### end experiment
-		###### experiment
-		bottom_collider = _get_ecb_collider(bottom, "Floor", true)
+		### bottom
+		bottom_collider = _get_ecb_collider_from_query(
+			_cast_ecb_ray(space_state, global_position + Vector2(0.0, -dimensions.center), global_position),
+			"Floor",
+			true
+		)
 		if !bottom_collider:
-			bottom_collider = _get_ecb_collider(offset_bottom, "Floor", true)
+			bottom_collider = _get_ecb_collider_from_query(
+				_cast_ecb_ray(space_state, global_position, global_position - velocity_vec),
+				"Floor",
+				true
+			)
 		if !bottom_collider:
-			bottom_collider = _get_ecb_collider(bottom_detector, "Floor", true)
+			bottom_collider = _get_ecb_collider_from_query(
+				_cast_ecb_ray(space_state, global_position, global_position + velocity_projection),
+				"Floor",
+				true
+			)
 		if bottom_collider is PlatformNew && (article.entity.direction.y <= -article.entity.deadzone && article.entity.can_move):
 			return ## early return to allow for dropping through platforms
 		article.entity.body_on_ground = bottom_collider != null
@@ -185,6 +189,55 @@ func update_ecb_rays(article: Article, delta: float) -> void:
 				article.entity.body_vel.y = 0.0
 				article.position.y = bottom_collider.position.y - (bottom_collider.collision_shape.size.y*0.5)
 		###### end experiment
+		
+		###### handle right side collisions
+		#right_collider = _get_ecb_collider(right, "Wall")
+		#if !right_collider:
+			#right_collider = _get_ecb_collider(offset_right, "Wall")
+		#if !right_collider:
+			#right_collider = _get_ecb_collider(right_detector, "Wall")
+		#if right_collider:
+			#if article.entity.body_vel.x > 0.0:
+				#article.position.x = right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span
+				#article.entity.body_vel.x = 0.0
+		###### END right side collisions
+		###### handle left side collisions
+		#left_collider = _get_ecb_collider(left, "Wall")
+		#if !left_collider:
+			#left_collider = _get_ecb_collider(offset_left, "Wall")
+		#if !left_collider:
+			#left_collider = _get_ecb_collider(left_detector, "Wall")
+		#if left_collider:
+			#if article.entity.body_vel.x < 0.0:
+				#article.position.x = left_collider.position.x + (left_collider.collision_shape.size.x*0.5) + dimensions.left_span
+				#article.entity.body_vel.x = 0.0
+		###### END left side collisions
+		###### handle top side collisions
+		#top_collider = _get_ecb_collider(top, "Floor")
+		#if !top_collider:
+			#top_collider = _get_ecb_collider(offset_top, "Floor")
+		#if !top_collider:
+			#top_collider = _get_ecb_collider(top_detector, "Floor")
+		#if top_collider:
+			#if article.entity.body_vel.y < 0.0:
+				#article.position.y = top_collider.position.y + (top_collider.collision_shape.size.y*0.5) + dimensions.height
+				#article.entity.body_vel.y = 0.0 ## may or may not need this
+		###### END top side collisions
+		###### handle bottom collisions
+		#bottom_collider = _get_ecb_collider(bottom, "Floor", true)
+		#if !bottom_collider:
+			#bottom_collider = _get_ecb_collider(offset_bottom, "Floor", true)
+		#if !bottom_collider:
+			#bottom_collider = _get_ecb_collider(bottom_detector, "Floor", true)
+		#if bottom_collider is PlatformNew && (article.entity.direction.y <= -article.entity.deadzone && article.entity.can_move):
+			#return ## early return to allow for dropping through platforms
+		#article.entity.body_on_ground = bottom_collider != null
+		#if bottom_collider:
+			#article.entity.is_on_platform = bottom_collider is PlatformNew
+			#if article.entity.body_vel.y >= 0.0:
+				#article.entity.body_vel.y = 0.0
+				#article.position.y = bottom_collider.position.y - (bottom_collider.collision_shape.size.y*0.5)
+		###### END bottom collisions
 		
 		#if left_detected && (left_detector.is_colliding() && left_detector.get_collider() is TerrainArea2D && left_detector.get_collider().type == "Wall"):
 			#article.position.x = left_detector.get_collider().position.x + (left_detector.get_collider().collision_shape.size.x*0.5) + dimensions.left_span
@@ -312,6 +365,30 @@ func _get_ecb_collider(ray: RayCast2D, terrain_type: String, is_bottom_ray: bool
 	if is_bottom_ray:
 		var coll_point: Vector2 = ray.get_collision_point()
 		if collider is PlatformNew && coll_point.distance_to(ray.global_position + ray.target_position) >= COLLISION_POINT_THRESHOLD:
+			return null
+	return collider
+	
+func _cast_ecb_ray(space_state: PhysicsDirectSpaceState2D, origin: Vector2, end: Vector2) -> Dictionary:
+	var query = PhysicsRayQueryParameters2D.create(origin, end, collision_mask)
+	query.collide_with_areas = true
+	query.exclude = [self]
+	return space_state.intersect_ray(query)
+	
+func _get_ecb_collider_from_query(cast: Dictionary, terrain_type: String, is_bottom_ray: bool = false) -> Object:
+	if !cast.has("collider"):
+		return null
+	var collider: Object = cast["collider"]
+	if collider is not TerrainArea2D:
+		if is_bottom_ray:
+			if collider is not PlatformNew:
+				return null
+		else:
+			return null
+	if collider is not PlatformNew && collider.type != terrain_type:
+		return null
+	if is_bottom_ray:
+		var coll_point: Vector2 = cast.position
+		if collider is PlatformNew && coll_point.distance_to(global_position) >= COLLISION_POINT_THRESHOLD:
 			return null
 	return collider
 	

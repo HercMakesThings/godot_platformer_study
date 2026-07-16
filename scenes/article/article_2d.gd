@@ -1,6 +1,7 @@
 class_name Article extends Node2D
 
-@export var ecb: EnvironmentCollisionBody
+#@export var ecb: EnvironmentCollisionBody
+@export var ecb: EnvironmentCollisionDiamond
 
 @export var hurtbox: Hurtbox
 @onready var hitboxes: Node2D = %Hitboxes
