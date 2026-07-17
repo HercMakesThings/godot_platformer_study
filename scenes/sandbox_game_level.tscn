@@ -414,6 +414,11 @@ script = ExtResource("11_s3sem")
 shape = SubResource("RectangleShape2D_8nwor")
 debug_color = Color(0.4993003, 0.57446873, 0.2679287, 0.41960785)
 
+[node name="Sprite2D" type="Sprite2D" parent="Terrain/Area2D2" unique_id=784921519]
+position = Vector2(-8.940697e-07, -8.940697e-07)
+scale = Vector2(0.46874994, 0.015625002)
+texture = ExtResource("2_e128x")
+
 [node name="PlatformNew" type="Area2D" parent="Terrain" unique_id=1750502685]
 position = Vector2(17, -32)
 collision_layer = 2
@@ -423,3 +428,8 @@ metadata/_custom_type_script = "uid://d1tqws1en3mmr"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain/PlatformNew" unique_id=1545515933]
 shape = SubResource("RectangleShape2D_1oj7r")
 debug_color = Color(0.4993003, 0.57446873, 0.2679287, 0.41960785)
+
+[node name="Sprite2D" type="Sprite2D" parent="Terrain/PlatformNew" unique_id=1497085154]
+position = Vector2(-1.8775463e-06, -8.940697e-07)
+scale = Vector2(0.5, 0.015624984)
+texture = ExtResource("2_e128x")

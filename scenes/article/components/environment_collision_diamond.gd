@@ -4,6 +4,8 @@ class_name EnvironmentCollisionDiamond extends Area2D
 
 @export var DEFAULT_ECB_STATS: EcbStatsRes
 
+var article: Article
+
 var dimensions: EcbStatsRes
 
 var last_global_position: Vector2
@@ -24,20 +26,32 @@ func _ready() -> void:
 	
 func init_stats(stats: EcbStatsRes) -> void:
 	set_shape(stats)
+	
+func bind(_article: Article) -> void:
+	article = _article
+	set_shape(article.entity.ecb_stats)
 
-func tick(article: Article, delta: float) -> void:
+#func tick(article: Article, delta: float) -> void:
+func tick(delta: float) -> void:
+	# Request the engine to call _draw() on the next frame
+	if article.debug:
+		queue_redraw()
 	## Check for collisions at the beginning of the physics frame (Article calls tick() first)
 	if dimensions.CONTINUOUS_COLLISION_DETECTION:
-		update_ecb_rays(article, delta)
+		update_ecb_rays(delta)
 	## check for collisions again at the end of the physics frame
-	call_deferred("update_ecb_rays", article, delta)
+	call_deferred("update_ecb_rays", delta)
 	## update last global position for offset vectors
 	call_deferred("update_last_position")
 	
 func _on_area_entered(_area: Area2D) -> void:
 	pass
 	
-func update_ecb_rays(article: Article, delta: float) -> void:
+func _draw() -> void:
+	if article.debug:
+		_draw_debug_ecb()
+	
+func update_ecb_rays(delta: float) -> void:
 		## Get offset and projected velocity vectors
 		var velocity_vec: Vector2 = global_position - last_global_position
 		var velocity_projection: Vector2 = article.entity.body_vel * delta
@@ -171,3 +185,30 @@ func set_shape_to_default():
 	
 func update_last_position():
 	last_global_position = global_position
+	
+func _draw_debug_ecb() -> void:
+	var velocity_vec: Vector2 = global_position - last_global_position
+	var top_pos: Vector2 = Vector2(0.0, -dimensions.height)
+	var left_pos: Vector2 = Vector2(-dimensions.left_span, -dimensions.center)
+	var right_pos: Vector2 = Vector2(dimensions.right_span, -dimensions.center)
+	var physics_delta = get_physics_process_delta_time()
+	var velocity_projection: Vector2 = article.entity.body_vel * physics_delta
+	#var top_color: Color = Color.GREEN if top_collider && top_collider.position else Color.RED
+	# Fetch the physics frame delta (usually 0.016667 for 60 FPS)
+	## draw ecb boundaries
+	draw_line(top_pos, left_pos, Color.CORAL, 1.0)
+	draw_line(left_pos, Vector2.ZERO, Color.CORAL, 1.0)
+	draw_line(Vector2.ZERO, right_pos, Color.CORAL, 1.0)
+	draw_line(right_pos, top_pos, Color.CORAL, 1.0)
+	## draw TOP offset & projection vectors
+	draw_line(top_pos, top_pos - velocity_vec, Color.GREEN, 1.0)
+	draw_line(top_pos, top_pos + velocity_projection, Color.GREEN, 1.0)
+	## draw RIGHT offset & projection vectors
+	draw_line(right_pos, right_pos - velocity_vec, Color.GREEN, 1.0)
+	draw_line(right_pos, right_pos + velocity_projection, Color.GREEN, 1.0)
+	## draw LEFT offset & projection vectors
+	draw_line(left_pos, left_pos - velocity_vec, Color.GREEN, 1.0)
+	draw_line(left_pos, left_pos + velocity_projection, Color.GREEN, 1.0)
+	## draw BOTTOM offset & projection vectors
+	draw_line(Vector2.ZERO, -velocity_vec, Color.GREEN, 1.0)
+	draw_line(Vector2.ZERO, velocity_projection, Color.GREEN, 1.0)

@@ -23,7 +23,8 @@ var velocity: Vector2
 func _ready() -> void:
 	velocity = Vector2.ZERO 
 	entity.init()
-	ecb.init_stats(entity.ecb_stats)
+	#ecb.init_stats(entity.ecb_stats)
+	ecb.bind(self)
 	if model is Sprite2D:
 		model.texture = entity.texture_2D
 		model.material = ShaderMaterial.new()
@@ -35,7 +36,8 @@ func _ready() -> void:
 		
 func _physics_process(delta: float) -> void:
 	handle_velocity(delta)
-	ecb.tick(self, delta)
+	#ecb.tick(self, delta)
+	ecb.tick(delta)
 	_update_components(delta)
 		
 	#handle_velocity(delta)
