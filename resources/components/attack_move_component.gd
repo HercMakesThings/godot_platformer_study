@@ -53,6 +53,7 @@ func _update(delta: float) -> void:
 			
 	#for box in hitboxes:
 	for box: Hitbox in hitbox_owner.get_children():
+		box.set_debug(actor.debug)
 		if atk_initiated:
 			for statblock in box.stats_array:
 				if frames >= statblock.active_window_start && frames < statblock.active_window_start + statblock.active_window + active_frames_modifier:

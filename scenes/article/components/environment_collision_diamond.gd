@@ -33,9 +33,10 @@ func bind(_article: Article) -> void:
 
 #func tick(article: Article, delta: float) -> void:
 func tick(delta: float) -> void:
-	# Request the engine to call _draw() on the next frame
-	if article.debug:
-		queue_redraw()
+	## Request the engine to call _draw() on the next frame
+	queue_redraw()
+	#if article.debug:
+		#queue_redraw()
 	## Check for collisions at the beginning of the physics frame (Article calls tick() first)
 	if dimensions.CONTINUOUS_COLLISION_DETECTION:
 		update_ecb_rays(delta)
@@ -48,6 +49,8 @@ func _on_area_entered(_area: Area2D) -> void:
 	pass
 	
 func _draw() -> void:
+	if !article:
+		return
 	if article.debug:
 		_draw_debug_ecb()
 	

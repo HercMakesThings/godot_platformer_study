@@ -14,9 +14,13 @@ var owner_hurtbox: Hurtbox
 
 signal shape_hit_something(hitbox: Area2D, shape_index: int, hurtbox: Area2D)
 
+var _debug: bool
+
 func _ready() -> void:
 	monitorable = false
 	is_active = false
+	#if !_debug:
+		#_debug = false
 	area_shape_entered.connect(_on_area_2d_body_shape_entered)
 	orientation = 1
 	add_to_group("atk_hitbox_group")
@@ -32,7 +36,7 @@ func _ready() -> void:
 func tick(_delta: float) -> void:
 	## TODO: decide whether hitbox should handle its own orientation
 	## or should the ability its tied to handle that
-	
+	#print("hitbox debug status: " + str(_debug))
 	for i in range(stats_array.size()):
 		shapes_array[i].set_disabled(!stats_array[i].is_active)
 		shapes_array[i].visible = stats_array[i].is_active
@@ -43,6 +47,10 @@ func tick(_delta: float) -> void:
 		stats_array[i].angle_vec = Vector2(abs(stats_array[i].angle_vec.x)*orientation, stats_array[i].angle_vec.y)
 		var angle_dif = angle_visual_array[i].target_position.angle_to(stats_array[i].angle_vec)
 		angle_visual_array[i].target_position = angle_visual_array[i].target_position.rotated(angle_dif)
+		
+func _physics_process(_delta: float) -> void:
+	if _debug:
+		queue_redraw()
 	
 func set_orientation(o: int) -> void:
 	orientation = o
@@ -60,9 +68,11 @@ func init_shape_stats():
 		shapes_array[count].visible = statblock.is_active
 		angle_visual_array[count].visible = statblock.is_active
 		count += 1
+		
+func set_debug(d: bool) -> void:
+	_debug = d
 	
 func _on_area_2d_body_shape_entered(area_rid: RID, area: Node2D, _area_shape_index: int, local_shape_index: int) -> void:
-	# Add to list of hurtboxes hitbox has contacted (while move is active)
 	if owner_hurtbox == null:
 		return
 	if area is not Hurtbox:
@@ -71,6 +81,7 @@ func _on_area_2d_body_shape_entered(area_rid: RID, area: Node2D, _area_shape_ind
 		return
 	if owner_hurtbox.get_rid() == area_rid:
 		return
+	## Add to list of hurtboxes hitbox has contacted (while move is active)
 	collided_hurtboxes.append(area)
 	## Find the shape owner ID using the index
 	#var shape_owner_id: int = shape_find_owner(local_shape_index)
@@ -79,3 +90,30 @@ func _on_area_2d_body_shape_entered(area_rid: RID, area: Node2D, _area_shape_ind
 	#shape_hit_something.emit(self, shape_owner_id, area)
 	shape_hit_something.emit(self, local_shape_index, area)
 	area.contacted(self, get_rid(), local_shape_index)
+	
+func _draw() -> void:
+	if _debug:
+		_draw_debug_shapes()
+	
+func _draw_debug_shapes() -> void:
+	for i: int in range(shapes_array.size()):
+	#for shape in get_children():
+		var shape: CollisionShape2D = shapes_array[i]
+		if shape is not CollisionShape2D:
+			continue
+		if shape.disabled:
+			continue
+		var style_box: StyleBoxFlat = StyleBoxFlat.new()
+		style_box.corner_detail = 8
+		style_box.set_corner_radius_all(20)
+		style_box.bg_color = Color.RED
+		style_box.bg_color.a = 0.6
+		var height: float = shape.shape.height if shape.shape is CapsuleShape2D else 4.0
+		var radius: float = shape.shape.radius
+		var pos: Vector2 = shape.position
+		var rect: Rect2 = Rect2(pos, Vector2(radius*2.0, height))
+		var angle_rad: float = deg_to_rad(shape.rotation_degrees)
+		draw_set_transform(pos, angle_rad, Vector2.ONE)
+		var centered_rect = Rect2(-rect.size / 2, rect.size)
+		draw_style_box(style_box, centered_rect)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

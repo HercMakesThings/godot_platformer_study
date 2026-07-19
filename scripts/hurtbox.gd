@@ -19,18 +19,22 @@ func _draw() -> void:
 	if !article:
 		return
 	if article.debug:
-		var debug_vis: StyleBoxFlat = StyleBoxFlat.new()
-		debug_vis.set_corner_radius_all(20)
-		debug_vis.corner_detail = 8
-		debug_vis.bg_color = Color.DARK_GOLDENROD
-		debug_vis.bg_color.a = 0.6
-		var shape: CollisionShape2D = get_child(0)
-		var height: float = shape.shape.height if shape.shape is CapsuleShape2D else 4.0
-		var radius: float = shape.shape.radius
-		draw_style_box(debug_vis, Rect2(Vector2(-radius, -height), Vector2(radius*2.0, height)))
+		_draw_debug_shapes()
+		
+func _draw_debug_shapes() -> void:
+	var debug_vis: StyleBoxFlat = StyleBoxFlat.new()
+	debug_vis.set_corner_radius_all(20)
+	debug_vis.corner_detail = 8
+	debug_vis.bg_color = Color.DARK_GOLDENROD
+	debug_vis.bg_color.a = 0.6
+	var shape: CollisionShape2D = get_child(0)
+	var height: float = shape.shape.height if shape.shape is CapsuleShape2D else 4.0
+	var radius: float = shape.shape.radius
+	draw_style_box(debug_vis, Rect2(Vector2(-radius, -height), Vector2(radius*2.0, height)))
 	
-#func _physics_process(_delta: float) -> void:
-	#queue_redraw()
+func _physics_process(_delta: float) -> void:
+	#if article.debug:
+		queue_redraw()
 	
 #func _on_hurtbox_area_entered(area: Area2D) -> void:
 	#if area.is_in_group("atk_hitbox_group") and area is Hitbox:
