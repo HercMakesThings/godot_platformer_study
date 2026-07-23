@@ -85,7 +85,7 @@ body = NodePath("..")
 metadata/_custom_type_script = "uid://3yiwskv8i3aa"
 
 [node name="EnvironmentCollisionDiamond" type="Area2D" parent="." unique_id=1315620430]
-collision_mask = 3
+collision_mask = 2
 script = ExtResource("9_8kk3p")
 metadata/_custom_type_script = "uid://uubyevs7hmlh"
 

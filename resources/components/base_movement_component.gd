@@ -233,7 +233,7 @@ func handle_state(entity, delta) -> void:
 					entity.change_state(entity.MoveState.LANDLAG)
 					return
 			else:
-				entity.apply_gravity()
+				entity.apply_gravity(0.0, 1.6)
 				if !entity.can_move:
 					return
 				if entity.on_ground:

@@ -87,10 +87,10 @@ func change_state(new: MoveState) -> void:
 	move_state_frame = 0
 	current_state = new
 	
-func apply_gravity(extra: float = 0) -> void:
+func apply_gravity(extra: float = 0.0, falling_mod: float = 1.5) -> void:
 	if body_vel.y <= TERMINAL_VELOCITY:
 		if body_vel.y > 0.0:
-			body_vel.y = move_toward(body_vel.y, TERMINAL_VELOCITY, gravity * 1.5 + extra)
+			body_vel.y = move_toward(body_vel.y, TERMINAL_VELOCITY, gravity * falling_mod + extra)
 		else:
 			body_vel.y = move_toward(body_vel.y, TERMINAL_VELOCITY, gravity + extra)
 	body_vel.y = clamp(body_vel.y, -TERMINAL_VELOCITY, TERMINAL_VELOCITY)

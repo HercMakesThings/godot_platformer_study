@@ -1,11 +1,9 @@
 class_name Hitbox extends Area2D
 
-@export var stats_array: Array[HitboxStats]
 @export var shapes_array: Array[CollisionShape2D]
-@export var angle_visual_array: Array[RayCast2D]
 
 var is_active: bool
-var orientation: int
+#var orientation: int
 
 var hitbox_shape: CollisionShape2D
 
@@ -15,60 +13,27 @@ var owner_hurtbox: Hurtbox
 signal shape_hit_something(hitbox: Area2D, shape_index: int, hurtbox: Area2D)
 
 var _debug: bool
+var shape_angle_vis_arr: PackedVector2Array
 
 func _ready() -> void:
 	monitorable = false
+	monitoring = true
 	is_active = false
-	#if !_debug:
-		#_debug = false
 	area_shape_entered.connect(_on_area_2d_body_shape_entered)
-	orientation = 1
+	#orientation = 1
 	add_to_group("atk_hitbox_group")
 	if get_child_count() > 0 && shapes_array.size() == 0:
 		for child in get_children():
 			if child is CollisionShape2D:
 				shapes_array.append(child)
-			elif child is RayCast2D:
-				angle_visual_array.append(child)
-	init_shape_stats()
-		
 	
-func tick(_delta: float) -> void:
-	## TODO: decide whether hitbox should handle its own orientation
-	## or should the ability its tied to handle that
-	#print("hitbox debug status: " + str(_debug))
-	for i in range(stats_array.size()):
-		shapes_array[i].set_disabled(!stats_array[i].is_active)
-		shapes_array[i].visible = stats_array[i].is_active
-		angle_visual_array[i].visible = stats_array[i].is_active
-		shapes_array[i].position.x = abs(shapes_array[i].position.x)*orientation
-		angle_visual_array[i].position.x = abs(angle_visual_array[i].position.x)*orientation
-		shapes_array[i].rotation_degrees = abs(shapes_array[i].rotation_degrees)*orientation
-		stats_array[i].angle_vec = Vector2(abs(stats_array[i].angle_vec.x)*orientation, stats_array[i].angle_vec.y)
-		var angle_dif = angle_visual_array[i].target_position.angle_to(stats_array[i].angle_vec)
-		angle_visual_array[i].target_position = angle_visual_array[i].target_position.rotated(angle_dif)
-		
 func _physics_process(_delta: float) -> void:
 	if _debug:
 		queue_redraw()
 	
-func set_orientation(o: int) -> void:
-	orientation = o
+#func set_orientation(o: int) -> void:
+	#orientation = o
 	
-func init_shape_stats():
-	if !stats_array:
-		return
-	var count: int = 0
-	for statblock in stats_array:
-		shapes_array[count].rotation_degrees = statblock.rot * orientation
-		var angle_radians: float = deg_to_rad(statblock.angle)
-		statblock.angle_vec = statblock.angle_vec.rotated(angle_radians * orientation)
-		var angle_dif: float = angle_visual_array[count].target_position.angle_to(statblock.angle_vec)
-		angle_visual_array[count].target_position = angle_visual_array[count].target_position.rotated(angle_dif)
-		shapes_array[count].visible = statblock.is_active
-		angle_visual_array[count].visible = statblock.is_active
-		count += 1
-		
 func set_debug(d: bool) -> void:
 	_debug = d
 	
@@ -97,7 +62,6 @@ func _draw() -> void:
 	
 func _draw_debug_shapes() -> void:
 	for i: int in range(shapes_array.size()):
-	#for shape in get_children():
 		var shape: CollisionShape2D = shapes_array[i]
 		if shape is not CollisionShape2D:
 			continue
@@ -116,4 +80,8 @@ func _draw_debug_shapes() -> void:
 		draw_set_transform(pos, angle_rad, Vector2.ONE)
 		var centered_rect = Rect2(-rect.size / 2, rect.size)
 		draw_style_box(style_box, centered_rect)
+		draw_set_transform(pos, 0.0, Vector2.ONE)
+		var line_col: Color = Color.WHITE
+		line_col.a = 0.6
+		draw_line(Vector2.ZERO, shape_angle_vis_arr[i], line_col, 0.5)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
