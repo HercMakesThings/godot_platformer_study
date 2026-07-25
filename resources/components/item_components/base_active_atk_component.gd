@@ -11,6 +11,8 @@ var hitbox_owner_node: Node2D
 
 var initial_collided_hurtboxes: Array[Hurtbox]
 
+var collided_hurtboxes: Array[Hurtbox]
+
 signal atk_connected
 
 var deactivated: bool
@@ -28,17 +30,20 @@ func update(delta: float) -> void:
 		tick_hitbox(box, i, delta)
 		if actor.entity.body_on_ground:
 			deactivated = false
-			if box.collided_hurtboxes.size() > 0:
-				box.collided_hurtboxes.clear()
+			collided_hurtboxes.clear()
+			initial_collided_hurtboxes.clear()
 		
 func _hitbox_shape_hit_something(hitbox: Area2D, shape_index: int, hurtbox: Area2D) -> void:
+	if hurtbox.get_rid() == actor.hurtbox.get_rid():
+		return
+	if hurtbox in collided_hurtboxes:
+		return
+	collided_hurtboxes.append(hurtbox)
 	print(str(hitbox.name) + " hitbox hit " + str(hurtbox.name) + " at shape index " + str(shape_index))
 	#for eff: OnReceivedHitEffect in on_received_hit_effects:
 		#eff._execute(actor, hitbox, hitbox.get_rid(), shape_index)
 	## determine hitbox index to get the right statblock
 	var hitbox_idx: int
-	#for i: int in range(default_hitboxes.size()):
-		#var box: Hitbox = default_hitboxes[i]
 	for i: int in range(hitbox_owner_node.get_child_count()):
 		var box: Hitbox = hitbox_owner_node.get_children()[i]
 		if hitbox.name == box.name:
@@ -76,14 +81,13 @@ func _generate_move_hitboxes(collection: Array[HitboxShapeStatsList]) -> void:
 			child.queue_free()
 	for i: int in range(hitbox_stats_collection.size()):
 		var new_hitbox: Hitbox = Hitbox.new()
-		new_hitbox.owner_hurtbox = actor.hurtbox
 		new_hitbox.shape_hit_something.connect(_hitbox_shape_hit_something)
 		new_hitbox.set_collision_layer_value(1, false)
 		new_hitbox.set_collision_mask_value(1, false)
 		new_hitbox.set_collision_mask_value(5, true)
 		if initial_collided_hurtboxes.size() > 0:
 			for _b in initial_collided_hurtboxes:
-				new_hitbox.collided_hurtboxes.append(_b)
+				collided_hurtboxes.append(_b)
 		for j: int in range(hitbox_stats_collection[i].hitbox_stats_array.size()):
 			var statblock: HitboxStats = hitbox_stats_collection[i].hitbox_stats_array[j]
 			var shape: CollisionShape2D = CollisionShape2D.new()

@@ -20,9 +20,17 @@ func handle_state(entity, delta) -> void:
 			if entity.body_on_ground:
 				if !entity.can_move:
 					return
-				if entity.direction.x > entity.deadzone:
+				#if entity.direction.x > entity.deadzone:
+					#entity.orientation = 1
+				#elif entity.direction.x < -entity.deadzone:
+					#entity.orientation = -1
+				#if entity.direction.x > 0.05:
+					#entity.orientation = 1
+				#elif entity.direction.x < -0.05:
+					#entity.orientation = -1
+				if entity.direction.x > 0.0:
 					entity.orientation = 1
-				elif entity.direction.x < -entity.deadzone:
+				elif entity.direction.x < 0.0:
 					entity.orientation = -1
 				if abs(entity.direction.x) >= entity.deadzone && abs(entity.direction.x) < entity.hard_press_thresh:
 					entity.change_state(entity.MoveState.WALK)

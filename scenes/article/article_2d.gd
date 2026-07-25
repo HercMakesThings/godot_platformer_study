@@ -25,6 +25,7 @@ func _ready() -> void:
 	entity.init()
 	#ecb.init_stats(entity.ecb_stats)
 	ecb.bind(self)
+	hurtbox.bind(self)
 	if model is Sprite2D:
 		model.texture = entity.texture_2D
 		model.material = ShaderMaterial.new()

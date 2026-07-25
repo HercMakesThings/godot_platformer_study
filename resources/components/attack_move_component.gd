@@ -19,6 +19,8 @@ var atk_initiated: bool
 var frames: int
 var active_frames_modifier: int
 
+var collided_hurtboxes: Array[Hurtbox]
+
 signal atk_connected
 signal move_completed(newState: AttackComponent.AtkMoveState)
 
@@ -44,10 +46,7 @@ func _update(delta: float) -> void:
 			active_frames_modifier = 0
 			actor.entity.can_move = true
 			actor.entity.move_paused = false
-			print("attack ending!")
-			for box: Hitbox in hitbox_owner_node.get_children():
-				print("clearing collided hurtboxes")
-				box.collided_hurtboxes.clear()
+			collided_hurtboxes.clear()
 			move_completed.emit(AttackComponent.AtkMoveState.IDLE)
 			
 	for i: int in range(hitboxes.size()):
@@ -78,7 +77,6 @@ func generate_move_hitboxes(collection: Array[HitboxShapeStatsList]) -> void:
 			child.queue_free()
 	for i: int in range(hitbox_stats_collection.size()):
 		var new_hitbox: Hitbox = Hitbox.new()
-		new_hitbox.owner_hurtbox = actor.hurtbox
 		new_hitbox.shape_hit_something.connect(_hitbox_shape_hit_something)
 		new_hitbox.set_collision_layer_value(1, false)
 		new_hitbox.set_collision_mask_value(1, false)
@@ -104,9 +102,12 @@ func generate_move_hitboxes(collection: Array[HitboxShapeStatsList]) -> void:
 		hitboxes.append(new_hitbox)
 		
 func _hitbox_shape_hit_something(hitbox: Area2D, hitbox_shape_index: int, hurtbox: Area2D) -> void:
+	if hurtbox.get_rid() == actor.hurtbox.get_rid():
+		return
+	if hurtbox in collided_hurtboxes:
+		return
+	collided_hurtboxes.append(hurtbox)
 	print(str(hitbox.name) + " hitbox hit " + str(hurtbox.name) + " at hitbox shape index " + str(hitbox_shape_index))
-	#hitbox_shape_hit_something.emit(hitbox, shape_index, hurtbox
-	#for box in hitboxes:
 	var hitbox_idx: int
 	for i: int in range(hitboxes.size()):
 		var box: Hitbox = hitboxes[i]

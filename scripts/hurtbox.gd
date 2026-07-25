@@ -1,16 +1,22 @@
 extends Area2D
 class_name Hurtbox
 
-#signal hurtbox_hit(hitbox: Hitbox)
-
 var article: Article
 
 signal hurtbox_was_hit(hitbox: Hitbox, area_rid: RID, area_shape_index: int)
 
+func bind(_article: Article) -> void:
+	article = _article
+
 func _ready() -> void:
+	## set hurtbox to only be in hurtbox physics layer
 	monitoring = false
-	if get_parent() is Article:
-		article = get_parent()
+	monitorable = true
+	set_collision_mask_value(1, false)
+	set_collision_layer_value(1, false)
+	set_collision_layer_value(5, true)
+	#if get_parent() is Article && !article:
+		#article = get_parent()
 	
 func contacted(area: Area2D, area_rid: RID, area_shape_index: int) -> void:
 	hurtbox_was_hit.emit(area, area_rid, area_shape_index)
@@ -33,15 +39,9 @@ func _draw_debug_shapes() -> void:
 	draw_style_box(debug_vis, Rect2(Vector2(-radius, -height), Vector2(radius*2.0, height)))
 	
 func _physics_process(_delta: float) -> void:
-	#if article.debug:
+	if article.debug:
 		queue_redraw()
 	
-#func _on_hurtbox_area_entered(area: Area2D) -> void:
-	#if area.is_in_group("atk_hitbox_group") and area is Hitbox:
-		##print(area.dmg)
-		##hurtbox_hit.emit(area)
-		#pass
-#
 #func _on_hurtbox_area_shape_entered(area_rid: RID, area: Area2D, area_shape_index: int, _local_shape_index: int):
 	#if area is not Hitbox:
 		#return
@@ -52,4 +52,3 @@ func _physics_process(_delta: float) -> void:
 		#return
 	#if area is Hitbox && area.owner_hurtbox.get_rid() != get_rid():
 		#hurtbox_was_hit.emit(area, area_rid, area_shape_index)
-	
