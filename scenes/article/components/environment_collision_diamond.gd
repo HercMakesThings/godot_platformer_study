@@ -30,7 +30,7 @@ func init_stats(stats: EcbStatsRes) -> void:
 func bind(_article: Article) -> void:
 	article = _article
 	set_shape(article.entity.ecb_stats)
-
+	
 #func tick(article: Article, delta: float) -> void:
 func tick(delta: float) -> void:
 	## Request the engine to call _draw() on the next frame
