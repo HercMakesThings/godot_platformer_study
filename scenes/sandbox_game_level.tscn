@@ -339,7 +339,7 @@ script = ExtResource("1_sv4m1")
 unique_name_in_owner = true
 
 [node name="Actor" parent="Articles" unique_id=1557691037 instance=ExtResource("19_xdh4x")]
-position = Vector2(-96, -8)
+position = Vector2(-107, -62)
 entity = SubResource("Resource_1oj7r")
 _components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_xen7v"), SubResource("Resource_xwsm1"), SubResource("Resource_iajgh"), SubResource("Resource_kuj1c"), SubResource("Resource_hj2df"), SubResource("Resource_pnxvg")])
 
@@ -355,7 +355,7 @@ status = SubResource("Resource_0t3xq")
 _components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_7vo24"), SubResource("Resource_pgml8"), SubResource("Resource_xf2lg")])
 
 [node name="Sandbag" parent="Articles" unique_id=1988568871 instance=ExtResource("24_5bxoa")]
-position = Vector2(-37, -20)
+position = Vector2(-34, -53)
 entity = SubResource("Resource_58mri")
 status = SubResource("Resource_q5f03")
 _components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_rd1xp"), SubResource("Resource_hxpxq"), SubResource("Resource_gndfj")])
