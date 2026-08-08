@@ -230,10 +230,10 @@ metadata/_custom_type_script = "uid://cpvpjmguj38se"
 [sub_resource type="Resource" id="Resource_g7lnm"]
 resource_local_to_scene = true
 script = ExtResource("5_rg6m1")
-height = 8.0
-center = 4.0
 left_span = 4.0
 right_span = 4.0
+top_span = 4.0
+bottom_span = 4.0
 metadata/_custom_type_script = "uid://c7r4bmhxr5nip"
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_kuj1c"]
@@ -339,7 +339,7 @@ script = ExtResource("1_sv4m1")
 unique_name_in_owner = true
 
 [node name="Actor" parent="Articles" unique_id=1557691037 instance=ExtResource("19_xdh4x")]
-position = Vector2(-107, -62)
+position = Vector2(-105, -53)
 entity = SubResource("Resource_1oj7r")
 _components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_xen7v"), SubResource("Resource_xwsm1"), SubResource("Resource_iajgh"), SubResource("Resource_kuj1c"), SubResource("Resource_hj2df"), SubResource("Resource_pnxvg")])
 

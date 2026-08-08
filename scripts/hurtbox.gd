@@ -1,6 +1,8 @@
 extends Area2D
 class_name Hurtbox
 
+@export var shapes_array: Array[CollisionShape2D]
+
 var article: Article
 
 signal hurtbox_was_hit(hitbox: Hitbox, area_rid: RID, area_shape_index: int)
@@ -17,6 +19,11 @@ func _ready() -> void:
 	set_collision_layer_value(5, true)
 	#if get_parent() is Article && !article:
 		#article = get_parent()
+	if shapes_array.size() == 0:
+		for shape in get_children():
+			if shape is not CollisionShape2D:
+				continue
+			shapes_array.append(shape)
 	
 func contacted(area: Area2D, area_rid: RID, area_shape_index: int) -> void:
 	hurtbox_was_hit.emit(area, area_rid, area_shape_index)
@@ -36,7 +43,7 @@ func _draw_debug_shapes() -> void:
 	var shape: CollisionShape2D = get_child(0)
 	var height: float = shape.shape.height if shape.shape is CapsuleShape2D else 4.0
 	var radius: float = shape.shape.radius
-	draw_style_box(debug_vis, Rect2(Vector2(-radius, -height), Vector2(radius*2.0, height)))
+	draw_style_box(debug_vis, Rect2(Vector2(-radius, -shapes_array[0].position.y), Vector2(radius*2.0, height)))
 	
 func _physics_process(_delta: float) -> void:
 	if article.debug:

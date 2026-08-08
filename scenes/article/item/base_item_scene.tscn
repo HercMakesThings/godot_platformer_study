@@ -40,7 +40,6 @@ script = ExtResource("4_63u8s")
 metadata/_custom_type_script = "uid://lpgo7mxv0d5h"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1302287758]
-position = Vector2(0, -4.135)
 shape = SubResource("CircleShape2D_gudfk")
 debug_color = Color(0.4993003, 0.57446873, 0.2679287, 0.41960785)
 
@@ -48,7 +47,6 @@ debug_color = Color(0.4993003, 0.57446873, 0.2679287, 0.41960785)
 unique_name_in_owner = true
 
 [node name="DebugOrientationVisualizer" type="RayCast2D" parent="." unique_id=635522620 node_paths=PackedStringArray("body")]
-position = Vector2(0, -7.06)
 enabled = false
 target_position = Vector2(10.32, 0)
 collide_with_bodies = false

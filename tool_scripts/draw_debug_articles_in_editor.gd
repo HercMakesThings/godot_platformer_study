@@ -21,13 +21,14 @@ func _draw() -> void:
 			if !a.debug:
 				continue
 			var dimensions: EcbStatsRes = a.entity.ecb_stats
-			var top_pos: Vector2 = a.global_position + Vector2(0.0, -dimensions.height)
-			var left_pos: Vector2 = a.global_position + Vector2(-dimensions.left_span, -dimensions.center)
-			var right_pos: Vector2 = a.global_position + Vector2(dimensions.right_span, -dimensions.center)
+			var top_pos: Vector2 = a.global_position + Vector2(0.0, -dimensions.top_span)
+			var left_pos: Vector2 = a.global_position + Vector2(-dimensions.left_span, 0.0)
+			var right_pos: Vector2 = a.global_position + Vector2(dimensions.right_span, 0.0)
+			var bottom_pos: Vector2 = a.global_position + Vector2(0.0, dimensions.bottom_span)
 			## draw ecb boundaries
 			draw_line(top_pos, left_pos, Color.CORAL, 1.0)
-			draw_line(left_pos, a.global_position, Color.CORAL, 1.0)
-			draw_line(a.global_position, right_pos, Color.CORAL, 1.0)
+			draw_line(left_pos, bottom_pos, Color.CORAL, 1.0)
+			draw_line(bottom_pos, right_pos, Color.CORAL, 1.0)
 			draw_line(right_pos, top_pos, Color.CORAL, 1.0)
 			## draw hurtboxes
 			var debug_vis: StyleBoxFlat = StyleBoxFlat.new()
@@ -36,8 +37,6 @@ func _draw() -> void:
 			debug_vis.bg_color = Color.DARK_GOLDENROD
 			debug_vis.bg_color.a = 0.6
 			for shape: CollisionShape2D in a.hurtbox.get_children():
-				#var shape: CollisionShape2D = get_child(0)
 				var height: float = shape.shape.height if shape.shape is CapsuleShape2D else 4.0
 				var radius: float = shape.shape.radius
-				#draw_style_box(debug_vis, Rect2(Vector2(-radius, -height), Vector2(radius*2.0, height)))
 				draw_style_box(debug_vis, Rect2(a.global_position + Vector2(-radius, -height*0.5) + shape.position, Vector2(radius*2.0, height)))

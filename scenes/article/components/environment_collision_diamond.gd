@@ -10,17 +10,8 @@ var dimensions: EcbStatsRes
 
 var last_global_position: Vector2
 
-#var right_collider: Object = null
-#var left_collider: Object = null
-#var top_collider: Object = null
-#var bottom_collider: Object = null
-
-#var _center_pos: Vector2
-#var _right_pos: Vector2
-#var _left_pos: Vector2
-#var _top_pos: Vector2
-
-var _bounding_box: Dictionary[String, Vector2]
+enum BoxPoint{ TOP, RIGHT, BOTTOM, LEFT, CENTER }
+var _bounding_box: Dictionary[BoxPoint, Vector2]
 
 func _ready() -> void:
 	area_entered.connect(_on_area_entered)
@@ -58,53 +49,48 @@ func update_ecb_rays(delta: float) -> void:
 		## Get offset and projected velocity vectors
 		var velocity_vec: Vector2 = global_position - last_global_position
 		var velocity_projection: Vector2 = article.entity.body_vel * delta
-		## Update ecb corners in global space (bottom currently == global_position)
-		#_center_pos = global_position + Vector2(0.0, -dimensions.center)
-		#_left_pos = global_position + Vector2(-dimensions.left_span, -dimensions.center)
-		#_right_pos = global_position + Vector2(dimensions.right_span, -dimensions.center)
-		#_top_pos = global_position + Vector2(0.0, -dimensions.height)
-		_bounding_box.set("top", global_position + Vector2(0.0, -dimensions.height))
-		_bounding_box.set("right", global_position + Vector2(dimensions.right_span, -dimensions.center))
-		_bounding_box.set("bottom", global_position)
-		_bounding_box.set("left", global_position + Vector2(-dimensions.left_span, -dimensions.center))
-		_bounding_box.set("center", global_position + Vector2(0.0, -dimensions.center))
+		## Update bounding box vector points (in global space) for raycast queries
+		_bounding_box.set(BoxPoint.TOP, global_position + Vector2(0.0, -dimensions.top_span))
+		_bounding_box.set(BoxPoint.RIGHT, global_position + Vector2(dimensions.right_span, 0.0))
+		_bounding_box.set(BoxPoint.BOTTOM, global_position + Vector2(0.0, dimensions.bottom_span))
+		_bounding_box.set(BoxPoint.LEFT, global_position + Vector2(-dimensions.left_span, 0.0))
+		_bounding_box.set(BoxPoint.CENTER, global_position)
 		###### query physics state
 		var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
-		## experiment
-		## cast rays for each point in the diamond
-		for k: String in _bounding_box.keys():
-			if k == "center":
+		## cast rays for each point in the diamond and handle collisions
+		for k: BoxPoint in _bounding_box.keys():
+			if k == BoxPoint.CENTER:
 				return
 			var _pos: Vector2 = _bounding_box.get(k)
 			var _collider: Object = _get_ecb_collider_from_query(
-				_cast_ecb_ray(space_state, _bounding_box.get("center"), _pos),
-				"Wall" if (k == "left" || k == "right") else "Floor",
-				k == "bottom"
+				_cast_ecb_ray(space_state, _bounding_box.get(BoxPoint.CENTER), _pos),
+				"Wall" if (k == BoxPoint.LEFT || k == BoxPoint.RIGHT) else "Floor",
+				k == BoxPoint.BOTTOM
 			)
 			if !_collider:
 				_collider = _get_ecb_collider_from_query(
 					_cast_ecb_ray(space_state, _pos, _pos - velocity_vec),
-					"Wall" if (k == "left" || k == "right") else "Floor",
-					k == "bottom"
+					"Wall" if (k == BoxPoint.LEFT || k == BoxPoint.RIGHT) else "Floor",
+					k == BoxPoint.BOTTOM
 				)
 			if !_collider:
 				_collider = _get_ecb_collider_from_query(
 					_cast_ecb_ray(space_state, _pos, _pos + velocity_projection),
-					"Wall" if (k == "left" || k == "right") else "Floor",
-					k == "bottom"
+					"Wall" if (k == BoxPoint.LEFT || k == BoxPoint.RIGHT) else "Floor",
+					k == BoxPoint.BOTTOM
 				)
 			match k:
-				"top":
+				BoxPoint.TOP:
 					if _collider:
 						if article.entity.body_vel.y < 0.0:
 							article.position.y = _collider.position.y + (_collider.collision_shape.size.y*0.5) + dimensions.height
 							article.entity.body_vel.y = 0.0 ## may or may not need this
-				"right":
+				BoxPoint.RIGHT:
 					if _collider:
 						if article.entity.body_vel.x > 0.0:
 							article.position.x = _collider.position.x - (_collider.collision_shape.size.x*0.5) - dimensions.right_span
 							article.entity.body_vel.x = 0.0
-				"bottom":
+				BoxPoint.BOTTOM:
 					if _collider && _collider is PlatformNew && (article.entity.direction.y <= -article.entity.deadzone && article.entity.can_move):
 						_collider = null
 						return ## early return to allow for dropping through platforms
@@ -113,8 +99,8 @@ func update_ecb_rays(delta: float) -> void:
 						article.entity.is_on_platform = _collider is PlatformNew
 						if article.entity.body_vel.y >= 0.0:
 							article.entity.body_vel.y = 0.0
-							article.position.y = _collider.position.y - (_collider.collision_shape.size.y*0.5)
-				"left":
+							article.position.y = _collider.position.y - (_collider.collision_shape.size.y*0.5) + -dimensions.bottom_span
+				BoxPoint.LEFT:
 					if _collider:
 						if article.entity.body_vel.x < 0.0:
 							article.position.x = _collider.position.x + (_collider.collision_shape.size.x*0.5) + dimensions.left_span
@@ -122,90 +108,6 @@ func update_ecb_rays(delta: float) -> void:
 				_:
 					continue
 			_collider = null
-		## END experiment
-		### left
-		#left_collider = _get_ecb_collider_from_query(
-			#_cast_ecb_ray(space_state, _center_pos, _left_pos),
-			#"Wall"
-		#)
-		#if !left_collider:
-			#left_collider = _get_ecb_collider_from_query(
-				#_cast_ecb_ray(space_state, _left_pos, _left_pos - velocity_vec),
-				#"Wall"
-			#)
-		#if !left_collider:
-			#left_collider = _get_ecb_collider_from_query(
-				#_cast_ecb_ray(space_state, _left_pos, _left_pos + velocity_projection),
-				#"Wall"
-			#)
-		#if left_collider:
-			#if article.entity.body_vel.x < 0.0:
-				#article.position.x = left_collider.position.x + (left_collider.collision_shape.size.x*0.5) + dimensions.left_span
-				#article.entity.body_vel.x = 0.0
-		### right
-		#right_collider = _get_ecb_collider_from_query(
-			#_cast_ecb_ray(space_state, _center_pos, _right_pos),
-			#"Wall"
-		#)
-		#if !right_collider:
-			#right_collider = _get_ecb_collider_from_query(
-				#_cast_ecb_ray(space_state, _right_pos, _right_pos - velocity_vec),
-				#"Wall"
-			#)
-		#if !right_collider:
-			#right_collider = _get_ecb_collider_from_query(
-				#_cast_ecb_ray(space_state, _right_pos, _right_pos + velocity_projection),
-				#"Wall"
-			#)
-		#if right_collider:
-			#if article.entity.body_vel.x > 0.0:
-				#article.position.x = right_collider.position.x - (right_collider.collision_shape.size.x*0.5) - dimensions.right_span
-				#article.entity.body_vel.x = 0.0
-		### top
-		#top_collider = _get_ecb_collider_from_query(
-			#_cast_ecb_ray(space_state, _center_pos, _top_pos),
-			#"Floor"
-		#)
-		#if !top_collider:
-			#top_collider = _get_ecb_collider_from_query(
-				#_cast_ecb_ray(space_state, _top_pos, _top_pos - velocity_vec),
-				#"Floor"
-			#)
-		#if !top_collider:
-			#top_collider = _get_ecb_collider_from_query(
-				#_cast_ecb_ray(space_state, _top_pos, _top_pos + velocity_projection),
-				#"Floor"
-			#)
-		#if top_collider:
-			#if article.entity.body_vel.y < 0.0:
-				#article.position.y = top_collider.position.y + (top_collider.collision_shape.size.y*0.5) + dimensions.height
-				#article.entity.body_vel.y = 0.0 ## may or may not need this
-		### bottom
-		#bottom_collider = _get_ecb_collider_from_query(
-			#_cast_ecb_ray(space_state, _center_pos, global_position),
-			#"Floor",
-			#true
-		#)
-		#if !bottom_collider:
-			#bottom_collider = _get_ecb_collider_from_query(
-				#_cast_ecb_ray(space_state, global_position, global_position - velocity_vec),
-				#"Floor",
-				#true
-			#)
-		#if !bottom_collider:
-			#bottom_collider = _get_ecb_collider_from_query(
-				#_cast_ecb_ray(space_state, global_position, global_position + velocity_projection),
-				#"Floor",
-				#true
-			#)
-		#if bottom_collider is PlatformNew && (article.entity.direction.y <= -article.entity.deadzone && article.entity.can_move):
-			#return ## early return to allow for dropping through platforms
-		#article.entity.body_on_ground = bottom_collider != null
-		#if bottom_collider:
-			#article.entity.is_on_platform = bottom_collider is PlatformNew
-			#if article.entity.body_vel.y >= 0.0:
-				#article.entity.body_vel.y = 0.0
-				#article.position.y = bottom_collider.position.y - (bottom_collider.collision_shape.size.y*0.5)
 		###### query physics state END
 	
 func _cast_ecb_ray(space_state: PhysicsDirectSpaceState2D, origin: Vector2, end: Vector2) -> Dictionary:
@@ -228,17 +130,17 @@ func _get_ecb_collider_from_query(cast: Dictionary, terrain_type: String, is_bot
 		return null
 	if is_bottom_ray:
 		var coll_point: Vector2 = cast.position
-		if collider is PlatformNew && coll_point.distance_to(global_position) >= dimensions.COLLISION_POINT_THRESHOLD:
+		if collider is PlatformNew && coll_point.distance_to(global_position + Vector2(0.0, dimensions.bottom_span)) >= dimensions.COLLISION_POINT_THRESHOLD:
 			return null
 	return collider
 	
 func set_shape(stats: EcbStatsRes) -> void:
 	dimensions = stats
 	shape.shape.points = PackedVector2Array([
-		Vector2(0, -stats.height),
-		Vector2(stats.right_span, -stats.center),
-		Vector2.ZERO,
-		Vector2(-stats.left_span, -stats.center)
+		Vector2(0.0, -stats.top_span),
+		Vector2(stats.right_span, 0.0),
+		Vector2(0.0, stats.bottom_span),
+		Vector2(-stats.left_span, 0.0)
 	])
 	
 func set_shape_to_default():
@@ -249,17 +151,18 @@ func update_last_position():
 	
 func _draw_debug_ecb() -> void:
 	var velocity_vec: Vector2 = global_position - last_global_position
-	var top_pos: Vector2 = Vector2(0.0, -dimensions.height)
-	var left_pos: Vector2 = Vector2(-dimensions.left_span, -dimensions.center)
-	var right_pos: Vector2 = Vector2(dimensions.right_span, -dimensions.center)
+	var top_pos: Vector2 = Vector2(0.0, -dimensions.top_span)
+	var left_pos: Vector2 = Vector2(-dimensions.left_span, 0.0)
+	var right_pos: Vector2 = Vector2(dimensions.right_span, 0.0)
+	var bottom_pos: Vector2 = Vector2(0.0, dimensions.bottom_span)
 	var physics_delta = get_physics_process_delta_time()
 	var velocity_projection: Vector2 = article.entity.body_vel * physics_delta
 	#var top_color: Color = Color.GREEN if top_collider && top_collider.position else Color.RED
 	# Fetch the physics frame delta (usually 0.016667 for 60 FPS)
 	## draw ecb boundaries
 	draw_line(top_pos, left_pos, Color.CORAL, 1.0)
-	draw_line(left_pos, Vector2.ZERO, Color.CORAL, 1.0)
-	draw_line(Vector2.ZERO, right_pos, Color.CORAL, 1.0)
+	draw_line(left_pos, bottom_pos, Color.CORAL, 1.0)
+	draw_line(bottom_pos, right_pos, Color.CORAL, 1.0)
 	draw_line(right_pos, top_pos, Color.CORAL, 1.0)
 	## draw TOP offset & projection vectors
 	draw_line(top_pos, top_pos - velocity_vec, Color.GREEN, 1.0)
@@ -271,5 +174,5 @@ func _draw_debug_ecb() -> void:
 	draw_line(left_pos, left_pos - velocity_vec, Color.GREEN, 1.0)
 	draw_line(left_pos, left_pos + velocity_projection, Color.GREEN, 1.0)
 	## draw BOTTOM offset & projection vectors
-	draw_line(Vector2.ZERO, -velocity_vec, Color.GREEN, 1.0)
-	draw_line(Vector2.ZERO, velocity_projection, Color.GREEN, 1.0)
+	draw_line(bottom_pos, bottom_pos + -velocity_vec, Color.GREEN, 1.0)
+	draw_line(bottom_pos, bottom_pos + velocity_projection, Color.GREEN, 1.0)
