@@ -25,16 +25,21 @@ func _execute(attacker: Object, hurtbox: Area2D, _hitbox: Hitbox, hitbox_index: 
 	var atk_kbg: float = statblock.kbg
 	if article is Actor:
 		article.status.update_percent(atk_dmg)
-	var atk_lag: float = statblock.lag
-	var atk_stun: float = statblock.stun
+	var electric: float = 1.5 if statblock.tags.has("electric") else 1.0
+	var c: float = 0.67 if article.entity.current_state == article.entity.MoveState.CROUCH else 1.0
+	var lag: int = floor(floor(floor(atk_dmg / 3 + 4) * electric) * c)
+	lag = clamp(lag, 2, 30)
+	var atk_lag: float = lag
+	var knockback: float = FlushyUtils.calc_kb_no_area(atk_bkb, atk_kbg, atk_dmg, article.status.percent, article.entity.get_weight())
+	var bonus_stun: int = 5 if statblock.tags.has("strong") else 0
+	var atk_stun: int = floor(knockback * 0.4) + bonus_stun
 	for i in range(atk_lag + atk_stun):
 		if i <= atk_lag:
 			article.entity.move_paused = true
 		elif i <= atk_lag + atk_stun:
 			article.entity.move_paused = false
 			var force: Vector2 = atk_angle_vec.normalized()
-			var kb: float = FlushyUtils.calc_kb_no_area(atk_bkb, atk_kbg, atk_dmg, article.status.percent, article.entity.get_weight())
-			force = force * kb
+			force = force * knockback
 			article.entity.body_vel = force
 		await article.get_tree().physics_frame
 	article.entity.gravity = article.entity.GRAVITY

@@ -1,6 +1,6 @@
 class_name BaseMovementComponent extends BaseComponent
 
-func update(delta) -> void:
+func update(delta: float) -> void:
 	## early return for when ability or game mechanic needs
 	## to pause the character entirely
 	if actor.entity.move_paused:
@@ -14,29 +14,21 @@ func update(delta) -> void:
 	actor.entity.move_state_frame = actor.entity.move_state_frame + 1
 	return
 	
-func handle_state(entity, delta) -> void:
+func handle_state(entity: Entity, delta: float) -> void:
+	#print(str(entity.direction.normalized().dot(Vector2(entity.orientation, 0.0).normalized())))
 	match entity.current_state:
 		entity.MoveState.IDLE:
 			if entity.body_on_ground:
 				if !entity.can_move:
 					return
-				#if entity.direction.x > entity.deadzone:
-					#entity.orientation = 1
-				#elif entity.direction.x < -entity.deadzone:
-					#entity.orientation = -1
-				#if entity.direction.x > 0.05:
-					#entity.orientation = 1
-				#elif entity.direction.x < -0.05:
-					#entity.orientation = -1
-				if entity.direction.x > 0.0:
-					entity.orientation = 1
-				elif entity.direction.x < 0.0:
-					entity.orientation = -1
-				if abs(entity.direction.x) >= entity.deadzone && abs(entity.direction.x) < entity.hard_press_thresh:
-					entity.change_state(entity.MoveState.WALK)
+				if entity.direction.normalized().dot(Vector2(entity.orientation, 0.0).normalized()) < 0:
+					entity.change_state(entity.MoveState.TURNAROUND)
 					return
-				elif abs(entity.direction.x) >= entity.hard_press_thresh && entity.move_state_frame > 0:
+				if abs(entity.direction.x) >= entity.hard_press_thresh && entity.move_state_frame <= 3:
 					entity.change_state(entity.MoveState.DASH)
+					return
+				elif abs(entity.direction.x) >= entity.deadzone:
+					entity.change_state(entity.MoveState.WALK)
 					return
 				if entity.jump_just_pressed || entity.jump_pressed:
 					entity.change_state(entity.MoveState.JUMPSQUAT)
@@ -54,8 +46,8 @@ func handle_state(entity, delta) -> void:
 			if entity.body_on_ground:
 				if !entity.can_move:
 					return
-				if entity.move_state_frame < 3 && abs(entity.direction.x) >= entity.hard_press_thresh:
-					entity.change_state(entity.MoveState.DASH)
+				if entity.direction.normalized().dot(entity.body_vel.normalized()) < 0:
+					entity.change_state(entity.MoveState.TURNAROUND)
 					return
 				if absf(entity.direction.x) < entity.deadzone:
 					if entity.body_vel.length() < 1.0 && entity.move_state_frame >= 3:
@@ -68,7 +60,6 @@ func handle_state(entity, delta) -> void:
 				if entity.direction.y < -entity.deadzone + -entity.crouch_thresh:
 					entity.change_state(entity.MoveState.CROUCH)
 					return
-				#entity.apply_accel(entity.walk_force, delta)
 				entity.apply_force(entity.walk_force, delta)
 				# Clamp speed
 				#entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_WALK_SPD, entity.MAX_WALK_SPD)
@@ -84,9 +75,7 @@ func handle_state(entity, delta) -> void:
 				if entity.direction.normalized().dot(entity.body_vel.normalized()) <= 0:
 					if entity.direction.normalized().dot(entity.body_vel.normalized()) < -entity.deadzone:
 						if absf(entity.direction.y) <= entity.hard_press_thresh:
-							entity.body_vel.x = 0
-							entity.accel = Vector2.ZERO
-							entity.change_state(entity.MoveState.IDLE)
+							entity.change_state(entity.MoveState.TURNAROUND)
 							return
 					elif entity.direction.normalized().dot(entity.body_vel.normalized()) == 0:
 						if entity.body_vel.length() < 1.0 && entity.move_state_frame >= 3:
@@ -104,19 +93,11 @@ func handle_state(entity, delta) -> void:
 						#entity.change_state(entity.MoveState.IDLE)
 						#return
 				if entity.move_state_frame >= entity.dash_time:
-					#if abs(entity.direction.x) >= entity.hard_press_thresh:
 					entity.change_state(entity.MoveState.RUN)
 					return
-				#if abs(entity.direction.x) < entity.deadzone:
-					#if entity.body_vel.length() < 1.0 && entity.move_state_frame >= 3:
-						#entity.change_state(entity.MoveState.IDLE)
-						#return
-					#entity.decelerate(delta)
 				if entity.jump_just_pressed || entity.jump_pressed:
 					entity.change_state(entity.MoveState.JUMPSQUAT)
 					return
-				#entity.apply_accel(entity.dash_force, delta)
-				#entity.apply_accel(Vector2(entity.dash_force.x*entity.orientation, entity.dash_force.y), delta, false)
 				entity.apply_force(entity.dash_force, delta)
 				# Clamp speed
 				entity.body_vel.x = clamp(entity.body_vel.x, -entity.MAX_SPEED, entity.MAX_SPEED)
@@ -128,6 +109,30 @@ func handle_state(entity, delta) -> void:
 				entity.on_ground = false
 				entity.change_state(entity.MoveState.AIRBORNE)
 				return
+		entity.MoveState.TURNAROUND:
+			if entity.body_on_ground:
+				if entity.move_state_frame == 1:
+					entity.body_vel.x = 0
+					entity.accel = Vector2.ZERO
+					entity.orientation *= -1
+				if entity.move_state_frame > 1:
+					if abs(entity.direction.x) >= entity.deadzone && abs(entity.direction.x) < entity.hard_press_thresh:
+						entity.change_state(entity.MoveState.WALK)
+						return
+					elif abs(entity.direction.x) >= entity.hard_press_thresh && entity.move_state_frame > 0:
+						entity.change_state(entity.MoveState.DASH)
+						return
+					if entity.jump_just_pressed || entity.jump_pressed:
+						entity.change_state(entity.MoveState.JUMPSQUAT)
+						return
+					if entity.direction.y <= -entity.deadzone + -entity.crouch_thresh:
+						entity.change_state(entity.MoveState.CROUCH)
+						return
+					if entity.body_vel.length() > 0.0:
+						entity.decelerate(delta)
+				if entity.move_state_frame >= 6:
+					entity.change_state(entity.MoveState.IDLE)
+					return
 		entity.MoveState.RUN:
 			if entity.body_on_ground:
 				if !entity.can_move:
@@ -220,19 +225,6 @@ func handle_state(entity, delta) -> void:
 			if entity.body_on_ground:
 				if entity.body_vel.y > 0:
 					entity.body_vel.y = 0
-				#if !on_ground:
-					#on_ground = true
-					##if !contact_point.is_colliding():
-					#if !contact_point:
-						#entity.change_state(MoveState.IDLE)
-						#return
-					#else:
-						#entity.change_state(MoveState.LANDLAG)
-						#return
-				#else:
-					#entity.change_state(MoveState.LANDLAG)
-					#return
-				#if !entity.contact_point:
 				if entity.on_ground:
 					entity.change_state(entity.MoveState.IDLE)
 					return

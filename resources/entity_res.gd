@@ -65,7 +65,7 @@ var body_vel: Vector2 = Vector2.ZERO
 
 var current_state: MoveState
 var move_state_frame: int
-enum MoveState {IDLE, WALK, DASH, RUN, RUNTURN, JUMPSQUAT, AIRBORNE, LANDLAG, CROUCH}
+enum MoveState {IDLE, WALK, TURNAROUND, DASH, RUN, RUNTURN, JUMPSQUAT, AIRBORNE, LANDLAG, CROUCH}
 
 func init() -> void:
 	#orientation = 1
@@ -84,8 +84,10 @@ func init() -> void:
 ## Recommended to early return immediately after calling this function
 ## to prevent an unclean state change
 func change_state(new: MoveState) -> void:
+#func change_state(new: MoveState, callback: Callable) -> void:
 	move_state_frame = 0
 	current_state = new
+	#callback.call(self)
 	
 func apply_gravity(extra: float = 0.0, falling_mod: float = 1.5) -> void:
 	if body_vel.y <= TERMINAL_VELOCITY:

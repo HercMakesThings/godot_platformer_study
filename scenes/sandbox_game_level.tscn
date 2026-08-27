@@ -63,11 +63,10 @@ metadata/_custom_type_script = "uid://cal8xdt3li4hx"
 script = ExtResource("13_vu8dy")
 pos = Vector2(16.35, -6.08)
 angle = 241.0
-bkb = 21.6
-kbg = 27.0
-lag = 8
+bkb = 54.4
+kbg = 81.7
 rot = 105.0
-dmg = 4.0
+dmg = 8.0
 radius = 4.65
 height = 18.0
 metadata/_custom_type_script = "uid://coptrl0topre1"
@@ -104,7 +103,7 @@ metadata/_custom_type_script = "uid://ceyk2xuwjcyt0"
 
 [sub_resource type="Resource" id="Resource_hogu4"]
 script = ExtResource("13_vu8dy")
-pos = Vector2(13.255001, -9.575001)
+pos = Vector2(13.255, 0)
 angle = 224.0
 bkb = 21.6
 kbg = 13.5
@@ -353,12 +352,14 @@ profile = SubResource("Resource_2ey6k")
 entity = SubResource("Resource_absuy")
 status = SubResource("Resource_0t3xq")
 _components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_7vo24"), SubResource("Resource_pgml8"), SubResource("Resource_xf2lg")])
+debug = false
 
 [node name="Sandbag" parent="Articles" unique_id=1988568871 instance=ExtResource("24_5bxoa")]
 position = Vector2(-34, -53)
 entity = SubResource("Resource_58mri")
 status = SubResource("Resource_q5f03")
 _components = Array[ExtResource("12_ru8pc")]([SubResource("Resource_rd1xp"), SubResource("Resource_hxpxq"), SubResource("Resource_gndfj")])
+debug = false
 
 [node name="Terrain" type="Node2D" parent="." unique_id=540272521]
 unique_name_in_owner = true
