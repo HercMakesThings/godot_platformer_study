@@ -106,13 +106,20 @@ func _hitbox_shape_hit_something(hitbox: Area2D, hitbox_shape_index: int, hurtbo
 		return
 	if hurtbox in collided_hurtboxes:
 		return
+	if !hurtbox.get_parent():
+		return
 	collided_hurtboxes.append(hurtbox)
 	print(str(hitbox.name) + " hitbox hit " + str(hurtbox.name) + " at hitbox shape index " + str(hitbox_shape_index))
 	var hitbox_idx: int
+	var article: Article = hurtbox.get_parent()
+	var c: float = 0.67 if article.entity.current_state == article.entity.MoveState.CROUCH else 1.0
 	for i: int in range(hitboxes.size()):
 		var box: Hitbox = hitboxes[i]
 		if hitbox.name == box.name && atk_initiated:
-			active_frames_modifier = hitbox_stats_collection[i].hitbox_stats_array[hitbox_shape_index].lag
+			var statblock: HitboxStats = hitbox_stats_collection[i].hitbox_stats_array[hitbox_shape_index]
+			var electric: float = 1.5 if statblock.tags.has("electric") else 1.0
+			var lag: int = floor(floor(floor(statblock.dmg / 3 + 4) * electric) * c)
+			active_frames_modifier = lag
 			hitbox_idx = i
 	for _effect: OnHitEffect in on_hit_effects:
 		_effect._execute(self, hurtbox, hitbox, hitbox_idx, hitbox_shape_index)

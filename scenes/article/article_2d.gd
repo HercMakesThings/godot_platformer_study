@@ -45,8 +45,8 @@ func _physics_process(delta: float) -> void:
 	#call_deferred("handle_velocity", delta)
 	
 	## debug prints
-	#if debug:
-		#debug_prints()
+	if debug:
+		debug_prints()
 	
 func handle_velocity(delta: float) -> void:
 	if !entity.move_paused:

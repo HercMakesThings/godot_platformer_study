@@ -30,18 +30,27 @@ func _execute(attacker: Object, hurtbox: Area2D, _hitbox: Hitbox, hitbox_index: 
 	var lag: int = floor(floor(floor(atk_dmg / 3 + 4) * electric) * c)
 	lag = clamp(lag, 2, 30)
 	var atk_lag: float = lag
-	var knockback: float = FlushyUtils.calc_kb_no_area(atk_bkb, atk_kbg, atk_dmg, article.status.percent, article.entity.get_weight())
+	var knockback: float = _calc_knockback(atk_bkb, atk_kbg, atk_dmg, article.status.percent, article.entity.get_weight())
 	var bonus_stun: int = 5 if statblock.tags.has("strong") else 0
 	var atk_stun: int = floor(knockback * 0.4) + bonus_stun
+	var force: Vector2 = atk_angle_vec.normalized() * knockback
+	_apply_knockback(article, atk_lag, atk_stun, force)
+	article.entity.gravity = article.entity.GRAVITY
+	article.entity.move_paused = false
+	article.entity.can_move = true
+	
+## function for calculating a character's knockback when they are hit
+func _calc_knockback(bkb: float, kbg: float, dmg: float, percent: float, weight: float) -> float:
+	var growth: float = kbg / 100.0
+	var p: float = percent
+	#return ((((p + (dmg*p))*(50/(weight+10)))*growth)+bkb)
+	return (((((p/10) + (dmg*p)/20)*((50/(weight+10)))*growth)*kbg)+bkb)
+	
+func _apply_knockback(article: Article, atk_lag: float, atk_stun: int, force: Vector2) -> void:
 	for i in range(atk_lag + atk_stun):
 		if i <= atk_lag:
 			article.entity.move_paused = true
 		elif i <= atk_lag + atk_stun:
 			article.entity.move_paused = false
-			var force: Vector2 = atk_angle_vec.normalized()
-			force = force * knockback
 			article.entity.body_vel = force
 		await article.get_tree().physics_frame
-	article.entity.gravity = article.entity.GRAVITY
-	article.entity.move_paused = false
-	article.entity.can_move = true

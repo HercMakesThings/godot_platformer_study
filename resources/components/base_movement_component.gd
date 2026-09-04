@@ -24,11 +24,15 @@ func handle_state(entity: Entity, delta: float) -> void:
 				if entity.direction.normalized().dot(Vector2(entity.orientation, 0.0).normalized()) < 0:
 					entity.change_state(entity.MoveState.TURNAROUND)
 					return
-				if abs(entity.direction.x) >= entity.hard_press_thresh && entity.move_state_frame <= 3:
+				#if abs(entity.direction.x) >= entity.hard_press_thresh && entity.move_state_frame <= 3:
+				#if abs(entity.direction.x) >= entity.hard_press_thresh:
+					#entity.change_state(entity.MoveState.DASH)
+					#return
+				#if abs(entity.direction.x) >= entity.deadzone:
+					#entity.change_state(entity.MoveState.WALK)
+					#return
+				if abs(entity.direction.x) >= entity.deadzone:
 					entity.change_state(entity.MoveState.DASH)
-					return
-				elif abs(entity.direction.x) >= entity.deadzone:
-					entity.change_state(entity.MoveState.WALK)
 					return
 				if entity.jump_just_pressed || entity.jump_pressed:
 					entity.change_state(entity.MoveState.JUMPSQUAT)
@@ -72,16 +76,25 @@ func handle_state(entity: Entity, delta: float) -> void:
 			if entity.body_on_ground:
 				if !entity.can_move:
 					return
-				if entity.direction.normalized().dot(entity.body_vel.normalized()) <= 0:
-					if entity.direction.normalized().dot(entity.body_vel.normalized()) < -entity.deadzone:
-						if absf(entity.direction.y) <= entity.hard_press_thresh:
-							entity.change_state(entity.MoveState.TURNAROUND)
-							return
-					elif entity.direction.normalized().dot(entity.body_vel.normalized()) == 0:
-						if entity.body_vel.length() < 1.0 && entity.move_state_frame >= 3:
-							entity.change_state(entity.MoveState.IDLE)
-							return
-						entity.decelerate(delta)
+				if (
+					absf(entity.direction.x) >= entity.deadzone &&
+					absf(entity.direction.x) < entity.hard_press_thresh &&
+					#absf(entity.direction.y) < entity.hard_press_thresh &&
+					absf(entity.direction.y) < 0.65 
+					#entity.move_state_frame > 1
+					):
+						entity.change_state(entity.MoveState.WALK)
+						return
+				#if entity.direction.normalized().dot(entity.body_vel.normalized()) <= 0:
+					#if entity.direction.normalized().dot(entity.body_vel.normalized()) < -entity.deadzone:
+						#if absf(entity.direction.y) <= entity.hard_press_thresh:
+							#entity.change_state(entity.MoveState.TURNAROUND)
+							#return
+					#elif entity.direction.normalized().dot(entity.body_vel.normalized()) == 0:
+						#if entity.body_vel.length() < 1.0 && entity.move_state_frame >= 3:
+							#entity.change_state(entity.MoveState.IDLE)
+							#return
+						#entity.decelerate(delta)
 				#if entity.direction.normalized().dot(entity.body_vel.normalized()) < -entity.deadzone:
 				##if abs(entity.direction.dot(entity.body_vel)) < entity.deadzone:
 ##					## clamp y direction to allow for moonwalking
@@ -133,6 +146,10 @@ func handle_state(entity: Entity, delta: float) -> void:
 				if entity.move_state_frame >= 6:
 					entity.change_state(entity.MoveState.IDLE)
 					return
+			else:
+				entity.on_ground = false
+				entity.change_state(entity.MoveState.AIRBORNE)
+				return
 		entity.MoveState.RUN:
 			if entity.body_on_ground:
 				if !entity.can_move:

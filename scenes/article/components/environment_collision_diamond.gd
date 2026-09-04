@@ -82,8 +82,9 @@ func update_ecb_rays(delta: float) -> void:
 			match k:
 				BoxPoint.TOP:
 					if _collider:
+						if _collider is PlatformNew: print("hit platform!")
 						if article.entity.body_vel.y < 0.0:
-							article.position.y = _collider.position.y + (_collider.collision_shape.size.y*0.5) + dimensions.height
+							article.position.y = _collider.position.y + (_collider.collision_shape.size.y*0.5) + dimensions.top_span
 							article.entity.body_vel.y = 0.0 ## may or may not need this
 				BoxPoint.RIGHT:
 					if _collider:
@@ -96,8 +97,8 @@ func update_ecb_rays(delta: float) -> void:
 						return ## early return to allow for dropping through platforms
 					article.entity.body_on_ground = _collider != null
 					if _collider:
-						article.entity.is_on_platform = _collider is PlatformNew
 						if article.entity.body_vel.y >= 0.0:
+							article.entity.is_on_platform = _collider is PlatformNew
 							article.entity.body_vel.y = 0.0
 							article.position.y = _collider.position.y - (_collider.collision_shape.size.y*0.5) + -dimensions.bottom_span
 				BoxPoint.LEFT:
@@ -129,9 +130,14 @@ func _get_ecb_collider_from_query(cast: Dictionary, terrain_type: String, is_bot
 	if collider is not PlatformNew && collider.type != terrain_type:
 		return null
 	if is_bottom_ray:
-		var coll_point: Vector2 = cast.position
-		if collider is PlatformNew && coll_point.distance_to(global_position + Vector2(0.0, dimensions.bottom_span)) >= dimensions.COLLISION_POINT_THRESHOLD:
-			return null
+		if collider is PlatformNew:
+			var coll_point: Vector2 = cast.position
+			if coll_point.distance_to(global_position + Vector2(0.0, dimensions.bottom_span)) >= dimensions.COLLISION_POINT_THRESHOLD:
+				return null
+			if article.entity.body_vel.y < 0.0:
+				return null
+			if article.entity.current_state == article.entity.MoveState.CROUCH:
+				return null
 	return collider
 	
 func set_shape(stats: EcbStatsRes) -> void:
